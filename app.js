@@ -102,7 +102,7 @@ const state = {
   streamAnycubic: localStorage.getItem("titan_admin_stream_anycubic") || "assets/timelapse_anycubic/timelapse_anycubic.mp4",
   fbChannelLink: localStorage.getItem("titan_admin_fb_channel") || "https://www.facebook.com/profile.php?id=100007422796036",
   ytChannelLink: localStorage.getItem("titan_admin_yt_channel") || "https://www.youtube.com/watch?v=NJzGKR9L8pc",
-  publicTimelapse1: localStorage.getItem("titan_admin_timelapse_1") || "assets/bambulab/timelapse_bambu.mp4",
+  publicTimelapse1: localStorage.getItem("titan_admin_timelapse_1") || "3DBenchy_PLA_0.2_15m9S_02.mp4",
   publicTimelapse2: localStorage.getItem("titan_admin_timelapse_2") || "assets/anycubic/timelapse_anycubic.mp4",
   selectedMaterialKey: "pla",
   selectedMaterialPrice: 0.04,
@@ -259,11 +259,11 @@ function formatYoutubeEmbed(url) {
 function renderUniversalVideoPlayer(url, title) {
   const fallbackUrl = title.includes("Anycubic") 
     ? "assets/anycubic/timelapse_anycubic.mp4" 
-    : "assets/bambulab/timelapse_bambu.mp4";
+    : "3DBenchy_PLA_0.2_15m9S_02.mp4";
 
   if (!url || url.startsWith("Es.") || url.startsWith("Video Caricato") || url.startsWith("[Video MP4")) {
     if (title.includes("Bambu")) {
-      url = state.publicTimelapse1 || "assets/bambulab/timelapse_bambu.mp4";
+      url = state.publicTimelapse1 || "3DBenchy_PLA_0.2_15m9S_02.mp4";
     } else if (title.includes("Anycubic")) {
       url = state.publicTimelapse2 || "assets/anycubic/timelapse_anycubic.mp4";
     } else {
@@ -345,7 +345,7 @@ function applySocialAndTimelapseLinks() {
 
   const box1 = document.getElementById("timelapseBox1");
   if (box1) {
-    box1.innerHTML = renderUniversalVideoPlayer(state.publicTimelapse1 || "assets/bambulab/timelapse_bambu.mp4", "Timelapse Bambu Lab X1C");
+    box1.innerHTML = renderUniversalVideoPlayer(state.publicTimelapse1 || "3DBenchy_PLA_0.2_15m9S_02.mp4", "Timelapse Bambu Lab X1C");
   }
 
   const box2 = document.getElementById("timelapseBox2");
