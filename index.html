@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TITAN 3D (titan3d.it) | Stampa 3D Multicolore & Progettazione di Giovanni Di Lello</title>
+  <meta name="description" content="Laboratorio avanzato di stampa 3D ad alta precisione titan3d.it di Giovanni Di Lello. Materiali 100% atossici ed eco-friendly. Preventivatore 3D interattivo, tecnologie AMS & ACE Pro 2 fino a 4 colori.">
+  <meta name="google-site-verification" content="googleadeb123b383fe22c">
+  <link rel="canonical" href="https://titan3d.it/">
+  <meta property="og:title" content="TITAN 3D (titan3d.it) | Stampa 3D Multicolore & Progettazione di Giovanni Di Lello">
+  <meta property="og:description" content="Laboratorio avanzato di stampa 3D ad alta precisione titan3d.it di Giovanni Di Lello. Materiali 100% atossici ed eco-friendly. Preventivatore 3D interattivo, tecnologie AMS & ACE Pro 2 fino a 4 colori.">
+  <meta property="og:url" content="https://titan3d.it/">
+  <meta property="og:type" content="website">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "TITAN 3D Studio Giovanni Di Lello",
+    "url": "https://titan3d.it/",
+    "logo": "https://titan3d.it/assets/hero.jpg",
+    "description": "Laboratorio avanzato di stampa 3D ad alta precisione, servizi CAD e preventivatore 3D interattivo.",
+    "priceRange": "€€"
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Rajdhani:wght@600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Background Particle / Mesh Glow -->
+  <div class="bg-mesh-overlay"></div>
+
+  <!-- Header Section -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="logo-icon-3d">
+          <div class="cube-inner"></div>
+        </div>
+        <div class="logo-text">
+          <span class="brand-title">TITAN <span class="accent-cyan">3D</span> <span style="font-size:0.75em; color:var(--text-muted); font-weight:400; text-transform:none;">.it</span></span>
+          <span class="brand-subtitle">STUDIO GIOVANNI DI LELLO</span>
+        </div>
+      </div>
+
+      <!-- Live Machine Status Traffic Light Badge -->
+      <div class="status-semaforo-badge" id="semaforoBadge">
+        <div class="status-dot green" id="semaforoDot"></div>
+        <div class="status-info">
+          <span class="status-label" id="semaforoLabel">MACCHINE DISPONIBILI</span>
+          <span class="status-sub" id="semaforoSub">2/2 Macchine Pronte</span>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#macchine">Macchine & Canali</a>
+        <a href="#timelapse">Timelapse</a>
+        <a href="#area-cliente">🔐 Area Cliente</a>
+        <a href="#sicurezza" class="text-green">🍃 Eco & Atossico</a>
+        <a href="#preventivatore" class="btn-nav-highlight">Preventivatore 3D</a>
+        <a href="#cad-service">Servizio CAD</a>
+        <button id="bgMusicBtn" onclick="toggleBgMusic()" ondblclick="skipNextMusicTrack()" class="btn-music-toggle" title="Clicca per Avviare/Pausa - Doppio Clic per Prossimo Brano">🎵 <span id="bgMusicStatus">Musica OFF</span></button>
+        <button class="btn-admin-access" onclick="openAdminModal()" title="Pannello Proprietario Giovanni">⚙️ Admin</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Audio Element for Ambient High-Tech Music -->
+  <audio id="bgAudio" loop preload="auto">
+    <source src="assets/bg_music.mp3" type="audio/mpeg">
+    <source src="assets/musica/bg_music.mp3" type="audio/mpeg">
+    <source src="assets/audio/bg_music.mp3" type="audio/mpeg">
+    <source src="assets/musica/musica.mp3" type="audio/mpeg">
+    <source src="assets/audio/musica.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-bg-wrapper">
+      <img src="assets/hero.jpg" alt="Titan 3D Forge Studio di Giovanni Di Lello" class="hero-bg-img">
+      <div class="hero-gradient-overlay"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="cyber-tag">LABORATORIO ARTIGIANALE HIGH-TECH</div>
+      <h1>STAMPA 3D AD ALTA PRECISIONE <br><span class="gradient-text">& MULTICOLORE</span></h1>
+      <p class="hero-description">
+        Stampa 3D professionale a colori ad alta risoluzione. Parco macchine specializzato <strong>Bambu Lab X1 Carbon (AMS 4 Colori)</strong> e <strong>Anycubic S1 Max (350×350×350mm Camera Chiusa + ACE Pro 2)</strong>.
+      </p>
+
+      <!-- Indoor Health & Eco Banner -->
+      <div class="eco-health-banner">
+        <span class="eco-icon">🍃</span>
+        <div class="eco-text">
+          <strong>100% MATERIALI ATOSSICI ED ECO-FRIENDLY:</strong> Usiamo esclusivamente polimeri sicuri ed inodori (PLA bio-amido, PLA alimentare, PETG, TPU) ideali per la casa, prototipi e giocattoli per bambini. Zero esalazioni tossiche (No ABS / No ASA).
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <a href="#preventivatore" class="btn-primary">
+          <span>⚡ CALCOLA PREVENTIVO ISTANTANEO</span>
+        </a>
+        <a href="#simulatore" class="btn-secondary">
+          <span>🔮 PROVA IL SIMULATORE 3D LIVE</span>
+        </a>
+      </div>
+
+      <!-- Fleet Badges -->
+      <div class="hero-fleet-pills">
+        <div class="fleet-pill">
+          <span class="pill-dot cyan"></span>
+          <span>Bambu Lab X1 Carbon + AMS 4 Colori (256×256×256mm)</span>
+        </div>
+        <div class="fleet-pill">
+          <span class="pill-dot amber"></span>
+          <span>Anycubic S1 Max + ACE Pro 2 (350×350×350mm Camera Chiusa)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fleet & Social Channels Section -->
+  <section id="macchine" class="section-container">
+    <div class="section-header">
+      <div class="section-badge">PARCO MACCHINE & CANALI DEDICATI</div>
+      <h2>LE NOSTRE 2 POTENTI <span class="gradient-text">STAMPANTI 3D</span></h2>
+      <p>Ogni macchina è ottimizzata per garantire la massima qualità superficiale, grande volume di stampa e tolleranze dimensionali perfette.</p>
+    </div>
+
+    <div class="grid-2-col">
+      
+      <!-- Card 1: Bambu Lab X1 Carbon -->
+      <div class="machine-card cyan-glow">
+        <div class="machine-image-wrapper">
+          <img src="assets/bambu_x1c.jpg?v=9999" alt="Bambu Lab X1 Carbon con AMS" class="machine-img">
+          <div class="machine-tag">CORE-XY HIGH SPEED</div>
+        </div>
+        <div class="machine-body">
+          <div class="machine-header-title">
+            <h3>Bambu Lab X1 Carbon</h3>
+            <span class="badge-ams">+ AMS (Stampa fino a 4 Colori)</span>
+          </div>
+          <p class="machine-desc">
+            Top di gamma per filamenti caricati in fibra di carbonio atossica (PLA-CF/PETG-CF), ispezione primo layer via AI LiDAR e stampa ad altissima velocità con cambio colore automatico fino a 4 tonalità in un unico pezzo.
+          </p>
+
+          <ul class="machine-specs">
+            <li><span>Volume Max Pezzo:</span> <strong>256 × 256 × 256 mm</strong></li>
+            <li><span>Materiali Sicuri:</span> PLA, PLA Alimentare, PETG, TPU, PLA-CF (No ABS/ASA)</li>
+            <li><span>Sistema Colore:</span> AMS (Automatic Material System - 4 Colori)</li>
+          </ul>
+
+          <a href="https://www.facebook.com/profile.php?id=100007422796036" id="fbChannelLink" target="_blank" rel="noopener noreferrer" class="btn-channel btn-fb">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            <span>PROFILO FACEBOOK (Bambu Lab X1C)</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 2: Anycubic S1 Max -->
+      <div class="machine-card amber-glow">
+        <div class="machine-image-wrapper">
+          <img src="assets/anycubic_s1.jpg?v=9999" alt="Anycubic S1 Max con ACE Pro 2" class="machine-img">
+          <div class="machine-tag">MAX VOLUME 350mm & CAMERA CHIUSA</div>
+        </div>
+        <div class="machine-body">
+          <div class="machine-header-title">
+            <h3>Anycubic S1 Max</h3>
+            <span class="badge-ace">+ ACE Pro 2 (Multi-Color)</span>
+          </div>
+          <p class="machine-desc">
+            Grandioso volume di stampa <strong>350 × 350 × 350 mm</strong> con <strong>struttura a camera chiusa</strong> per la massima protezione e stabilità termica. Dotata del modulo avanzato ACE Pro 2 con essiccazione attiva del filamento.
+          </p>
+
+          <ul class="machine-specs">
+            <li><span>Volume Max Pezzo:</span> <strong>350 × 350 × 350 mm</strong></li>
+            <li><span>Struttura:</span> Camera Chiusa Protezione Silenziosa</li>
+            <li><span>Materiali Sicuri:</span> PLA High Speed, PLA Alimentare, PETG, TPU Flessibile</li>
+            <li><span>Sistema Colore:</span> ACE Pro 2 Engine (Essiccatore integrato)</li>
+          </ul>
+
+          <a href="https://www.youtube.com/watch?v=NJzGKR9L8pc" id="ytChannelLink" target="_blank" rel="noopener noreferrer" class="btn-channel btn-yt">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            <span>CANALE YOUTUBE (Anycubic S1 Max)</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Timelapse Showcase Section -->
+  <section id="timelapse" class="section-container">
+    <div class="section-header">
+      <div class="section-badge">TIMELAPSE STAMPE 3D</div>
+      <h2>LE NOSTRE STAMPE IN <span class="gradient-text">AZIONE</span></h2>
+      <p>Guarda i timelapse delle nostre macchine all'opera. Quando avrai i tuoi video pronti, potrai inserire i tuoi link YouTube qui sotto!</p>
+    </div>
+    
+    <div style="text-align: center; margin-bottom: 25px;">
+      <button onclick="openAdminModal()" class="btn-secondary-small" style="padding: 12px 24px; font-weight: 700; background: rgba(0, 240, 255, 0.15); border: 1px solid var(--cyan-primary); color: var(--cyan-primary); cursor: pointer;">
+        🎥 Carica o Modifica i Tuoi Video Timelapse (Pannello Admin)
+      </button>
+    </div>
+
+    <div class="grid-2-col">
+      <!-- Video 1 Placeholder -->
+      <div class="machine-card cyan-glow" style="padding: 20px;">
+        <div id="timelapseBox1">
+          <!-- Dynamic Video Player Rendered via app.js -->
+        </div>
+        <div class="machine-body" style="padding: 15px 0 0 0; flex: none;">
+          <div class="machine-header-title">
+            <h3 style="font-size: 1.2rem;">Timelapse: Bambu Lab X1C</h3>
+          </div>
+          <p class="machine-desc" style="margin-bottom: 0; font-size: 0.85rem;">Guarda la Bambu Lab X1 Carbon ad alta velocità in azione con cambio colore AMS.</p>
+        </div>
+      </div>
+
+      <!-- Video 2 Placeholder -->
+      <div class="machine-card amber-glow" style="padding: 20px;">
+        <div id="timelapseBox2">
+          <!-- Dynamic Video Player Rendered via app.js -->
+        </div>
+        <div class="machine-body" style="padding: 15px 0 0 0; flex: none;">
+          <div class="machine-header-title">
+            <h3 style="font-size: 1.2rem;">Timelapse: Anycubic S1 Max</h3>
+          </div>
+          <p class="machine-desc" style="margin-bottom: 0; font-size: 0.85rem;">Guarda la Anycubic S1 Max a camera chiusa in azione (350×350×350mm).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Client Account & Dedicated Portal Section -->
+  <section id="area-cliente" class="section-container">
+    <div class="section-header">
+      <div class="section-badge">PORTALE RISERVATO CLIENTE</div>
+      <h2>AREA CLIENTE <span class="gradient-text">& STATO ORDINI LIVE</span></h2>
+      <p>Accedi al tuo spazio personale con le tue credenziali (Email/Telefono o Codice Ordine e Password) per verificare la vidimazione dell'account e lo stato dei tuoi progetti 3D in tempo reale.</p>
+    </div>
+
+    <div class="client-portal-container">
+      
+      <!-- Tab Navigation Header -->
+      <div class="portal-tabs-nav">
+        <button class="portal-tab-btn active" id="tabBtnLogin" onclick="switchPortalTab('login')">
+          <span>🔑 ACCESSO CLIENTE VIDIMATO</span>
+        </button>
+        <button class="portal-tab-btn" id="tabBtnRegister" onclick="switchPortalTab('register')">
+          <span>📝 REGISTRAZIONE NUOVO CLIENTE</span>
+        </button>
+      </div>
+
+      <!-- Tab 1: Accesso / Login & Cerca Ordine -->
+      <div class="portal-tab-content active" id="portalTabLogin">
+        <div style="max-width: 650px; margin: 0 auto;">
+          <div style="margin-bottom: 15px;">
+            <h3 style="font-size: 1.25rem; color: var(--cyan-primary); font-family: var(--font-heading);">🔑 Accedi all'Area Riservata Clienti</h3>
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px;">
+            Inserisci la tua <strong>Email / Numero di Telefono</strong> (oppure il tuo <strong>Codice Ordine</strong>) e la tua <strong>Password</strong> per consultare lo stato vidimazione e la lavorazione dei tuoi pezzi:
+          </p>
+
+          <div class="form-group">
+            <label for="clientSearchCode">Email Personale, Numero di Telefono o Codice Ordine Cliente <span class="req">*</span>:</label>
+            <input type="text" id="clientSearchCode" placeholder="Es. mario.rossi@email.it, 3331234567, TITAN-8492 o cliente1">
+          </div>
+
+          <div class="form-group">
+            <label for="clientSearchPass">La tua Password Account <span class="req">*</span>:</label>
+            <input type="password" id="clientSearchPass" placeholder="Inserisci la tua password">
+          </div>
+
+          <button onclick="searchClientOrder()" class="btn-primary" style="width: 100%; margin-top: 15px; padding: 16px;">
+            <span>🔓 ACCEDI ALL'AREA RISERVATA & VERIFICA ORDINE</span>
+          </button>
+
+          <div style="text-align: center; margin-top: 20px; font-size: 0.88rem; color: var(--text-muted);">
+            Non hai ancora un account? <a href="#area-cliente" onclick="switchPortalTab('register')" style="color: var(--amber-primary); font-weight: 700; text-decoration: underline;">Registrati qui per richiedere la vidimazione →</a>
+          </div>
+
+          <div id="clientOrderResult" class="order-result-box hidden" style="margin-top: 22px;">
+            <!-- Dynamic order details rendered by app.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Registrazione Nuovo Cliente -->
+      <div class="portal-tab-content" id="portalTabRegister">
+        <div style="max-width: 650px; margin: 0 auto;">
+          <div style="margin-bottom: 15px;">
+            <h3 style="font-size: 1.25rem; color: var(--amber-primary); font-family: var(--font-heading);">📝 Richiedi Registrazione Account & Vidimazione</h3>
+          </div>
+
+          <!-- Avviso in Grande per Annotare i Dati -->
+          <div style="background: rgba(255, 153, 0, 0.12); border: 2px solid var(--amber-primary); padding: 16px 20px; border-radius: var(--radius-md); margin-bottom: 20px; box-shadow: 0 0 25px rgba(255, 153, 0, 0.15);">
+            <strong style="color: var(--amber-primary); font-size: 1.1rem; font-family: var(--font-heading); display: block; margin-bottom: 6px;">
+              ⚠️ FONDAMENTALE: SEGNA ED ANNOTA LA TUA EMAIL/TELEFONO E LA PASSWORD!
+            </strong>
+            <p style="font-size: 0.9rem; color: #fff; margin: 0; line-height: 1.45;">
+              Ricordati di <strong>annotare subito il tuo Contatto (Email/Telefono)</strong> e la <strong>Password</strong> che sceglierai qui sotto! Ti serviranno per accedere sempre alla tua Area Riservata Clienti e consultare lo stato vidimato dei tuoi pezzi, la fotocamera live ed i tuoi file STL privati.
+            </p>
+          </div>
+
+          <form id="clientRegisterForm" onsubmit="event.preventDefault(); handleClientRegister();">
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="regName">Nome & Cognome <span class="req">*</span>:</label>
+                <input type="text" id="regName" placeholder="Es. Mario Rossi" required>
+              </div>
+
+              <div class="form-group">
+                <label for="regContact">Email o Telefono <span class="req">*</span>:</label>
+                <input type="text" id="regContact" placeholder="Es. cliente1 o mario.rossi@email.it" required>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 10px;">
+              <label for="regPass">Crea la tua Password <span class="req">*</span>:</label>
+              <input type="password" id="regPass" placeholder="Scegli una password per accedere" required>
+            </div>
+
+            <div class="form-group">
+              <label for="regNotes">Note / Dettagli Progetto (Opzionale):</label>
+              <textarea id="regNotes" rows="2" placeholder="Es. Richiesta pezzi in PETG o prototipo..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-secondary" style="width: 100%; margin-top: 15px; padding: 16px;">
+              <span>✨ RICHIEDI REGISTRAZIONE & VIDIMAZIONE ACCOUNT</span>
+            </button>
+          </form>
+
+          <div style="text-align: center; margin-top: 20px; font-size: 0.88rem; color: var(--text-muted);">
+            Hai già un account? <a href="#area-cliente" onclick="switchPortalTab('login')" style="color: var(--cyan-primary); font-weight: 700; text-decoration: underline;">Accedi all'Area Riservata qui →</a>
+          </div>
+
+          <div id="clientRegisterSuccess" class="hidden" style="margin-top: 20px; padding: 16px; background: rgba(0, 255, 136, 0.1); border: 1px solid var(--green-primary); border-radius: var(--radius-md); color: var(--green-primary); font-size: 0.9rem;">
+            ✓ Richiesta inviata con successo! Account creato in attesa di vidimazione da Giovanni.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Eco & Health Safety Section -->
+  <section id="sicurezza" class="section-container bg-dark-panel">
+    <div class="grid-2-col-valign">
+      <div>
+        <div class="section-badge">SALUTE & AMBIENTE</div>
+        <h2>MATERIALI 100% <span class="gradient-text">ATOSSICI ED ECO-COMPATIBILI</span></h2>
+        <p>
+          Il nostro laboratorio ha a cuore la salute delle persone ed in particolare dei bambini. Per questo motivo <strong>non utilizziamo in alcun modo ABS o ASA</strong> (che rilasciano vapori di stirene tossici), preferendo filamenti naturali certificati ed inodori.
+        </p>
+      </div>
+
+      <div class="eco-features-box">
+        <div class="eco-item">
+          <span class="eco-check">✓</span>
+          <div>
+            <strong>PLA Bio-Polimero (Amido di Mais):</strong> Atossico, ecologico e biodegradabile. Perfetto per oggetti per la casa, giochi per bambini e prototipi.
+          </div>
+        </div>
+        <div class="eco-item">
+          <span class="eco-check">✓</span>
+          <div>
+            <strong>PLA Alimentare Certificato:</strong> Sicuro per contatto diretto con cibo, taglia-pasta e utensili da cucina.
+          </div>
+        </div>
+        <div class="eco-item">
+          <span class="eco-check">✓</span>
+          <div>
+            <strong>PETG Inodore & Sicuro:</strong> Estremamente resistente ai colpi e agli agenti atmosferici senza alcuna emissione di fumi nocivi.
+          </div>
+        </div>
+        <div class="eco-item">
+          <span class="eco-check">✓</span>
+          <div>
+            <strong>TPU Flessibile & Sicuro:</strong> Gomma poliuretanica inodore per pezzi morbidi, guarnizioni e protezioni antiurto.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive 3D Canvas Simulator Section -->
+  <section id="simulatore" class="section-container">
+    <div class="section-header">
+      <div class="section-badge">ANTEPRIMA INTERATTIVA 3D</div>
+      <h2>SIMULATORE DI <span class="gradient-text">STAMPA LAYER-BY-LAYER</span></h2>
+      <p>Ruota il modello 3D e muovi lo slider per simulare la costruzione del pezzo strato su strato in tempo reale.</p>
+    </div>
+
+    <div class="simulator-wrapper">
+      <div class="canvas-container">
+        <canvas id="canvas3d" width="600" height="450"></canvas>
+        <div class="canvas-instructions">💡 Trascina con il mouse per ruotare il modello in 3D</div>
+        <div class="canvas-layer-badge">Layer: <span id="currentLayerDisplay">100%</span></div>
+      </div>
+
+      <div class="simulator-controls">
+        <h3>CONTROLLI SIMULATORE 3D</h3>
+        
+        <div class="sim-control-group">
+          <label>Progresso Avanzamento Layer (Slicing):</label>
+          <input type="range" id="simLayerSlider" min="10" max="100" value="100" step="1" oninput="update3DSimulator()">
+        </div>
+
+        <div class="sim-control-group">
+          <label>Modalità Visualizzazione 3D:</label>
+          <div class="sim-btn-row">
+            <button class="btn-sim-mode active" id="btnModeSolid" onclick="setSimMode('solid')">🔷 Solido</button>
+            <button class="btn-sim-mode" id="btnModeWire" onclick="setSimMode('wireframe')">🕸️ Wireframe</button>
+            <button class="btn-sim-mode" id="btnModeLayers" onclick="setSimMode('layers')">🥞 Strati Layer</button>
+          </div>
+        </div>
+
+        <div class="sim-control-group">
+          <label>Colore Filamento Simulato:</label>
+          <div class="sim-color-picker">
+            <div class="sim-color-dot active" style="background:#00f0ff" onclick="setSimColor('#00f0ff', this)"></div>
+            <div class="sim-color-dot" style="background:#ff9900" onclick="setSimColor('#ff9900', this)"></div>
+            <div class="sim-color-dot" style="background:#00ff88" onclick="setSimColor('#00ff88', this)"></div>
+            <div class="sim-color-dot" style="background:#ff2a5f" onclick="setSimColor('#ff2a5f', this)"></div>
+            <div class="sim-color-dot" style="background:#ffffff" onclick="setSimColor('#ffffff', this)"></div>
+          </div>
+        </div>
+
+        <div class="sim-info-box">
+          <span>Stampa simulata su <strong>Bambu Lab X1C / Anycubic S1 Max (Materiali Atossici)</strong></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Preventivatore Automatico Section -->
+  <section id="preventivatore" class="section-container bg-dark-panel">
+    <div class="section-header">
+      <div class="section-badge">PREVENTIVATORE AUTOMATICO ISTANTANEO</div>
+      <h2>CALCOLA IL TUO <span class="gradient-text">PREVENTIVO 3D</span></h2>
+      <p>Seleziona il materiale atossico, il peso ed i colori per ottenere la quotazione in tempo reale.</p>
+    </div>
+
+    <!-- Firearms / Weapons Ban Banner (Shown when triggered) -->
+    <div id="weaponsShield" class="weapons-shield-banner hidden">
+      <div class="shield-icon">⛔</div>
+      <div class="shield-content">
+        <h3>PROGETTO RIFIUTATO AUTOMATICAMENTE</h3>
+        <p>
+          Ai sensi della legislazione vigente e della politica di sicurezza di <strong>TITAN 3D FORGE (Giovanni Di Lello)</strong>, è <strong>severamente vietata</strong> la produzione di componenti per armi da fuoco, parti di armi o accessori d'offesa.
+        </p>
+        <span class="shield-sub">La richiesta non può essere inviata né presa in carico.</span>
+      </div>
+    </div>
+
+    <div class="quote-calculator-grid" id="quoteCalculatorApp">
+      
+      <!-- Left Column: Form Controls -->
+      <div class="calc-form">
+        
+        <div class="form-group">
+          <label for="projectName">Nome Progetto / Pezzo <span class="req">*</span></label>
+          <input type="text" id="projectName" placeholder="Es. Supporto GoPro, Ingranaggio custom..." value="Supporto Personalizzato" oninput="calculateQuote()">
+        </div>
+
+        <!-- Material Card Selector (Dinamico da app.js) -->
+        <div class="form-group">
+          <label>Seleziona Materiale Atossico:</label>
+          <div class="material-cards-grid" id="materialCardsGrid">
+            <!-- Renderizzato dinamicamente da app.js (PLA, PLA Alimentare, PETG, TPU, PLA-CF, PETG-CF) -->
+          </div>
+        </div>
+
+        <!-- Dynamic Color Palettes Per Material (Tavolozza 1 e Tavolozza 2) -->
+        <div class="form-group">
+          <label>Seleziona i Colori Desiderati per questo Materiale:</label>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+            La disponibilità immediata dipende dal materiale. Se scegli un colore <strong>non a magazzino</strong>, verrà ordinato appositamente: i tempi di consegna aumentano (+24/48h) ed è previsto un piccolo acconto bobina.
+          </p>
+
+          <!-- Tavolozza 1: Colori a Magazzino (Pronta Consegna) -->
+          <div class="palette-sub-container">
+            <div class="palette-header-tag green">
+              🟢 TAVOLOZZA 1: COLORI A MAGAZZINO (Pronta Consegna in Casa)
+            </div>
+            <div class="color-palette-grid" id="stockPaletteGrid">
+              <!-- Renderizzato dinamicamente da app.js per il materiale selezionato -->
+            </div>
+          </div>
+
+          <!-- Tavolozza 2: Colori Su Ordinazione -->
+          <div class="palette-sub-container" style="margin-top: 14px;">
+            <div class="palette-header-tag amber">
+              📦 TAVOLOZZA 2: COLORI SU ORDINAZIONE (Su Richiesta - +€20 Acconto & Tempi +24/48h)
+            </div>
+            <div class="color-palette-grid" id="orderPaletteGrid">
+              <!-- Renderizzato dinamicamente da app.js per il materiale selezionato -->
+            </div>
+          </div>
+
+          <div class="color-count-info" style="margin-top: 12px;">
+            Colori selezionati: <strong id="selectedColorCountText">1 Colore (Base)</strong>
+          </div>
+
+          <div id="colorStockNotice" class="color-ordinazione-banner success">
+            <span class="banner-icon" id="colorStockNoticeIcon">🟢</span>
+            <div class="banner-text" id="colorStockNoticeText">
+              <strong>PRONTA CONSEGNA:</strong> Tutti i colori selezionati sono disponibili a magazzino. Nessun acconto extra e consegna nei tempi standard!
+            </div>
+          </div>
+        </div>
+
+        <!-- STL 3D File Drag & Drop Upload Zone -->
+        <div class="stl-upload-container">
+          <label>Carica il tuo file 3D (Formato .STL):</label>
+          <div class="stl-drop-zone" id="stlDropZone" onclick="document.getElementById('stlFileInput').click()">
+            <input type="file" id="stlFileInput" accept=".stl" style="display:none" onchange="handleStlFileUpload(this.files)">
+            <div class="stl-drop-content" id="stlDropContent">
+              <div class="stl-drop-icon">📦</div>
+              <div class="stl-drop-title">Trascina qui il tuo file <strong>.STL</strong> o <u>Clicca per Caricare</u></div>
+              <div class="stl-drop-sub">Analisi 3D istantanea di volume, peso e dimensioni in tempo reale</div>
+            </div>
+            <div class="stl-loaded-info hidden" id="stlLoadedInfo">
+              <div class="stl-info-header">
+                <span class="stl-filename" id="stlFileNameDisplay">modello.stl</span>
+                <button class="stl-remove-btn" onclick="event.stopPropagation(); removeStlFile();" title="Rimuovi file">✕</button>
+              </div>
+              <div class="stl-stats-grid">
+                <div class="stl-stat-badge">Volume: <strong id="stlVolDisplay">0 cm³</strong></div>
+                <div class="stl-stat-badge">Dimensioni: <strong id="stlBoundsDisplay">0×0×0 mm</strong></div>
+                <div class="stl-stat-badge highlight">Peso Stimato: <strong id="stlWeightDisplay">0 g</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Weight & Time Sliders -->
+        <div class="slider-group">
+          <div class="slider-header">
+            <label for="weightInput">Peso Stimato del Pezzo (Grammi):</label>
+            <span class="slider-value-display"><strong id="weightVal">150</strong> g</span>
+          </div>
+          <input type="range" id="weightInput" min="5" max="2500" value="150" step="5" oninput="syncWeight(this.value); calculateQuote();">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <label for="timeInput">Tempo Stimato di Stampa (Ore):</label>
+            <span class="slider-value-display"><strong id="timeVal">5.0</strong> h</span>
+          </div>
+          <input type="range" id="timeInput" min="0.5" max="72" value="5" step="0.5" oninput="syncTime(this.value); calculateQuote();">
+        </div>
+
+        <!-- Height & Dimensions check -->
+        <div class="form-group">
+          <label for="pieceHeight">Altezza indicativa del Pezzo (in mm):</label>
+          <input type="number" id="pieceHeight" min="1" max="500" value="120" oninput="checkHeightLimit(); calculateQuote();">
+          <div id="heightWarning" class="dimension-warning hidden">
+            ⚠️ <strong>Attenzione al Limite Macchine:</strong> Il pezzo supera l'altezza massima di 350mm della Anycubic S1 Max. Pezzi oltre 350mm necessitano di divisione.
+          </div>
+        </div>
+
+        <!-- Options -->
+        <div class="option-card-group">
+          
+          <label class="checkbox-card">
+            <input type="checkbox" id="colorInStock" checked onchange="calculateQuote()">
+            <div class="checkbox-custom"></div>
+            <div class="checkbox-text">
+              <span class="chk-title">🎨 Colore Già a Magazzino</span>
+              <span class="chk-desc">Se il colore è già disponibile in casa non c'è alcun acconto bobina.</span>
+            </div>
+          </label>
+
+          <label class="checkbox-card">
+            <input type="checkbox" id="cadNeeded" onchange="calculateQuote()">
+            <div class="checkbox-custom"></div>
+            <div class="checkbox-text">
+              <span class="chk-title">🛠️ Richiedi Progettazione 3D da Zero (+€25.00)</span>
+              <span class="chk-desc">Se non possiedi il file 3D (STL/STEP) e deve essere disegnato da zero da Giovanni.</span>
+            </div>
+          </label>
+
+          <!-- Weapons Safety Check -->
+          <label class="checkbox-card danger-card">
+            <input type="checkbox" id="weaponsCheck" onchange="checkWeaponsPolicy()">
+            <div class="checkbox-custom danger"></div>
+            <div class="checkbox-text">
+              <span class="chk-title text-danger">⚠️ Il pezzo riguarda armi da fuoco o accessori da sparo?</span>
+              <span class="chk-desc text-danger-sub">Spunta se il pezzo fa riferimento a componenti per armi da fuoco.</span>
+            </div>
+          </label>
+
+        </div>
+
+        <!-- Notes / Search Filter -->
+        <div class="form-group">
+          <label for="projectNotes">Descrizione / Note aggiuntive pezzo:</label>
+          <textarea id="projectNotes" rows="2" placeholder="Specificare tolleranze o note particolari..." oninput="checkTextNotesForWeapons(); calculateQuote();"></textarea>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Digital Price Gauge & Summary -->
+      <div class="calc-summary-panel">
+        
+        <!-- High Tech Digital Price Gauge -->
+        <div class="price-gauge-box">
+          <div class="gauge-label">TOTALE PREVENTIVO STIMATO</div>
+          <div class="gauge-amount" id="totalAmount">€14.25</div>
+          <div class="gauge-sub">*Verifica e conferma finale di Giovanni Di Lello</div>
+        </div>
+
+        <div class="breakdown-list">
+          <div class="breakdown-row">
+            <span>Quota Setup & Bed Prep</span>
+            <span id="priceSetup">€5.00</span>
+          </div>
+          <div class="breakdown-row">
+            <span>Materiale & Purga Colori (<span id="summaryMatName">PLA</span>)</span>
+            <span id="priceMaterial">€6.00</span>
+          </div>
+          <div class="breakdown-row">
+            <span>Energia kWh & Usura Macchina</span>
+            <span id="priceEnergy">€3.25</span>
+          </div>
+          <div class="breakdown-row hidden" id="rowColorDeposit">
+            <span class="text-amber">Acconto Anticipato Bobina Speciale</span>
+            <span class="text-amber" id="priceColorDeposit">+€20.00</span>
+          </div>
+          <div class="breakdown-row hidden" id="rowCadService">
+            <span class="text-cyan">Quota Progettazione CAD da Zero</span>
+            <span class="text-cyan" id="priceCadService">+€25.00</span>
+          </div>
+        </div>
+
+        <!-- Machine Recommendation -->
+        <div class="recommendation-box" id="recommendationBox">
+          <span class="rec-icon">⚙️</span>
+          <div class="rec-text">
+            <strong>Macchina Consigliata:</strong> <br><span id="recMachine">Bambu Lab X1 Carbon (AMS)</span>
+          </div>
+        </div>
+
+        <!-- WhatsApp Dispatch Action -->
+        <div class="whatsapp-action-area">
+          <button id="btnWhatsappSend" onclick="sendWhatsappQuote()" class="btn-whatsapp">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            <span>INVIA RICHIESTA SU WHATSAPP</span>
+          </button>
+          <span class="whatsapp-hint">Invia i dati direttamente a Giovanni Di Lello</span>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CAD Modeling & Engineering Section -->
+  <section id="cad-service" class="section-container">
+    <div class="grid-2-col-valign">
+      <div class="cad-info">
+        <div class="section-badge">MODELLAZIONE 3D & PROGETTAZIONE</div>
+        <h2>HAI UN'IDEA MA <span class="gradient-text">NON HAI IL FILE 3D?</span></h2>
+        <p>
+          Giovanni Di Lello offre un servizio di **modellazione 3D CAD su misura** partendo da un disegno, una foto, un componente rotto da ricostruire o quote personalizzate.
+        </p>
+
+        <div class="cad-features-list">
+          <div class="cad-feat-item">
+            <div class="feat-icon">📐</div>
+            <div>
+              <strong>Ricostruzione Pezzi Rotti:</strong> Reverse engineering di componenti meccanici e ricambi introvabili.
+            </div>
+          </div>
+
+          <div class="cad-feat-item">
+            <div class="feat-icon">🎨</div>
+            <div>
+              <strong>Ottimizzazione per AMS & ACE Pro 2:</strong> Progettazione a strati per ottimizzare i cambi colore senza sprechi.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cad-pricing-box">
+        <div class="cad-card-header">
+          <div class="cad-title">TARIFFA BASE MODELLAZIONE</div>
+          <div class="cad-price">€25.00 <span class="cad-price-unit">/ da zero</span></div>
+        </div>
+        <ul class="cad-included">
+          <li>✓ Studio fattibilità geometrica</li>
+          <li>✓ Creazione file CAD 3D (STEP / STL / 3MF)</li>
+          <li>✓ Revisione quote con il cliente</li>
+        </ul>
+        <div class="cad-action">
+          <a href="#preventivatore" onclick="enableCadOptionInCalc()" class="btn-primary-small">Aggiungi CAD al Preventivo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h3>TITAN <span class="accent-cyan">3D</span> <span style="font-size:0.75em; color:var(--text-muted); font-weight:400; text-transform:none;">.it</span></h3>
+        <p>Stampa 3D Multicolore ad Alta Precisione & Progettazione CAD di Giovanni Di Lello.</p>
+        <p class="footer-copy">&copy; 2026 Giovanni Di Lello - Tutti i diritti riservati.</p>
+      </div>
+
+      <div class="footer-channels">
+        <h4>I Nostri Canali Official</h4>
+        <div class="footer-social-links">
+          <a href="https://www.facebook.com/profile.php?id=100007422796036" id="footerFbChannelLink" target="_blank" rel="noopener noreferrer" class="social-link fb">Facebook (Bambu Lab X1C)</a>
+          <a href="https://www.youtube.com/watch?v=NJzGKR9L8pc" id="footerYtChannelLink" target="_blank" rel="noopener noreferrer" class="social-link yt">YouTube (Anycubic S1 Max)</a>
+        </div>
+      </div>
+
+      <div class="footer-admin">
+        <button class="btn-footer-admin" onclick="openAdminModal()">⚙️ Gestione Flotta (Giovanni)</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Admin Modal (Pannello Proprietario Giovanni Di Lello) -->
+  <div id="adminModal" class="modal-backdrop hidden">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3>⚙️ PANNELLO GESTIONE - GIOVANNI DI LELLO</h3>
+        <button class="modal-close" onclick="closeAdminModal()">✕</button>
+      </div>
+      
+      <div class="modal-body">
+        <p class="admin-intro">Gestione completa laboratorio: semaforo macchine, prezzi spole, tavolozze colori per materiale ed account clienti con password.</p>
+        
+        <div class="admin-section">
+          <label><strong>Stato Semaforo Macchine:</strong></label>
+          <div class="semaforo-selector">
+            <button class="btn-sem-opt sem-green active" id="btnSemGreen" onclick="setSemaforo('green', 'MACCHINE DISPONIBILI', '2/2 Macchine Pronte')">
+              🟢 Disponibile (Libero)
+            </button>
+            <button class="btn-sem-opt sem-yellow" id="btnSemYellow" onclick="setSemaforo('yellow', 'CODA MODERATA', 'Tempo attesa +24/48h')">
+              🟡 Coda Moderata (+24h)
+            </button>
+            <button class="btn-sem-opt sem-red" id="btnSemRed" onclick="setSemaforo('red', 'FLOTTA OCCUPATA', 'Riservato per altri progetti')">
+              🔴 Flotta Occupata (Chiuso)
+            </button>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="adminKwh">Costo Energia (€/kWh):</label>
+            <input type="number" id="adminKwh" step="0.01" value="0.35" onchange="updateAdminSettings()">
+          </div>
+          <div class="form-group">
+            <label for="adminBaseSetup">Forfettario Avvio (€):</label>
+            <input type="number" id="adminBaseSetup" step="0.5" value="5.00" onchange="updateAdminSettings()">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="adminWaPhone">Numero WhatsApp Giovanni (es. 393479927649):</label>
+          <input type="text" id="adminWaPhone" value="393479927649" placeholder="Es. 393479927649" onchange="updateAdminSettings()">
+        </div>
+
+        <div class="form-group">
+          <label for="adminPasswordInput">Password Personalizzata Accesso Admin:</label>
+          <input type="text" id="adminPasswordInput" value="1234" placeholder="Password (es. 1234)" onchange="updateAdminSettings()">
+        </div>
+
+        <!-- Live Camera & Streaming Video Links for 2 Machines -->
+        <div style="background: rgba(0, 240, 255, 0.05); padding: 14px; border-radius: 8px; border: 1px solid rgba(0, 240, 255, 0.25); margin-bottom: 15px;">
+          <h4 style="color: var(--cyan-primary); font-size: 0.95rem; font-family: var(--font-heading); margin-bottom: 6px;">📹 Link Streaming Video / Cam Live (Per le 2 Macchine)</h4>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">Incolla qui i tuoi link YouTube, Twitch o video MP4/RTSP per mostrarli nell'Area Cliente vidimata:</p>
+          
+          <div class="form-group" style="margin-bottom: 10px;">
+            <label for="adminStreamBambu" style="font-size: 0.85rem;">🎥 Cam Live Macchina 1 (Bambu Lab X1 Carbon):</label>
+            <input type="text" id="adminStreamBambu" placeholder="Es. assets/timelapse_bambu/video.mp4 oppure https://..." onchange="updateAdminSettings()">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="adminStreamAnycubic" style="font-size: 0.85rem;">🎥 Cam Live Macchina 2 (Anycubic S1 Max):</label>
+            <input type="text" id="adminStreamAnycubic" placeholder="Es. assets/timelapse_anycubic/video.mp4 oppure https://..." onchange="updateAdminSettings()">
+          </div>
+        </div>
+
+        <!-- Social Channels & Public Homepage Timelapses -->
+        <div style="background: rgba(255, 153, 0, 0.05); padding: 14px; border-radius: 8px; border: 1px solid rgba(255, 153, 0, 0.25); margin-bottom: 15px;">
+          <h4 style="color: var(--amber-primary); font-size: 0.95rem; font-family: var(--font-heading); margin-bottom: 6px;">🌐 Link Canali Social & Video Timelapse Pubblici (Homepage)</h4>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">Incolla qui i link dei tuoi canali Facebook/YouTube e dei video di presentazione della homepage:</p>
+          
+          <div class="form-row-2" style="margin-bottom: 10px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="adminFbChannelLink" style="font-size: 0.85rem;">📘 Link Canale Facebook:</label>
+              <input type="text" id="adminFbChannelLink" placeholder="Es. https://facebook.com/..." onchange="updateAdminSettings()">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="adminYtChannelLink" style="font-size: 0.85rem;">🔴 Link Canale YouTube:</label>
+              <input type="text" id="adminYtChannelLink" placeholder="Es. https://youtube.com/..." onchange="updateAdminSettings()">
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="adminPublicTimelapse1" style="font-size: 0.85rem;">🎥 Video Timelapse Bambu X1C (Cartella: <code>assets/timelapse_bambu/</code>):</label>
+              <input type="text" id="adminPublicTimelapse1" placeholder="Es. assets/timelapse_bambu/video.mp4 o link YouTube" onchange="updateAdminSettings()">
+              <input type="file" id="uploadFileTimelapse1" accept="video/mp4,video/webm" style="display:none" onchange="handleLocalVideoUpload(1, this.files)">
+              <div style="display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap;">
+                <button type="button" onclick="document.getElementById('uploadFileTimelapse1').click()" class="btn-secondary-small" style="font-size: 0.78rem; padding: 6px 12px; cursor: pointer;">📁 Scegli File MP4 da PC</button>
+                <button type="button" onclick="removeTimelapseVideo(1)" class="btn-secondary-small" style="font-size: 0.78rem; padding: 6px 12px; cursor: pointer; color: var(--accent-red); border-color: rgba(255, 0, 85, 0.4);">🗑️ Rimuovi</button>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="adminPublicTimelapse2" style="font-size: 0.85rem;">🎥 Video Timelapse Anycubic S1 (Cartella: <code>assets/timelapse_anycubic/</code>):</label>
+              <input type="text" id="adminPublicTimelapse2" placeholder="Es. assets/timelapse_anycubic/video.mp4 o link YouTube" onchange="updateAdminSettings()">
+              <input type="file" id="uploadFileTimelapse2" accept="video/mp4,video/webm" style="display:none" onchange="handleLocalVideoUpload(2, this.files)">
+              <div style="display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap;">
+                <button type="button" onclick="document.getElementById('uploadFileTimelapse2').click()" class="btn-secondary-small" style="font-size: 0.78rem; padding: 6px 12px; cursor: pointer;">📁 Scegli File MP4 da PC</button>
+                <button type="button" onclick="removeTimelapseVideo(2)" class="btn-secondary-small" style="font-size: 0.78rem; padding: 6px 12px; cursor: pointer; color: var(--accent-red); border-color: rgba(255, 0, 85, 0.4);">🗑️ Rimuovi</button>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top: 10px; text-align: right;">
+            <button type="button" onclick="resetDefaultTimelapseVideos()" class="btn-secondary-small" style="font-size: 0.78rem; padding: 6px 12px; cursor: pointer; background: rgba(0, 240, 255, 0.1); border: 1px solid var(--cyan-primary); color: var(--cyan-primary);">🔄 Ripristina Video di Esempio Funzionanti</button>
+          </div>
+        </div>
+
+        <div class="admin-status-msg">
+          Stato attuale impostato: <strong id="adminCurrentStatusLabel">🟢 MACCHINE DISPONIBILI</strong>
+        </div>
+
+        <!-- Admin Dual Palette Management Section (PER MATERIALE) -->
+        <div class="admin-section" style="margin-top: 20px; background: rgba(0, 240, 255, 0.05); padding: 18px; border-radius: var(--radius-sm); border: 1px solid rgba(0, 240, 255, 0.3);">
+          <h4 style="font-size: 1.1rem; color: var(--cyan-primary); margin-bottom: 6px;">🎨 Gestione Colori & Tavolozze Suddivise Per Materiale</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Seleziona il materiale per configurare quali colori hai in casa (Tavolozza 1) ed i colori su ordinazione (Tavolozza 2) specifici per quel filamento.</p>
+
+          <div style="margin-bottom: 15px;">
+            <label for="adminMaterialColorSelect" style="font-weight: 700; color: var(--cyan-primary);">Seleziona Materiale da Gestire:</label>
+            <select id="adminMaterialColorSelect" onchange="renderAdminPalettesManager()" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); background: var(--bg-card); color: var(--text-main); border: 1px solid var(--cyan-primary); font-family: var(--font-sub); font-size: 0.95rem; font-weight: 700; margin-top: 4px;">
+              <option value="pla">🍃 PLA Standard (Bio-Amido)</option>
+              <option value="pla_food">🍎 PLA Alimentare (Certificato Cibo)</option>
+              <option value="petg">🛡️ PETG Resistente (Inodore)</option>
+              <option value="tpu">🌀 TPU Flessibile (Gomma)</option>
+              <option value="placf">⚡ PLA-CF Carbon Fiber</option>
+              <option value="petgcf">💎 PETG-CF Carbon Fiber</option>
+            </select>
+          </div>
+
+          <!-- Tavolozza 1: Colori a Magazzino in Casa -->
+          <div style="margin-bottom: 18px; background: rgba(0, 255, 136, 0.04); padding: 12px; border-radius: var(--radius-sm); border: 1px solid rgba(0, 255, 136, 0.2);">
+            <strong style="font-size: 0.9rem; color: var(--green-primary); display: block; margin-bottom: 6px;">🟢 1. Colori A Magazzino in Casa (Tavolozza 1 - Pronta Consegna):</strong>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px;">Spunta i colori attualmente presenti nel tuo laboratorio per il materiale selezionato:</p>
+            
+            <div id="adminStockPaletteList" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
+              <!-- Dynamic list rendered via app.js -->
+            </div>
+
+            <!-- Form per aggiungere nuovo colore a Tavolozza 1 -->
+            <div style="border-top: 1px dashed var(--border-color); padding-top: 8px;">
+              <strong style="font-size: 0.82rem; color: var(--green-primary);">➕ Aggiungi Colore A Magazzino per questo Materiale:</strong>
+              <div class="form-row-2" style="margin-top: 6px;">
+                <input type="text" id="newStockColorName" placeholder="Nome Colore (es. Blu Cobalto)">
+                <input type="color" id="newStockColorHex" value="#00f0ff" style="height: 38px; cursor: pointer; padding: 2px;">
+              </div>
+              <button class="btn-primary-small" onclick="addNewStockColorFromAdmin()" style="margin-top: 6px; background: var(--green-primary); color: #000; font-weight:700;">➕ Aggiungi Colore in Casa</button>
+            </div>
+          </div>
+
+          <!-- Tavolozza 2: Colori Su Ordinazione -->
+          <div style="background: rgba(255, 153, 0, 0.04); padding: 12px; border-radius: var(--radius-sm); border: 1px solid rgba(255, 153, 0, 0.2);">
+            <strong style="font-size: 0.9rem; color: var(--amber-primary); display: block; margin-bottom: 6px;">📦 2. Colori Su Ordinazione (Tavolozza 2 - Acconto Bobina & +24/48h):</strong>
+            <div id="adminOrderPaletteList" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
+              <!-- Dynamic list rendered via app.js -->
+            </div>
+
+            <div style="border-top: 1px dashed var(--border-color); padding-top: 8px;">
+              <strong style="font-size: 0.82rem; color: var(--amber-primary);">➕ Aggiungi Colore Su Ordinazione per questo Materiale:</strong>
+              <div class="form-row-2" style="margin-top: 6px;">
+                <input type="text" id="newOrderColorName" placeholder="Nome Colore (es. Verde Smeraldo)">
+                <input type="color" id="newOrderColorHex" value="#00ff88" style="height: 38px; cursor: pointer; padding: 2px;">
+              </div>
+              <button class="btn-secondary-small" onclick="addNewOrderColorFromAdmin()" style="margin-top: 6px;">➕ Aggiungi Colore su Ordinazione</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Material & Spool Pricing Manager -->
+        <div class="admin-section" style="margin-top: 20px; background: rgba(255, 153, 0, 0.05); padding: 18px; border-radius: var(--radius-sm); border: 1px solid rgba(255, 153, 0, 0.3);">
+          <h4 style="font-size: 1.1rem; color: var(--amber-primary); margin-bottom: 6px;">💰 Gestione Prezzi Spole & Materiali (€/kg)</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+            Inserisci il costo al kg della bobina acquistata e la tariffa al grammo utilizzata per calcolare il preventivo per ogni materiale (PLA, PLA Alimentare, PETG, TPU, PLA-CF, PETG-CF).
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;" id="adminMaterialsPricingList">
+            <!-- Renderizzato dinamicamente da app.js -->
+          </div>
+          <button class="btn-primary-small" onclick="saveMaterialPricesFromAdmin()" style="margin-top: 12px; background: var(--amber-primary); color: #000; font-weight:700;">💾 Salva Prezzi Spole & Ricalcola Preventivo</button>
+          <div id="adminMatPriceSuccess" class="hidden" style="margin-top: 8px; color: var(--green-primary); font-size: 0.85rem; font-weight: 700;">✓ Prezzi spole e materiali aggiornati!</div>
+        </div>
+
+        <!-- Admin Registered Clients & Approval Manager -->
+        <div class="admin-section" style="margin-top: 25px; background: rgba(0, 255, 136, 0.05); padding: 18px; border-radius: var(--radius-sm); border: 1px solid rgba(0, 255, 136, 0.3);">
+          <h4 style="font-size: 1.1rem; color: var(--green-primary); margin-bottom: 6px;">👥 Gestione Account Clienti, Passwords & Vidimazioni</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">
+            Visualizza tutti i clienti, le loro <strong>Password</strong> in chiaro, i codici ordine assegnati ed approva/vidima l'accesso ai loro progetti.
+          </p>
+
+          <!-- Form Aggiungi Nuovo Cliente da Admin -->
+          <div style="background: rgba(0,0,0,0.3); border: 1px dashed rgba(0, 255, 136, 0.4); padding: 14px; border-radius: var(--radius-sm); margin-bottom: 18px;">
+            <strong style="font-size: 0.9rem; color: var(--green-primary); display: block; margin-bottom: 8px;">➕ Registra Nuovo Cliente Manualmente:</strong>
+            <div class="form-row-2">
+              <input type="text" id="adminNewClientName" placeholder="Nome & Cognome Cliente">
+              <input type="text" id="adminNewClientContact" placeholder="Email o Telefono">
+            </div>
+            <div class="form-row-2" style="margin-top: 8px;">
+              <input type="text" id="adminNewClientPass" placeholder="Password Accesso Cliente">
+              <input type="text" id="adminNewClientCode" placeholder="Codice Ordine Assegnato (es. TITAN-9999)">
+            </div>
+            <button class="btn-primary-small" onclick="addClientFromAdmin()" style="margin-top: 10px; background: var(--green-primary); color: #000; font-weight: 700;">➕ Crea ed Approva Cliente</button>
+          </div>
+
+          <!-- Elenco Clienti Registrati -->
+          <div id="adminClientsList" style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- Renderizzato dinamicamente da app.js -->
+          </div>
+
+          <!-- Pulsanti Backup & Ripristino Clienti -->
+          <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+            <button class="btn-primary-small" onclick="exportClientAccountsBackup()" style="background: var(--cyan-primary); color: #000; font-weight: 700; padding: 10px 14px;">📥 Scarica Backup Clienti (JSON)</button>
+            <button class="btn-secondary-small" onclick="importClientAccountsBackup()" style="padding: 10px 14px; font-weight: 700;">📤 Ripristina Backup Clienti</button>
+          </div>
+        </div>
+
+      <div class="modal-footer">
+        <button class="btn-primary" onclick="closeAdminModal()">Salva e Chiudi</button>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="adminClientFileInput" accept=".stl,.step,.stp,.3mf,.obj,.pdf,.zip" style="display:none">
+  <script src="app.js"></script>
+</body>
+</html>
