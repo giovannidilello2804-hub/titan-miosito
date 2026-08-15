@@ -1,0 +1,7 @@
+{
+  "cleanUrls": false,
+  "rewrites": [
+    { "source": "/BingSiteAuth.xml", "destination": "/BingSiteAuth.xml" },
+    { "source": "/bingsiteauth.xml", "destination": "/BingSiteAuth.xml" }
+  ]
+}
