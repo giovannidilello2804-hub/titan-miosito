@@ -1,30 +1,37 @@
 /* ==========================================================================
-   ROBLOX BUILDER 3D - DEDICATED VOXEL BUILDER GAME ENGINE
+   ROBLOX BEDWARS SURVIVAL 3D - GAME ENGINE
    ========================================================================== */
 
 // --- GAME STATE ---
 const state = {
-  selectedBlock: 'grass',
-  isFlyMode: true,
+  health: 100,
+  maxHealth: 100,
+  score: 250,
+  wave: 1,
+  selectedSlot: 'sword', // 'sword', 'stone', 'wood', 'lava'
   audioEnabled: true,
-  blocksCount: 0
+  isGameOver: false
 };
 
-// --- THREE.JS GLOBALS ---
+// THREE.JS GLOBALS
 let scene, camera, renderer;
-let ghostMesh;
-let buildBlocks = [];
-let terrainMesh;
-let raycaster, mousePointer;
+let playerGroup, swordMesh, playerTorso;
+let groundMesh;
+let enemies = [];
+let botPlayers = [];
+let placedBlocks = [];
 
-// Camera & Movement Controls
+// Controls & Physics
 const keys = {};
-let cameraPos = { x: 0, y: 8, z: 16 };
+let playerPos = { x: 0, y: 0.8, z: 0 };
+let playerVel = { x: 0, y: 0, z: 0 };
+let isGrounded = true;
 let cameraRotY = 0;
-let cameraRotX = -0.3;
-let flySpeed = 0.35;
+let cameraRotX = 0.35;
+let isAttacking = false;
+let attackAnimTimer = 0;
 
-// Audio Context
+// Web Audio API
 let audioCtx = null;
 
 // ==========================================================================
@@ -33,11 +40,11 @@ let audioCtx = null;
 
 window.addEventListener('DOMContentLoaded', () => {
   initThreeJS();
-  initGhostCursor();
+  initPlayerCharacter();
+  initBotTeammates();
   initAudioCtx();
   setupEventListeners();
-  buildInitialGround();
-  loadSavedWorld();
+  startWave(state.wave);
 
   // Animation Loop
   animate();
@@ -46,16 +53,12 @@ window.addEventListener('DOMContentLoaded', () => {
 function initThreeJS() {
   const container = document.getElementById('game-container');
 
-  // Scene
   scene = new THREE.Scene();
-  scene.background = new THREE.Color('#0b1329');
-  scene.fog = new THREE.FogExp2('#0b1329', 0.008);
+  scene.background = new THREE.Color('#0a1026');
+  scene.fog = new THREE.FogExp2('#0a1026', 0.01);
 
-  // Camera
   camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(cameraPos.x, cameraPos.y, cameraPos.z);
 
-  // Renderer
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -63,326 +66,564 @@ function initThreeJS() {
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   container.appendChild(renderer.domElement);
 
-  // Raycaster & Mouse
-  raycaster = new THREE.Raycaster();
-  mousePointer = new THREE.Vector2(0, 0); // Center of screen for crosshair
-
   // Lighting
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-  scene.add(ambientLight);
+  const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+  scene.add(ambient);
 
-  const sunLight = new THREE.DirectionalLight(0xfffae6, 0.9);
-  sunLight.position.set(40, 60, 40);
-  sunLight.castShadow = true;
-  sunLight.shadow.mapSize.width = 2048;
-  sunLight.shadow.mapSize.height = 2048;
-  scene.add(sunLight);
+  const sun = new THREE.DirectionalLight(0x00f0ff, 0.9);
+  sun.position.set(30, 50, 30);
+  sun.castShadow = true;
+  scene.add(sun);
 
-  const neonLight = new THREE.PointLight(0x00f0ff, 0.6, 50);
-  neonLight.position.set(0, 20, 0);
-  scene.add(neonLight);
+  // Ground Arena
+  const groundGeo = new THREE.BoxGeometry(60, 1, 60);
+  const groundMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.8 });
+  groundMesh = new THREE.Mesh(groundGeo, groundMat);
+  groundMesh.position.y = -0.5;
+  groundMesh.receiveShadow = true;
+  scene.add(groundMesh);
 
-  // Background Sky Clouds
-  createDecorativeClouds();
+  // Base Bed / Core Structure
+  createBaseBed();
 }
 
-function createDecorativeClouds() {
-  const cloudGeo = new THREE.DodecahedronGeometry(5, 1);
-  const cloudMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, transparent: true, opacity: 0.85 });
+function createBaseBed() {
+  const bedGroup = new THREE.Group();
+  const bedGeo = new THREE.BoxGeometry(3, 0.6, 2);
+  const bedMat = new THREE.MeshStandardMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 0.4 });
+  const bed = new THREE.Mesh(bedGeo, bedMat);
+  bed.position.set(0, 0.3, 0);
+  bedGroup.add(bed);
+  scene.add(bedGroup);
+}
 
-  for (let i = 0; i < 25; i++) {
-    const cloud = new THREE.Mesh(cloudGeo, cloudMat);
-    cloud.position.set(
-      (Math.random() - 0.5) * 250,
-      30 + Math.random() * 25,
-      (Math.random() - 0.5) * 250
-    );
-    cloud.scale.set(1.5 + Math.random() * 2, 0.5 + Math.random() * 0.5, 1.5 + Math.random() * 2);
-    scene.add(cloud);
+// ==========================================================================
+// 3D PLAYER CHARACTER & GLOWING SWORD
+// ==========================================================================
+
+function initPlayerCharacter() {
+  playerGroup = new THREE.Group();
+
+  const skinMat = new THREE.MeshStandardMaterial({ color: '#ffe082', roughness: 0.3 });
+  const shirtMat = new THREE.MeshStandardMaterial({ color: '#00f0ff', roughness: 0.4 });
+  const pantsMat = new THREE.MeshStandardMaterial({ color: '#1a237e', roughness: 0.5 });
+
+  // Torso
+  const torsoGeo = new THREE.BoxGeometry(1.2, 1.4, 0.6);
+  playerTorso = new THREE.Mesh(torsoGeo, shirtMat);
+  playerTorso.position.y = 1.4;
+  playerTorso.castShadow = true;
+  playerGroup.add(playerTorso);
+
+  // Head
+  const headGeo = new THREE.BoxGeometry(0.9, 0.9, 0.9);
+  const head = new THREE.Mesh(headGeo, skinMat);
+  head.position.y = 2.45;
+  head.castShadow = true;
+  playerGroup.add(head);
+
+  // Crown Hat
+  const crownGeo = new THREE.CylinderGeometry(0.55, 0.45, 0.35, 6);
+  const crownMat = new THREE.MeshStandardMaterial({ color: '#ffea00', metalness: 0.8 });
+  const crown = new THREE.Mesh(crownGeo, crownMat);
+  crown.position.y = 0.55;
+  head.add(crown);
+
+  // Arms & Legs
+  const armGeo = new THREE.BoxGeometry(0.45, 1.3, 0.45);
+  const lArm = new THREE.Mesh(armGeo, shirtMat);
+  lArm.position.set(-0.9, 1.35, 0);
+  playerGroup.add(lArm);
+
+  const rArm = new THREE.Mesh(armGeo, shirtMat);
+  rArm.position.set(0.9, 1.35, 0);
+  playerGroup.add(rArm);
+
+  // 3D Glowing Sword attached to Right Arm
+  const swordBladeGeo = new THREE.BoxGeometry(0.12, 1.6, 0.25);
+  const swordMat = new THREE.MeshStandardMaterial({ color: '#00f0ff', emissive: '#00f0ff', emissiveIntensity: 0.8 });
+  swordMesh = new THREE.Mesh(swordBladeGeo, swordMat);
+  swordMesh.position.set(0.2, -0.4, 0.6);
+  swordMesh.rotation.x = Math.PI / 3;
+  rArm.add(swordMesh);
+
+  // Legs
+  const legGeo = new THREE.BoxGeometry(0.5, 1.3, 0.5);
+  const lLeg = new THREE.Mesh(legGeo, pantsMat);
+  lLeg.position.set(-0.32, 0.65, 0);
+  playerGroup.add(lLeg);
+
+  const rLeg = new THREE.Mesh(legGeo, pantsMat);
+  rLeg.position.set(0.32, 0.65, 0);
+  playerGroup.add(rLeg);
+
+  playerGroup.position.set(playerPos.x, playerPos.y, playerPos.z);
+  scene.add(playerGroup);
+}
+
+// MULTIPLAYER AI BOT TEAMMATES
+function initBotTeammates() {
+  const botNames = ['Noob_Gamer99', 'CyberNinja_9', 'VoxelMaster'];
+  const botColors = ['#ffea00', '#ff007f', '#00ff88'];
+
+  for (let i = 0; i < 3; i++) {
+    const botGroup = new THREE.Group();
+    const mat = new THREE.MeshStandardMaterial({ color: botColors[i] });
+
+    const torso = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.4, 0.6), mat);
+    torso.position.y = 1.4;
+    botGroup.add(torso);
+
+    const head = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.9, 0.9), new THREE.MeshStandardMaterial({ color: '#ffe082' }));
+    head.position.y = 2.45;
+    botGroup.add(head);
+
+    const botX = (i - 1) * 4;
+    const botZ = -3;
+    botGroup.position.set(botX, 0, botZ);
+    scene.add(botGroup);
+
+    botPlayers.push({ mesh: botGroup, name: botNames[i], target: null });
   }
 }
 
-// 3D GHOST PLACEMENT CURSOR
-function initGhostCursor() {
-  const geo = new THREE.BoxGeometry(1.02, 1.02, 1.02);
-  const mat = new THREE.MeshBasicMaterial({
-    color: 0x00f0ff,
-    wireframe: true,
-    transparent: true,
-    opacity: 0.8
+// ==========================================================================
+// WAVE SPAWNER & 3D ENEMY ZOMBIES
+// ==========================================================================
+
+function startWave(waveNum) {
+  state.wave = waveNum;
+  document.getElementById('waveNum').textContent = waveNum;
+
+  // Clear remaining enemies
+  enemies.forEach(e => scene.remove(e.mesh));
+  enemies = [];
+
+  const count = 4 + waveNum * 3;
+  document.getElementById('enemyCount').textContent = count;
+
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => spawnEnemyZombie(), i * 1200);
+  }
+
+  showToast(`⚔️ ONDA ${waveNum}: I Nemici stanno arrivando!`);
+  addChatMessage('SYSTEM', `Onda ${waveNum} iniziata! Difendete la base!`);
+}
+
+function spawnEnemyZombie() {
+  if (state.isGameOver) return;
+
+  const enemyGroup = new THREE.Group();
+  const zombieMat = new THREE.MeshStandardMaterial({ color: '#2e7d32', roughness: 0.6 });
+  const redEyeMat = new THREE.MeshBasicMaterial({ color: '#ff0000' });
+
+  // Body
+  const torso = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.4, 0.6), zombieMat);
+  torso.position.y = 1.4;
+  enemyGroup.add(torso);
+
+  // Head & Eyes
+  const head = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.9, 0.9), zombieMat);
+  head.position.y = 2.45;
+  enemyGroup.add(head);
+
+  const lEye = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.1), redEyeMat);
+  lEye.position.set(-0.25, 2.5, 0.45);
+  const rEye = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.1), redEyeMat);
+  rEye.position.set(0.25, 2.5, 0.45);
+  enemyGroup.add(lEye);
+  enemyGroup.add(rEye);
+
+  // Arms extended forward
+  const armGeo = new THREE.BoxGeometry(0.4, 1.2, 0.4);
+  const lArm = new THREE.Mesh(armGeo, zombieMat);
+  lArm.position.set(-0.8, 1.6, 0.4);
+  lArm.rotation.x = -Math.PI / 2;
+  enemyGroup.add(lArm);
+
+  const rArm = new THREE.Mesh(armGeo, zombieMat);
+  rArm.position.set(0.8, 1.6, 0.4);
+  rArm.rotation.x = -Math.PI / 2;
+  enemyGroup.add(rArm);
+
+  // Spawn position around perimeter
+  const angle = Math.random() * Math.PI * 2;
+  const radius = 22 + Math.random() * 6;
+  const spawnX = Math.cos(angle) * radius;
+  const spawnZ = Math.sin(angle) * radius;
+
+  enemyGroup.position.set(spawnX, 0, spawnZ);
+  scene.add(enemyGroup);
+
+  enemies.push({
+    mesh: enemyGroup,
+    hp: 40 + state.wave * 10,
+    maxHp: 40 + state.wave * 10,
+    speed: 0.04 + Math.random() * 0.02
   });
-  ghostMesh = new THREE.Mesh(geo, mat);
-  scene.add(ghostMesh);
-}
-
-// INITIAL BASE TERRAIN
-function buildInitialGround() {
-  const size = 30;
-  const gridGeo = new THREE.BoxGeometry(size, 1, size);
-  const gridMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.7 });
-  terrainMesh = new THREE.Mesh(gridGeo, gridMat);
-  terrainMesh.position.set(0, -0.5, 0);
-  terrainMesh.receiveShadow = true;
-  scene.add(terrainMesh);
 }
 
 // ==========================================================================
-// BLOCK MATERIALS & PLACEMENT ENGINE
+// ACTIONS: SWORD SLASH & BLOCK BUILDING
 // ==========================================================================
 
-function getBlockMaterial(type) {
-  switch (type) {
-    case 'grass': return new THREE.MeshStandardMaterial({ color: '#2e7d32', roughness: 0.6 });
-    case 'brick': return new THREE.MeshStandardMaterial({ color: '#c62828', roughness: 0.5 });
-    case 'wood': return new THREE.MeshStandardMaterial({ color: '#4e342e', roughness: 0.7 });
-    case 'stone': return new THREE.MeshStandardMaterial({ color: '#64748b', roughness: 0.6 });
-    case 'gold': return new THREE.MeshStandardMaterial({ color: '#ffea00', metalness: 0.8, roughness: 0.2 });
-    case 'neon_cyan': return new THREE.MeshStandardMaterial({ color: '#00f0ff', emissive: '#00f0ff', emissiveIntensity: 0.6 });
-    case 'neon_pink': return new THREE.MeshStandardMaterial({ color: '#ff007f', emissive: '#ff007f', emissiveIntensity: 0.6 });
-    case 'water': return new THREE.MeshStandardMaterial({ color: '#0284c7', transparent: true, opacity: 0.7 });
-    case 'glass': return new THREE.MeshStandardMaterial({ color: '#e0f2fe', transparent: true, opacity: 0.4 });
-    case 'lava': return new THREE.MeshStandardMaterial({ color: '#ff3366', emissive: '#ff3366', emissiveIntensity: 0.9 });
-    default: return new THREE.MeshStandardMaterial({ color: '#ffffff' });
+function performMainAction() {
+  if (state.isGameOver) return;
+
+  if (state.selectedSlot === 'sword') {
+    // Sword Attack Slash
+    isAttacking = true;
+    attackAnimTimer = 0;
+    playSynthSound(700, 'sawtooth', 0.12);
+
+    // Hit detection against enemies in front of player
+    let hitCount = 0;
+    enemies.forEach((enemy, idx) => {
+      const dist = Math.hypot(playerPos.x - enemy.mesh.position.x, playerPos.z - enemy.mesh.position.z);
+      if (dist < 3.2) {
+        enemy.hp -= 35;
+        hitCount++;
+        playSynthSound(300, 'square', 0.15);
+
+        // Knockback
+        enemy.mesh.position.x += Math.sin(cameraRotY) * 0.8;
+        enemy.mesh.position.z += Math.cos(cameraRotY) * 0.8;
+
+        if (enemy.hp <= 0) {
+          scene.remove(enemy.mesh);
+          enemies.splice(idx, 1);
+          state.score += 50;
+          updateHUD();
+          playSynthSound(880, 'sine', 0.2);
+
+          document.getElementById('enemyCount').textContent = enemies.length;
+
+          if (enemies.length === 0) {
+            triggerWaveVictory();
+          }
+        }
+      }
+    });
+
+    if (hitCount > 0) {
+      showToast(`💥 Colpiti ${hitCount} Nemici!`);
+    }
+  } else {
+    // Place Defensive Block
+    const blockType = state.selectedSlot;
+    const placeX = Math.round(playerPos.x + Math.sin(cameraRotY) * 2.2);
+    const placeZ = Math.round(playerPos.z + Math.cos(cameraRotY) * 2.2);
+
+    addDefenseBlock(placeX, 0.5, placeZ, blockType);
+    playSynthSound(450, 'triangle', 0.1);
   }
 }
 
-function setSelectBlock(type) {
-  state.selectedBlock = type;
-  document.querySelectorAll('.block-slot').forEach(el => el.classList.remove('active'));
-  document.querySelector(`.block-slot[data-type="${type}"]`)?.classList.add('active');
-  playSynthSound(500, 'sine', 0.1);
-}
+function addDefenseBlock(x, y, z, type) {
+  const geo = new THREE.BoxGeometry(1.2, 1.2, 1.2);
+  let mat = new THREE.MeshStandardMaterial({ color: '#64748b' });
 
-function placeBlockAtTarget() {
-  raycaster.setFromCamera(mousePointer, camera);
-  const targets = [terrainMesh].concat(buildBlocks.map(b => b.mesh));
-  const intersects = raycaster.intersectObjects(targets);
+  if (type === 'wood') mat = new THREE.MeshStandardMaterial({ color: '#5d4037' });
+  if (type === 'lava') mat = new THREE.MeshStandardMaterial({ color: '#ff3366', emissive: '#ff3366', emissiveIntensity: 0.8 });
 
-  if (intersects.length > 0) {
-    const hit = intersects[0];
-    const normal = hit.face.normal;
-
-    const x = Math.round(hit.point.x + normal.x * 0.5);
-    const y = Math.round(hit.point.y + normal.y * 0.5);
-    const z = Math.round(hit.point.z + normal.z * 0.5);
-
-    addBlockToScene(x, y, z, state.selectedBlock);
-    playSynthSound(440, 'triangle', 0.12);
-  }
-}
-
-function breakBlockAtTarget() {
-  raycaster.setFromCamera(mousePointer, camera);
-  const intersects = raycaster.intersectObjects(buildBlocks.map(b => b.mesh));
-
-  if (intersects.length > 0) {
-    const hitMesh = intersects[0].object;
-    scene.remove(hitMesh);
-    buildBlocks = buildBlocks.filter(b => b.mesh !== hitMesh);
-    playSynthSound(220, 'sawtooth', 0.15);
-  }
-}
-
-function addBlockToScene(x, y, z, type) {
-  // Check if block already exists at position
-  if (buildBlocks.some(b => b.x === x && b.y === y && b.z === z)) return;
-
-  const geo = new THREE.BoxGeometry(1, 1, 1);
-  const mat = getBlockMaterial(type);
   const mesh = new THREE.Mesh(geo, mat);
   mesh.position.set(x, y, z);
   mesh.castShadow = true;
   mesh.receiveShadow = true;
   scene.add(mesh);
 
-  buildBlocks.push({ mesh, type, x, y, z });
+  placedBlocks.push({ mesh, type, bounds: new THREE.Box3().setFromObject(mesh) });
+}
+
+function selectSlot(slotName) {
+  state.selectedSlot = slotName;
+  document.querySelectorAll('.hotbar-slot').forEach(s => s.classList.remove('active'));
+  document.querySelector(`.hotbar-slot[data-slot="${slotName}"]`)?.classList.add('active');
+
+  const btn = document.getElementById('btnMainAction');
+  if (slotName === 'sword') {
+    btn.textContent = '⚔️ ATTACCA CON LA SPADA';
+  } else {
+    btn.textContent = `🧱 PIAZZA ${slotName.toUpperCase()}`;
+  }
 }
 
 // ==========================================================================
-// PRE-BUILT BLUEPRINTS & TEMPLATES
+// GAMEPLAY LOOP & AI LOGIC
 // ==========================================================================
 
-function buildTemplate(name) {
-  if (name === 'house') {
-    // 5x5 House with Roof
-    for (let x = -2; x <= 2; x++) {
-      for (let z = -2; z <= 2; z++) {
-        for (let y = 0; y <= 3; y++) {
-          const isWall = (x === -2 || x === 2 || z === -2 || z === 2);
-          const isDoor = (x === 0 && z === 2 && y <= 1);
-          if (isWall && !isDoor) {
-            addBlockToScene(x + 4, y, z, 'brick');
-          }
-        }
-      }
-    }
-    // Roof
-    for (let x = -2; x <= 2; x++) {
-      for (let z = -2; z <= 2; z++) {
-        addBlockToScene(x + 4, 4, z, 'wood');
-      }
-    }
-    showToast('🏠 Casetta creata!');
-  } else if (name === 'castle') {
-    // Castle Towers
-    const corners = [[-5, -5], [5, -5], [-5, 5], [5, 5]];
-    corners.forEach(([cx, cz]) => {
-      for (let y = 0; y <= 6; y++) {
-        addBlockToScene(cx, y, cz, 'stone');
-      }
-    });
-    // Walls
-    for (let i = -4; i <= 4; i++) {
-      for (let y = 0; y <= 4; y++) {
-        if (i !== 0 || y > 2) {
-          addBlockToScene(i, y, -5, 'stone');
-          addBlockToScene(i, y, 5, 'stone');
-          addBlockToScene(-5, y, i, 'stone');
-          addBlockToScene(5, y, i, 'stone');
-        }
-      }
-    }
-    showToast('🏰 Castello creata!');
-  } else if (name === 'tower') {
-    // Glowing Neon Tower
-    for (let y = 0; y <= 12; y++) {
-      const type = y % 2 === 0 ? 'neon_cyan' : 'neon_pink';
-      addBlockToScene(-6, y, 0, type);
-    }
-    showToast('🗼 Torre Neon creata!');
-  } else if (name === 'tree') {
-    // 3D Tree
-    for (let y = 0; y <= 4; y++) addBlockToScene(-8, y, -4, 'wood');
-    for (let x = -1; x <= 1; x++) {
-      for (let z = -1; z <= 1; z++) {
-        for (let y = 5; y <= 7; y++) {
-          addBlockToScene(-8 + x, y, -4 + z, 'grass');
-        }
-      }
-    }
-    showToast('🌳 Albero 3D creato!');
+let animFrame = 0;
+
+function animate() {
+  requestAnimationFrame(animate);
+  animFrame++;
+
+  if (!state.isGameOver) {
+    updatePlayerPhysics();
+    updateEnemyAI();
+    updateBotAI();
+    updateSwordAnimation();
   }
 
+  updateCamera();
+  renderer.render(scene, camera);
+}
+
+function updatePlayerPhysics() {
+  let moveX = 0, moveZ = 0;
+
+  if (keys['KeyW'] || keys['ArrowUp']) moveZ += 1;
+  if (keys['KeyS'] || keys['ArrowDown']) moveZ -= 1;
+  if (keys['KeyA'] || keys['ArrowLeft']) moveX -= 1;
+  if (keys['KeyD'] || keys['ArrowRight']) moveX += 1;
+
+  if (Math.abs(touchVector.x) > 0.1 || Math.abs(touchVector.y) > 0.1) {
+    moveX = touchVector.x;
+    moveZ = touchVector.y;
+  }
+
+  const speed = 0.15;
+
+  if (moveX !== 0 || moveZ !== 0) {
+    const angle = cameraRotY;
+    const forwardX = Math.sin(angle);
+    const forwardZ = Math.cos(angle);
+    const rightX = Math.cos(angle);
+    const rightZ = -Math.sin(angle);
+
+    const dirX = forwardX * moveZ + rightX * moveX;
+    const dirZ = forwardZ * moveZ + rightZ * moveX;
+
+    playerVel.x = dirX * speed;
+    playerVel.z = dirZ * speed;
+
+    playerGroup.rotation.y = Math.atan2(dirX, dirZ);
+  } else {
+    playerVel.x = 0;
+    playerVel.z = 0;
+  }
+
+  playerPos.x += playerVel.x;
+  playerPos.z += playerVel.z;
+
+  playerGroup.position.set(playerPos.x, playerPos.y, playerPos.z);
+}
+
+function updateEnemyAI() {
+  enemies.forEach(enemy => {
+    // Pathfinding towards Player
+    const dx = playerPos.x - enemy.mesh.position.x;
+    const dz = playerPos.z - enemy.mesh.position.z;
+    const dist = Math.hypot(dx, dz);
+
+    if (dist > 0.8) {
+      enemy.mesh.position.x += (dx / dist) * enemy.speed;
+      enemy.mesh.position.z += (dz / dist) * enemy.speed;
+      enemy.mesh.rotation.y = Math.atan2(dx, dz);
+    } else {
+      // Attack Player
+      if (animFrame % 60 === 0) {
+        takeDamage(12);
+      }
+    }
+  });
+}
+
+function updateBotAI() {
+  botPlayers.forEach((bot, idx) => {
+    if (enemies.length > 0) {
+      const targetEnemy = enemies[idx % enemies.length];
+      if (targetEnemy) {
+        const dx = targetEnemy.mesh.position.x - bot.mesh.position.x;
+        const dz = targetEnemy.mesh.position.z - bot.mesh.position.z;
+        const dist = Math.hypot(dx, dz);
+
+        if (dist > 1.2) {
+          bot.mesh.position.x += (dx / dist) * 0.05;
+          bot.mesh.position.z += (dz / dist) * 0.05;
+          bot.mesh.rotation.y = Math.atan2(dx, dz);
+        }
+      }
+    }
+  });
+
+  // Random Chat Simulation
+  if (animFrame % 350 === 0) {
+    const msgs = [
+      'Attacchiamo i nemici insieme! ⚔️',
+      'Sto piazzando i muri di protezione!',
+      'Grande colpo! L\'onda sta finendo!',
+      'Vieni verso la base centrale!'
+    ];
+    const randomBot = botPlayers[Math.floor(Math.random() * botPlayers.length)];
+    const randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
+    addChatMessage(randomBot.name, randomMsg);
+  }
+}
+
+function updateSwordAnimation() {
+  if (isAttacking) {
+    attackAnimTimer += 0.2;
+    swordMesh.rotation.z = Math.sin(attackAnimTimer) * 1.4;
+    if (attackAnimTimer >= Math.PI) {
+      isAttacking = false;
+      swordMesh.rotation.z = 0;
+    }
+  }
+}
+
+function updateCamera() {
+  const camDist = 6.5;
+  const targetX = playerPos.x - Math.sin(cameraRotY) * camDist * Math.cos(cameraRotX);
+  const targetY = playerPos.y + 2.2 + Math.sin(cameraRotX) * camDist;
+  const targetZ = playerPos.z - Math.cos(cameraRotY) * camDist * Math.cos(cameraRotX);
+
+  camera.position.set(targetX, targetY, targetZ);
+  camera.lookAt(playerPos.x, playerPos.y + 1.2, playerPos.z);
+}
+
+// ==========================================================================
+// DAMAGE, HUD & CHAT
+// ==========================================================================
+
+function takeDamage(amount) {
+  state.health = Math.max(0, state.health - amount);
+  updateHUD();
+  playSynthSound(150, 'sawtooth', 0.2);
+
+  if (state.health <= 0) {
+    triggerGameOver();
+  }
+}
+
+function updateHUD() {
+  document.getElementById('healthFill').style.width = `${state.health}%`;
+  document.getElementById('healthLabel').textContent = `${state.health} / ${state.maxHealth}`;
+  document.getElementById('scoreText').textContent = `${state.score} Monete`;
+}
+
+function addChatMessage(user, text) {
+  const box = document.getElementById('chatMessages');
+  if (!box) return;
+
+  const line = document.createElement('div');
+  line.className = 'chat-line';
+  line.innerHTML = `<span class="user-tag ${user === 'SYSTEM' ? 'pro' : 'noob'}">${user}:</span> ${text}`;
+  box.appendChild(line);
+  box.scrollTop = box.scrollHeight;
+}
+
+function triggerWaveVictory() {
   if (window.confetti) {
-    confetti({ particleCount: 60, spread: 60, origin: { y: 0.7 } });
+    confetti({ particleCount: 100, spread: 80, origin: { y: 0.6 } });
   }
 
-  playSynthSound(659, 'triangle', 0.2);
+  document.getElementById('modalTitle').textContent = `ONDA ${state.wave} VINTA! 🎉`;
+  document.getElementById('modalSub').textContent = 'Hai eliminato tutti i nemici con la tua squadra!';
+  document.getElementById('endModal').classList.remove('hidden');
 }
 
-function saveWorld() {
-  const data = buildBlocks.map(b => ({ x: b.x, y: b.y, z: b.z, type: b.type }));
-  localStorage.setItem('roblox_builder_world', JSON.stringify(data));
-  showToast('💾 Mondo 3D salvato!');
-  playSynthSound(880, 'sine', 0.15);
+function triggerGameOver() {
+  state.isGameOver = true;
+  document.getElementById('modalIcon').textContent = '💀';
+  document.getElementById('modalTitle').textContent = 'SEI CADUTO IN BATTAGLIA!';
+  document.getElementById('modalSub').textContent = 'I nemici hanno superato le tue difese.';
+  document.getElementById('endModal').classList.remove('hidden');
 }
 
-function loadSavedWorld() {
-  const raw = localStorage.getItem('roblox_builder_world');
-  if (!raw) return;
-  try {
-    const list = JSON.parse(raw);
-    list.forEach(b => addBlockToScene(b.x, b.y, b.z, b.type));
-  } catch(e) {}
-}
+function restartOrNextWave() {
+  document.getElementById('endModal').classList.add('hidden');
 
-function clearWorld() {
-  buildBlocks.forEach(b => scene.remove(b.mesh));
-  buildBlocks = [];
-  localStorage.removeItem('roblox_builder_world');
-  showToast('🗑️ Mondo svuotato!');
+  if (state.health <= 0) {
+    state.health = 100;
+    state.wave = 1;
+    state.isGameOver = false;
+    playerPos = { x: 0, y: 0.8, z: 0 };
+    updateHUD();
+  } else {
+    state.wave++;
+  }
+
+  startWave(state.wave);
 }
 
 // ==========================================================================
-// CONTROLS & PHYSICS
+// EVENT LISTENERS & TOUCH CONTROLS
 // ==========================================================================
 
 function setupEventListeners() {
-  // Keyboard
   window.addEventListener('keydown', e => {
     keys[e.code] = true;
-    if (e.code === 'KeyF') toggleFly();
-    if (e.code === 'KeyQ') breakBlockAtTarget();
-    if (e.code === 'Digit1') setSelectBlock('grass');
-    if (e.code === 'Digit2') setSelectBlock('brick');
-    if (e.code === 'Digit3') setSelectBlock('wood');
-    if (e.code === 'Digit4') setSelectBlock('stone');
-    if (e.code === 'Digit5') setSelectBlock('gold');
+    if (e.code === 'Space') doJump();
+    if (e.code === 'Digit1') selectSlot('sword');
+    if (e.code === 'Digit2') selectSlot('stone');
+    if (e.code === 'Digit3') selectSlot('wood');
+    if (e.code === 'Digit4') selectSlot('lava');
   });
 
   window.addEventListener('keyup', e => keys[e.code] = false);
 
-  // Window Resize
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  // Mouse Interaction
   let isMouseDown = false;
-  let prevMouseX = 0, prevMouseY = 0;
+  let prevX = 0, prevY = 0;
 
   window.addEventListener('mousedown', e => {
     if (e.target.tagName === 'CANVAS') {
-      if (e.button === 0) { // Left Click
-        placeBlockAtTarget();
-        isMouseDown = true;
-      } else if (e.button === 2) { // Right Click
-        breakBlockAtTarget();
-      }
+      performMainAction();
+      isMouseDown = true;
     }
-    prevMouseX = e.clientX;
-    prevMouseY = e.clientY;
+    prevX = e.clientX; prevY = e.clientY;
   });
-
-  window.addEventListener('contextmenu', e => e.preventDefault()); // Prevent right click context menu
 
   window.addEventListener('mouseup', () => isMouseDown = false);
 
   window.addEventListener('mousemove', e => {
     if (!isMouseDown) return;
-    const deltaX = e.clientX - prevMouseX;
-    const deltaY = e.clientY - prevMouseY;
-    prevMouseX = e.clientX;
-    prevMouseY = e.clientY;
+    const dx = e.clientX - prevX;
+    const dy = e.clientY - prevY;
+    prevX = e.clientX; prevY = e.clientY;
 
-    cameraRotY -= deltaX * 0.005;
-    cameraRotX = Math.max(-1.4, Math.min(1.4, cameraRotX - deltaY * 0.005));
+    cameraRotY -= dx * 0.005;
+    cameraRotX = Math.max(0.1, Math.min(1.2, cameraRotX + dy * 0.005));
   });
 
-  // Touch Joystick
-  setupTouchJoystick();
+  setupTouchControls();
 }
 
-function toggleFly() {
-  state.isFlyMode = !state.isFlyMode;
-  document.getElementById('flyStatusBadge').textContent = state.isFlyMode ? '🕊️ VOLO ATTIVO (Premi F)' : '🚶 CAMMINATA (Premi F)';
+function doJump() {
+  if (isGrounded) {
+    playerVel.y = 0.28;
+    isGrounded = false;
+  }
 }
 
 let touchVector = { x: 0, y: 0 };
 
-function setupTouchJoystick() {
+function setupTouchControls() {
   const container = document.getElementById('joystickZone');
   const knob = document.getElementById('joystickKnob');
   if (!container || !knob) return;
 
-  let activeTouchId = null;
-  let startX = 0, startY = 0;
+  let touchId = null, startX = 0, startY = 0;
 
   container.addEventListener('touchstart', e => {
     const t = e.changedTouches[0];
-    activeTouchId = t.identifier;
+    touchId = t.identifier;
     const rect = container.getBoundingClientRect();
     startX = rect.left + rect.width / 2;
     startY = rect.top + rect.height / 2;
   });
 
   window.addEventListener('touchmove', e => {
-    if (activeTouchId === null) return;
+    if (touchId === null) return;
     for (let i = 0; i < e.changedTouches.length; i++) {
       const t = e.changedTouches[i];
-      if (t.identifier === activeTouchId) {
+      if (t.identifier === touchId) {
         const dx = t.clientX - startX;
         const dy = t.clientY - startY;
         const dist = Math.min(40, Math.hypot(dx, dy));
@@ -396,95 +637,17 @@ function setupTouchJoystick() {
   });
 
   const endTouch = () => {
-    activeTouchId = null;
+    touchId = null;
     knob.style.transform = 'translate(0px, 0px)';
     touchVector = { x: 0, y: 0 };
   };
 
   window.addEventListener('touchend', endTouch);
   window.addEventListener('touchcancel', endTouch);
-
-  document.getElementById('btnTouchPlace')?.addEventListener('touchstart', e => {
-    e.preventDefault();
-    placeBlockAtTarget();
-  });
-
-  document.getElementById('btnTouchBreak')?.addEventListener('touchstart', e => {
-    e.preventDefault();
-    breakBlockAtTarget();
-  });
 }
 
 // ==========================================================================
-// ANIMATION LOOP & GHOST UPDATE
-// ==========================================================================
-
-function animate() {
-  requestAnimationFrame(animate);
-
-  updateCameraMovement();
-  updateGhostCursor();
-
-  renderer.render(scene, camera);
-}
-
-function updateCameraMovement() {
-  let moveX = 0, moveZ = 0, moveY = 0;
-
-  if (keys['KeyW'] || keys['ArrowUp']) moveZ -= 1;
-  if (keys['KeyS'] || keys['ArrowDown']) moveZ += 1;
-  if (keys['KeyA'] || keys['ArrowLeft']) moveX -= 1;
-  if (keys['KeyD'] || keys['ArrowRight']) moveX += 1;
-
-  if (keys['Space']) moveY += 1;
-  if (keys['ShiftLeft'] || keys['KeyC']) moveY -= 1;
-
-  if (Math.abs(touchVector.x) > 0.1 || Math.abs(touchVector.y) > 0.1) {
-    moveX = touchVector.x;
-    moveZ = touchVector.y;
-  }
-
-  if (moveX !== 0 || moveZ !== 0 || moveY !== 0) {
-    const forwardX = Math.sin(cameraRotY);
-    const forwardZ = Math.cos(cameraRotY);
-    const rightX = Math.cos(cameraRotY);
-    const rightZ = -Math.sin(cameraRotY);
-
-    cameraPos.x += (forwardX * moveZ + rightX * moveX) * flySpeed;
-    cameraPos.z += (forwardZ * moveZ + rightZ * moveX) * flySpeed;
-    cameraPos.y += moveY * flySpeed;
-  }
-
-  camera.position.set(cameraPos.x, cameraPos.y, cameraPos.z);
-  camera.rotation.order = 'YXZ';
-  camera.rotation.y = cameraRotY;
-  camera.rotation.x = cameraRotX;
-}
-
-function updateGhostCursor() {
-  if (!ghostMesh) return;
-
-  raycaster.setFromCamera(mousePointer, camera);
-  const targets = [terrainMesh].concat(buildBlocks.map(b => b.mesh));
-  const intersects = raycaster.intersectObjects(targets);
-
-  if (intersects.length > 0) {
-    const hit = intersects[0];
-    const normal = hit.face.normal;
-
-    const gx = Math.round(hit.point.x + normal.x * 0.5);
-    const gy = Math.round(hit.point.y + normal.y * 0.5);
-    const gz = Math.round(hit.point.z + normal.z * 0.5);
-
-    ghostMesh.position.set(gx, gy, gz);
-    ghostMesh.visible = true;
-  } else {
-    ghostMesh.visible = false;
-  }
-}
-
-// ==========================================================================
-// AUDIO SYNTH & UTILS
+// AUDIO SYNTH
 // ==========================================================================
 
 function initAudioCtx() {

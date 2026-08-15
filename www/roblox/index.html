@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Roblox Builder 3D - Il Costruttore di papà</title>
-  <meta name="description" content="Gioco 3D Costruttore stile Roblox/Minecraft. Costruisci case, castelli e città in 3D con modalità Volo e Blueprint.">
+  <title>Roblox BedWars Survival 3D - Costruisci & Combatti</title>
+  <meta name="description" content="Gioco 3D Roblox di Costruzione, Battaglia contro Nemici e Giocatori Multiplayer AI.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <!-- Three.js 3D Engine & Canvas Confetti -->
+  <!-- Three.js & Confetti -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
@@ -18,90 +18,107 @@
   <!-- 3D Canvas Viewport -->
   <div id="game-container"></div>
 
-  <!-- 3D Crosshair Pointer -->
-  <div id="crosshair" class="crosshair">+</div>
-
-  <!-- TOP HUD HEADER BAR -->
-  <header class="hud-bar">
+  <!-- HUD TOP BAR: HEALTH, WAVE & MULTIPLAYER STATS -->
+  <header class="battle-hud">
     <div class="hud-left">
-      <div class="logo-box">
-        <span class="logo-icon">🧱</span>
-        <span class="logo-text">ROBLOX <span class="highlight-yellow">BUILDER 3D</span></span>
+      <!-- Health Bar -->
+      <div class="stat-card health-card">
+        <span class="stat-icon">❤️</span>
+        <div class="bar-outer">
+          <div class="bar-fill health-fill" id="healthFill" style="width: 100%;"></div>
+          <span class="bar-label" id="healthLabel">100 / 100</span>
+        </div>
       </div>
-      <div class="mode-badge" id="flyStatusBadge">🕊️ VOLO ATTIVO (Premi F)</div>
+
+      <!-- Wave Counter -->
+      <div class="stat-card wave-card">
+        <span class="stat-icon">⚔️</span>
+        <div class="wave-info">
+          <span class="wave-title">ONDA <strong id="waveNum">1</strong></span>
+          <span class="wave-sub">Nemici: <strong id="enemyCount">5</strong></span>
+        </div>
+      </div>
     </div>
 
-    <!-- Quick Blueprints / Templates -->
-    <div class="blueprints-bar">
-      <span class="bp-title">✨ Costruzioni Rapide:</span>
-      <button class="bp-btn" onclick="buildTemplate('house')">🏠 Casetta</button>
-      <button class="bp-btn" onclick="buildTemplate('castle')">🏰 Castello</button>
-      <button class="bp-btn" onclick="buildTemplate('tower')">🗼 Torre Neon</button>
-      <button class="bp-btn" onclick="buildTemplate('tree')">🌳 Albero 3D</button>
+    <!-- Center Mode Badge -->
+    <div class="hud-center">
+      <div class="online-badge">🌐 ONLINE: <strong id="onlineCount">4 Giocatori</strong></div>
     </div>
 
     <div class="hud-right">
-      <button class="hud-btn save-btn" onclick="saveWorld()">💾 Salva</button>
-      <button class="hud-btn clear-btn" onclick="clearWorld()">🗑️ Svuota</button>
-      <button class="hud-btn audio-btn" id="btnAudio" onclick="toggleAudio()">🔊</button>
+      <div class="stat-card score-card">
+        <span class="stat-icon">🪙</span>
+        <span id="scoreText">250 Monete</span>
+      </div>
+      <button class="icon-btn" id="btnAudio" onclick="toggleAudio()">🔊</button>
     </div>
   </header>
 
-  <!-- NOTIFICATION TOAST -->
-  <div id="toast" class="toast hidden"></div>
+  <!-- LIVE ROBLOX MULTIPLAYER CHAT BOX -->
+  <div class="chat-overlay" id="chatBox">
+    <div class="chat-header">💬 Chat di Gioco Roblox</div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-line"><span class="user-tag noob">Noob_Gamer99:</span> Ciao a tutti! Costruiamo il castello!</div>
+      <div class="chat-line"><span class="user-tag ninja">CyberNinja_9:</span> Attenti! Gli zombie stanno arrivando! ⚔️</div>
+    </div>
+  </div>
 
-  <!-- BOTTOM BLOCK PALETTE BAR -->
-  <div class="block-toolbar">
-    <div class="toolbar-title">🎨 Seleziona Blocco da Piazzare:</div>
-    <div class="palette-list" id="paletteList">
-      <button class="block-slot active" data-type="grass" onclick="setSelectBlock('grass')">
-        <span class="block-icon">🌱</span> Erba
+  <!-- WEAPON & BLOCK HOTBAR -->
+  <div class="hotbar-container">
+    <div class="hotbar-slots">
+      <button class="hotbar-slot active" data-slot="sword" onclick="selectSlot('sword')">
+        <span class="slot-icon">⚔️</span>
+        <span class="slot-name">Spada Neon</span>
       </button>
-      <button class="block-slot" data-type="brick" onclick="setSelectBlock('brick')">
-        <span class="block-icon">🧱</span> Mattoni
+      <button class="hotbar-slot" data-slot="stone" onclick="selectSlot('stone')">
+        <span class="slot-icon">🪨</span>
+        <span class="slot-name">Muro Pietra</span>
       </button>
-      <button class="block-slot" data-type="wood" onclick="setSelectBlock('wood')">
-        <span class="block-icon">🪵</span> Legno
+      <button class="hotbar-slot" data-slot="wood" onclick="selectSlot('wood')">
+        <span class="slot-icon">🪵</span>
+        <span class="slot-name">Muro Legno</span>
       </button>
-      <button class="block-slot" data-type="stone" onclick="setSelectBlock('stone')">
-        <span class="block-icon">🪨</span> Pietra
-      </button>
-      <button class="block-slot" data-type="gold" onclick="setSelectBlock('gold')">
-        <span class="block-icon">✨</span> Oro
-      </button>
-      <button class="block-slot" data-type="neon_cyan" onclick="setSelectBlock('neon_cyan')">
-        <span class="block-icon">⚡</span> Neon Ciano
-      </button>
-      <button class="block-slot" data-type="neon_pink" onclick="setSelectBlock('neon_pink')">
-        <span class="block-icon">💖</span> Neon Rosa
-      </button>
-      <button class="block-slot" data-type="water" onclick="setSelectBlock('water')">
-        <span class="block-icon">🌊</span> Acqua
-      </button>
-      <button class="block-slot" data-type="glass" onclick="setSelectBlock('glass')">
-        <span class="block-icon">🪟</span> Vetro
-      </button>
-      <button class="block-slot" data-type="lava" onclick="setSelectBlock('lava')">
-        <span class="block-icon">🔥</span> Lava
+      <button class="hotbar-slot" data-slot="lava" onclick="selectSlot('lava')">
+        <span class="slot-icon">🔥</span>
+        <span class="slot-name">Trappola Lava</span>
       </button>
     </div>
   </div>
 
-  <!-- TOUCH / MOBILE CONTROLS -->
-  <div class="touch-overlay" id="touchControls">
+  <!-- ACTION BUTTON FOR ATTACK / BUILD -->
+  <div class="action-trigger-area">
+    <button class="main-action-btn" id="btnMainAction" onclick="performMainAction()">
+      ⚔️ ATTACCA / PIAZZA
+    </button>
+  </div>
+
+  <!-- TOUCH OVERLAY CONTROLS -->
+  <div class="touch-overlay">
     <div id="joystickZone" class="joystick-base">
       <div id="joystickKnob" class="joystick-knob"></div>
     </div>
     <div class="touch-actions">
-      <button class="t-btn place-btn" id="btnTouchPlace">➕ PIAZZA</button>
-      <button class="t-btn break-btn" id="btnTouchBreak">❌ DISTRUGGI</button>
-      <button class="t-btn fly-btn" onclick="toggleFly()">🕊️ VOLA</button>
+      <button class="t-btn attack-tbtn" onclick="performMainAction()">⚔️ ATTACCA</button>
+      <button class="t-btn jump-tbtn" onclick="doJump()">⬆ SALTA</button>
     </div>
   </div>
 
-  <!-- INSTRUCTIONS BAR -->
-  <footer class="footer-instructions">
-    <span>⌨️ <strong>Controlli PC:</strong> W A S D / Frecce = Muoviti | SPAZIO = Vola Su | SHIFT = Scendi | <strong>CLICK SINISTRO</strong> = Piazza Blocco | <strong>CLICK DESTRO (o Q)</strong> = Rimuovi Blocco | <strong>F</strong> = Attiva/Disattiva Volo</span>
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- GAME OVER / WAVE VICTORY MODAL -->
+  <div id="endModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-icon" id="modalIcon">🏆</div>
+      <h2 id="modalTitle">ONDA COMPLETATA!</h2>
+      <p id="modalSub">Hai difeso la base e sconfitto i nemici!</p>
+      <button class="btn-modal-primary" onclick="restartOrNextWave()">🚀 Prossima Onda di Nemici</button>
+    </div>
+  </div>
+
+  <!-- FOOTER INSTRUCTIONS -->
+  <footer class="footer-bar">
+    <span>⌨️ <strong>Controlli PC:</strong> W A S D = Muoviti | SPAZIO = Salta | <strong>CLICK SINISTRO</strong> = Attacca con la Spada / Piazza Muro | Mouse Drag = Ruota Visuale</span>
   </footer>
 
   <script src="game.js"></script>
