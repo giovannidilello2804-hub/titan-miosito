@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Roblox Block World 3D - Il Gioco di papà</title>
+  <meta name="description" content="Gioco 3D interattivo stile Roblox in HTML5. Parkour Obby, Costruttore 3D e Personalizzazione Avatar.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Three.js 3D Engine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+  <!-- Game Canvas Container -->
+  <div id="game-container"></div>
+
+  <!-- UI Overlay Header -->
+  <header class="game-hud">
+    <div class="hud-left">
+      <div class="logo-badge">
+        <span class="logo-icon">🎮</span>
+        <span class="logo-text">ROBLOX <span class="accent-yellow">WORLD 3D</span></span>
+      </div>
+      <div class="player-stats">
+        <div class="stat-pill"><span class="icon">🪙</span> <span id="coinCount">0</span> Monete</div>
+        <div class="stat-pill"><span class="icon">⏱️</span> <span id="gameTimer">00:00</span></div>
+        <div class="stat-pill highlight"><span class="icon">⭐</span> Livello <span id="currentLevelNum">1</span></div>
+      </div>
+    </div>
+
+    <!-- Mode Selector Navigation -->
+    <nav class="mode-nav">
+      <button class="mode-btn active" id="btnModeObby" onclick="switchGameMode('obby')">🏃‍♂️ Parkour Obby</button>
+      <button class="mode-btn" id="btnModeBuild" onclick="switchGameMode('build')">🧱 Costruttore 3D</button>
+      <button class="mode-btn" id="btnModeAvatar" onclick="switchGameMode('avatar')">🎨 Avatar Studio</button>
+    </nav>
+
+    <div class="hud-right">
+      <button class="icon-btn" id="btnAudioToggle" onclick="toggleAudio()" title="Attiva/Disattiva Audio">🔊</button>
+      <button class="icon-btn" onclick="resetCurrentMode()" title="Ricomincia Livello">🔄</button>
+    </div>
+  </header>
+
+  <!-- Notification Banner -->
+  <div id="toastNotification" class="toast hidden">Benvenuto in Roblox World 3D!</div>
+
+  <!-- BUILD MODE PALETTE BAR -->
+  <div id="buildPaletteBar" class="build-palette hidden">
+    <div class="palette-title">🧱 Scegli Blocco:</div>
+    <div class="palette-items">
+      <button class="palette-item active" data-block="grass" onclick="selectBlockType('grass')">🌱 Erba</button>
+      <button class="palette-item" data-block="brick" onclick="selectBlockType('brick')">🧱 Mattoni</button>
+      <button class="palette-item" data-block="wood" onclick="selectBlockType('wood')">🪵 Legno</button>
+      <button class="palette-item" data-block="gold" onclick="selectBlockType('gold')">✨ Oro</button>
+      <button class="palette-item" data-block="neon" onclick="selectBlockType('neon')">⚡ Neon Cyan</button>
+      <button class="palette-item" data-block="lava" onclick="selectBlockType('lava')">🔥 Lava</button>
+      <button class="palette-item" data-block="rainbow" onclick="selectBlockType('rainbow')">🌈 Arcobaleno</button>
+    </div>
+    <div class="build-actions">
+      <button class="action-btn save" onclick="saveCustomWorld()">💾 Salva Mondo</button>
+      <button class="action-btn clear" onclick="clearCustomWorld()">🗑️ Svuota</button>
+    </div>
+  </div>
+
+  <!-- AVATAR STUDIO MODAL PANEL -->
+  <div id="avatarStudioPanel" class="avatar-panel hidden">
+    <div class="panel-header">
+      <h2>🎨 Personalizza il tuo Avatar Roblox</h2>
+      <button class="close-btn" onclick="switchGameMode('obby')">✖</button>
+    </div>
+    <div class="panel-content">
+      <div class="control-group">
+        <label>👕 Colore Maglietta:</label>
+        <input type="color" id="shirtColorPicker" value="#00f0ff" onchange="updateAvatarColors()">
+      </div>
+      <div class="control-group">
+        <label>👖 Colore Pantaloni:</label>
+        <input type="color" id="pantsColorPicker" value="#1a237e" onchange="updateAvatarColors()">
+      </div>
+      <div class="control-group">
+        <label>🖐️ Tinta Pelle:</label>
+        <input type="color" id="skinColorPicker" value="#ffe082" onchange="updateAvatarColors()">
+      </div>
+      <div class="control-group">
+        <label>👑 Cappello / Accessorio:</label>
+        <select id="hatSelect" onchange="updateAvatarHat()">
+          <option value="none">Nessuno</option>
+          <option value="cap">🧢 Cappellino Da Baseball</option>
+          <option value="crown">👑 Corona Reale</option>
+          <option value="viking">⚔️ Elmo Vichingo</option>
+          <option value="headphones">🎧 Cuffie Gaming Neon</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>😃 Espressione Viso:</label>
+        <select id="faceSelect" onchange="updateAvatarFace()">
+          <option value="happy">😃 Sorridente</option>
+          <option value="cool">😎 Occhiali da Sole Cool</option>
+          <option value="ninja">🥷 Maschera Ninja</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ON-SCREEN MOBILE / TOUCH CONTROLS -->
+  <div id="touchControls" class="touch-controls">
+    <div id="joystickZone" class="joystick-container">
+      <div id="joystickKnob" class="joystick-knob"></div>
+    </div>
+    <div class="touch-action-buttons">
+      <button class="touch-btn jump-btn" id="touchBtnJump">⬆ JUMP</button>
+      <button class="touch-btn build-btn hidden" id="touchBtnAction">🧱 PIAZZA</button>
+    </div>
+  </div>
+
+  <!-- VICTORY MODAL OVERLAY -->
+  <div id="victoryModal" class="modal-backdrop hidden">
+    <div class="modal-card victory-card">
+      <div class="trophy-bounce">🏆</div>
+      <h2>VITTORIA! COMPLIMENTI!</h2>
+      <p>Hai superato il percorso Obby con successo!</p>
+      <div class="victory-stats">
+        <div>Monete raccolte: <strong id="vicCoins">0</strong> 🪙</div>
+        <div>Tempo impiegato: <strong id="vicTime">00:00</strong> ⏱️</div>
+      </div>
+      <div class="modal-buttons">
+        <button class="btn-primary" onclick="nextLevelOrRestart()">🚀 Prossimo Livello / Gioca Ancora</button>
+        <button class="btn-secondary" onclick="switchGameMode('build')">🧱 Vai al Costruttore 3D</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME INSTRUCTIONS BAR -->
+  <footer class="game-footer">
+    <div class="controls-hint">
+      <span>⌨️ <strong>Controlli PC:</strong> W A S D / Frecce = Muoviti | SPAZIO = Salta | Mouse = Ruota Camera | E = Piazza Blocco | Q = Distruggi Blocco</span>
+    </div>
+  </footer>
+
+  <script src="game.js"></script>
+</body>
+</html>
