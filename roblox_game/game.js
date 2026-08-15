@@ -1,30 +1,34 @@
 /* ==========================================================================
-   ROBLOX BLOCK WORLD 3D - GAME ENGINE & THREE.JS LOGIC
+   ROBLOX ULTIMATE GAMER HUB 3D - ENGINE & GAME LOGIC
    ========================================================================== */
 
-// --- GAME STATE & GLOBAL VARIABLES ---
+// --- GLOBAL GAME STATE ---
 const state = {
-  mode: 'obby', // 'obby', 'build', 'avatar'
-  level: 1,
-  coins: parseInt(localStorage.getItem('roblox_coins') || '0'),
-  selectedBlock: 'grass',
-  audioEnabled: true,
-  timerSeconds: 0,
-  timerInterval: null,
+  activeTab: 'games', // 'games', 'obby3d', 'pets', 'avatar', 'build'
+  level: parseInt(localStorage.getItem('roblox_level') || '15'),
+  xp: parseInt(localStorage.getItem('roblox_xp') || '650'),
+  robux: parseInt(localStorage.getItem('roblox_robux') || '12500'),
+  coins: parseInt(localStorage.getItem('roblox_coins') || '450'),
+  playerName: localStorage.getItem('roblox_player_name') || 'PRO GAMER',
   
-  // Avatar Customization
+  activePet: localStorage.getItem('roblox_active_pet') || 'cat', // 'cat', 'fox', 'dragon'
+  selectedBlock: 'grass',
+  musicEnabled: true,
+  
   avatar: {
     shirt: localStorage.getItem('roblox_shirt') || '#00f0ff',
     pants: localStorage.getItem('roblox_pants') || '#1a237e',
     skin: localStorage.getItem('roblox_skin') || '#ffe082',
+    wings: localStorage.getItem('roblox_wings') || 'cyan',
     hat: localStorage.getItem('roblox_hat') || 'crown',
     face: localStorage.getItem('roblox_face') || 'happy'
   }
 };
 
-// --- THREE.JS GLOBALS ---
+// THREE.JS GLOBALS
 let scene, camera, renderer;
-let playerGroup, headMesh, torsoMesh, lArmMesh, rArmMesh, lLegMesh, rLegMesh, hatGroup, faceCanvas, faceTexture;
+let playerGroup, headMesh, torsoMesh, lArmMesh, rArmMesh, lLegMesh, rLegMesh, hatGroup, wingsGroup, faceCanvas, faceTexture;
+let petMesh = null;
 let platforms = [];
 let coinsList = [];
 let lavaList = [];
@@ -39,7 +43,7 @@ let isGrounded = false;
 let cameraRotationY = 0;
 let cameraRotationX = 0.3;
 
-// Web Audio API Synth
+// Web Audio API
 let audioCtx = null;
 
 // ==========================================================================
@@ -49,13 +53,13 @@ let audioCtx = null;
 window.addEventListener('DOMContentLoaded', () => {
   initThreeJS();
   initPlayerAvatar();
+  init3DPet();
   initAudioCtx();
   setupEventListeners();
-  loadCustomWorldData();
+  updateHUDStats();
   
-  // Start Obby Level 1
-  loadObbyLevel(state.level);
-  startTimer();
+  // Default Scene Load
+  loadObbyLevel(1);
 
   // Animation Loop
   animate();
@@ -64,15 +68,12 @@ window.addEventListener('DOMContentLoaded', () => {
 function initThreeJS() {
   const container = document.getElementById('game-container');
 
-  // Scene
   scene = new THREE.Scene();
-  scene.background = new THREE.Color('#78c8ff');
-  scene.fog = new THREE.FogExp2('#78c8ff', 0.015);
+  scene.background = new THREE.Color('#0b0f19');
+  scene.fog = new THREE.FogExp2('#0b0f19', 0.012);
 
-  // Camera
   camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-  // Renderer
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -80,70 +81,61 @@ function initThreeJS() {
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   container.appendChild(renderer.domElement);
 
-  // Lighting
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+  // Lights
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
   scene.add(ambientLight);
 
-  const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  dirLight.position.set(40, 60, 30);
+  const dirLight = new THREE.DirectionalLight(0x00f0ff, 0.9);
+  dirLight.position.set(30, 50, 30);
   dirLight.castShadow = true;
   dirLight.shadow.mapSize.width = 2048;
   dirLight.shadow.mapSize.height = 2048;
-  dirLight.shadow.camera.near = 0.5;
-  dirLight.shadow.camera.far = 150;
-  dirLight.shadow.camera.left = -40;
-  dirLight.shadow.camera.right = 40;
-  dirLight.shadow.camera.top = 40;
-  dirLight.shadow.camera.bottom = -40;
   scene.add(dirLight);
 
-  // Decorative Clouds Sky
-  createDecorativeClouds();
+  const pointLight = new THREE.PointLight(0xffea00, 1, 30);
+  pointLight.position.set(0, 10, 0);
+  scene.add(pointLight);
 
-  // Update Coin UI
-  document.getElementById('coinCount').textContent = state.coins;
+  createSkyIslands();
 }
 
-function createDecorativeClouds() {
-  const cloudGeo = new THREE.DodecahedronGeometry(4, 1);
-  const cloudMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85 });
+function createSkyIslands() {
+  // Background Floating Islands
+  const islandGeo = new THREE.DodecahedronGeometry(6, 1);
+  const islandMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.8 });
 
-  for (let i = 0; i < 20; i++) {
-    const cloud = new THREE.Mesh(cloudGeo, cloudMat);
-    cloud.position.set(
-      (Math.random() - 0.5) * 200,
-      25 + Math.random() * 20,
-      (Math.random() - 0.5) * 200
+  for (let i = 0; i < 15; i++) {
+    const island = new THREE.Mesh(islandGeo, islandMat);
+    island.position.set(
+      (Math.random() - 0.5) * 160,
+      10 + Math.random() * 30,
+      (Math.random() - 0.5) * 160
     );
-    cloud.scale.set(1 + Math.random() * 2, 0.6 + Math.random() * 0.4, 1 + Math.random() * 2);
-    scene.add(cloud);
+    island.scale.set(1 + Math.random() * 2, 0.5 + Math.random() * 0.5, 1 + Math.random() * 2);
+    scene.add(island);
   }
 }
 
 // ==========================================================================
-// ROBLOX BLOCKY PLAYER AVATAR CREATION
+// 3D ROBLOX CHARACTER & NEON WINGS & PETS
 // ==========================================================================
 
 function initPlayerAvatar() {
   playerGroup = new THREE.Group();
 
-  // Skin / Clothes Materials
   const skinMat = new THREE.MeshStandardMaterial({ color: state.avatar.skin, roughness: 0.3 });
   const shirtMat = new THREE.MeshStandardMaterial({ color: state.avatar.shirt, roughness: 0.4 });
   const pantsMat = new THREE.MeshStandardMaterial({ color: state.avatar.pants, roughness: 0.5 });
 
-  // 1. Torso
+  // Torso
   const torsoGeo = new THREE.BoxGeometry(1.2, 1.4, 0.6);
   torsoMesh = new THREE.Mesh(torsoGeo, shirtMat);
   torsoMesh.position.y = 1.4;
   torsoMesh.castShadow = true;
-  torsoMesh.receiveShadow = true;
   playerGroup.add(torsoMesh);
 
-  // 2. Head & Face
+  // Head & Face
   const headGeo = new THREE.BoxGeometry(0.9, 0.9, 0.9);
-  
-  // Dynamic Face Canvas
   faceCanvas = document.createElement('canvas');
   faceCanvas.width = 128;
   faceCanvas.height = 128;
@@ -152,7 +144,7 @@ function initPlayerAvatar() {
 
   const headMaterials = [
     skinMat, skinMat, skinMat, skinMat,
-    new THREE.MeshStandardMaterial({ map: faceTexture, roughness: 0.3 }), // Front face
+    new THREE.MeshStandardMaterial({ map: faceTexture, roughness: 0.3 }),
     skinMat
   ];
 
@@ -161,14 +153,17 @@ function initPlayerAvatar() {
   headMesh.castShadow = true;
   playerGroup.add(headMesh);
 
-  // 3. Hat / Accessory Container
+  // Hat & Wings Containers
   hatGroup = new THREE.Group();
   headMesh.add(hatGroup);
   renderAvatarHat(state.avatar.hat);
 
-  // 4. Arms
+  wingsGroup = new THREE.Group();
+  torsoMesh.add(wingsGroup);
+  renderAvatarWings(state.avatar.wings);
+
+  // Arms & Legs
   const armGeo = new THREE.BoxGeometry(0.45, 1.3, 0.45);
-  
   lArmMesh = new THREE.Mesh(armGeo, shirtMat);
   lArmMesh.position.set(-0.9, 1.35, 0);
   lArmMesh.castShadow = true;
@@ -179,9 +174,7 @@ function initPlayerAvatar() {
   rArmMesh.castShadow = true;
   playerGroup.add(rArmMesh);
 
-  // 5. Legs
   const legGeo = new THREE.BoxGeometry(0.5, 1.3, 0.5);
-
   lLegMesh = new THREE.Mesh(legGeo, pantsMat);
   lLegMesh.position.set(-0.32, 0.65, 0);
   lLegMesh.castShadow = true;
@@ -205,36 +198,29 @@ function drawFaceTexture(faceType) {
   ctx.lineWidth = 6;
 
   if (faceType === 'cool') {
-    // Sunglasses
     ctx.fillStyle = '#111';
     ctx.fillRect(20, 35, 88, 28);
     ctx.fillStyle = '#00f0ff';
     ctx.fillRect(25, 40, 35, 18);
     ctx.fillRect(68, 40, 35, 18);
-    // Cool smile
     ctx.beginPath();
     ctx.arc(64, 85, 20, 0, Math.PI);
     ctx.stroke();
   } else if (faceType === 'ninja') {
-    // Ninja Mask
-    ctx.fillStyle = '#222222';
+    ctx.fillStyle = '#222';
     ctx.fillRect(0, 0, 128, 128);
     ctx.fillStyle = state.avatar.skin;
     ctx.fillRect(15, 35, 98, 35);
-    // Eyes
     ctx.fillStyle = '#000';
     ctx.beginPath();
     ctx.arc(40, 52, 7, 0, Math.PI * 2);
     ctx.arc(88, 52, 7, 0, Math.PI * 2);
     ctx.fill();
   } else {
-    // Happy Default Smile
-    // Eyes
     ctx.beginPath();
     ctx.arc(38, 45, 8, 0, Math.PI * 2);
     ctx.arc(90, 45, 8, 0, Math.PI * 2);
     ctx.fill();
-    // Smile
     ctx.beginPath();
     ctx.arc(64, 75, 26, 0.1 * Math.PI, 0.9 * Math.PI);
     ctx.stroke();
@@ -270,7 +256,7 @@ function renderAvatarHat(hatType) {
     hatGroup.add(helm);
   } else if (hatType === 'headphones') {
     const bandGeo = new THREE.TorusGeometry(0.52, 0.06, 8, 16, Math.PI);
-    const hpMat = new THREE.MeshStandardMaterial({ color: '#00f0ff', emissive: '#00f0ff', emissiveIntensity: 0.4 });
+    const hpMat = new THREE.MeshStandardMaterial({ color: '#00f0ff', emissive: '#00f0ff', emissiveIntensity: 0.5 });
     const band = new THREE.Mesh(bandGeo, hpMat);
     band.rotation.x = Math.PI / 2;
     band.position.y = 0.45;
@@ -278,40 +264,142 @@ function renderAvatarHat(hatType) {
   }
 }
 
+function renderAvatarWings(wingsType) {
+  while (wingsGroup.children.length > 0) wingsGroup.remove(wingsGroup.children[0]);
+  if (wingsType === 'none') return;
+
+  let wingColor = '#00f0ff';
+  if (wingsType === 'purple') wingColor = '#a100ff';
+  if (wingsType === 'gold') wingColor = '#ffea00';
+
+  const wingGeo = new THREE.BoxGeometry(1.8, 1.0, 0.05);
+  const wingMat = new THREE.MeshStandardMaterial({ color: wingColor, emissive: wingColor, emissiveIntensity: 0.6, transparent: true, opacity: 0.85 });
+
+  const lWing = new THREE.Mesh(wingGeo, wingMat);
+  lWing.position.set(-1.2, 0.2, -0.35);
+  lWing.rotation.y = -0.3;
+
+  const rWing = new THREE.Mesh(wingGeo, wingMat);
+  rWing.position.set(1.2, 0.2, -0.35);
+  rWing.rotation.y = 0.3;
+
+  wingsGroup.add(lWing);
+  wingsGroup.add(rWing);
+}
+
+// 3D PET COMPANION
+function init3DPet() {
+  if (petMesh) scene.remove(petMesh);
+
+  const petGroup = new THREE.Group();
+  let petColor = '#00f0ff';
+
+  if (state.activePet === 'fox') petColor = '#ff6d00';
+  if (state.activePet === 'dragon') petColor = '#a100ff';
+
+  const bodyGeo = new THREE.BoxGeometry(0.6, 0.6, 0.6);
+  const bodyMat = new THREE.MeshStandardMaterial({ color: petColor, emissive: petColor, emissiveIntensity: 0.3 });
+  const body = new THREE.Mesh(bodyGeo, bodyMat);
+  petGroup.add(body);
+
+  // Ears
+  const earGeo = new THREE.ConeGeometry(0.18, 0.3, 4);
+  const lEar = new THREE.Mesh(earGeo, bodyMat);
+  lEar.position.set(-0.2, 0.45, 0);
+  const rEar = new THREE.Mesh(earGeo, bodyMat);
+  rEar.position.set(0.2, 0.45, 0);
+  petGroup.add(lEar);
+  petGroup.add(rEar);
+
+  petMesh = petGroup;
+  petMesh.position.set(playerPos.x + 1.2, playerPos.y + 1, playerPos.z + 1);
+  scene.add(petMesh);
+}
+
+function updatePetMovement() {
+  if (!petMesh) return;
+  const targetX = playerPos.x + 1.4;
+  const targetY = playerPos.y + 0.8 + Math.sin(animFrame * 0.1) * 0.2; // Hover bobbing
+  const targetZ = playerPos.z + 1.2;
+
+  petMesh.position.x += (targetX - petMesh.position.x) * 0.08;
+  petMesh.position.y += (targetY - petMesh.position.y) * 0.08;
+  petMesh.position.z += (targetZ - petMesh.position.z) * 0.08;
+}
+
 // ==========================================================================
-// GAME MODES & LEVEL GENERATION
+// NAVIGATION TABS & GAME MODES
 // ==========================================================================
 
-function switchGameMode(modeName) {
-  state.mode = modeName;
+function switchTab(tabName) {
+  state.activeTab = tabName;
 
-  // Update UI Buttons
-  document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-  if (modeName === 'obby') document.getElementById('btnModeObby').classList.add('active');
-  if (modeName === 'build') document.getElementById('btnModeBuild').classList.add('active');
-  if (modeName === 'avatar') document.getElementById('btnModeAvatar').classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.view-panel').forEach(p => p.classList.add('hidden'));
+  document.getElementById('buildPaletteBar').classList.add('hidden');
 
-  // Toggle Panels
-  document.getElementById('buildPaletteBar').classList.toggle('hidden', modeName !== 'build');
-  document.getElementById('avatarStudioPanel').classList.toggle('hidden', modeName !== 'avatar');
-
-  // Reset Scene Objects for Mode
-  clearSceneObjects();
-
-  if (modeName === 'obby') {
-    loadObbyLevel(state.level);
-    resetPlayerPosition();
-  } else if (modeName === 'build') {
+  if (tabName === 'games') {
+    document.getElementById('tabGames').classList.add('active');
+    document.getElementById('viewGames').classList.remove('hidden');
+  } else if (tabName === 'obby3d') {
+    document.getElementById('tabObby3D').classList.add('active');
+    loadObbyLevel(1);
+    showToast('🏃‍♂️ Modalità Obby 3D Attiva! Raggiungi il Trofeo!');
+  } else if (tabName === 'pets') {
+    document.getElementById('tabPets').classList.add('active');
+    document.getElementById('viewPets').classList.remove('hidden');
+  } else if (tabName === 'avatar') {
+    document.getElementById('tabAvatar').classList.add('active');
+    document.getElementById('viewAvatar').classList.remove('hidden');
+  } else if (tabName === 'build') {
+    document.getElementById('tabBuild').classList.add('active');
+    document.getElementById('buildPaletteBar').classList.remove('hidden');
     buildBaseBuildGrid();
-    loadCustomWorldBlocks();
-    playerPos = { x: 0, y: 3, z: 0 };
-  } else if (modeName === 'avatar') {
-    // Center Avatar for Studio
-    playerPos = { x: 0, y: 0, z: 0 };
-    playerGroup.position.set(0, 0, 0);
+    showToast('🧱 Modalità Costruttore 3D! Premi E per piazzare blocchi!');
+  }
+}
+
+function startSpecialGame(gameType) {
+  if (gameType === 'blox_fruits') {
+    showToast('⚔️ Entrando in Blox Fruits 3D Arena!');
+    switchTab('obby3d');
+  } else if (gameType === 'brookhaven') {
+    showToast('🚗 Entrando in Brookhaven 3D City!');
+    switchTab('build');
+  }
+}
+
+// OBBY LEVEL BUILDER
+function loadObbyLevel(levelNum) {
+  clearSceneObjects();
+  createPlatform(0, 0, 0, 6, 1, 6, '#00ff88');
+
+  let currentZ = -6;
+  const platformColors = ['#00f0ff', '#ffea00', '#a100ff', '#ff007f'];
+
+  for (let i = 0; i < 10 + levelNum * 3; i++) {
+    const gap = 3.5 + Math.random() * 2;
+    const heightOffset = (Math.random() - 0.3) * 1.8;
+    const xOffset = (Math.random() - 0.5) * 5;
+    currentZ -= gap;
+
+    if (i % 4 === 2) {
+      createLavaBlock(xOffset, heightOffset, currentZ, 3.5, 0.4, 3.5);
+    } else {
+      const color = platformColors[i % platformColors.length];
+      createPlatform(xOffset, heightOffset, currentZ, 3.5, 0.6, 3.5, color);
+
+      if (Math.random() > 0.3) {
+        createCoin(xOffset, heightOffset + 1.5, currentZ);
+      }
+    }
   }
 
-  showToast(`Modalità: ${modeName.toUpperCase()}`);
+  currentZ -= 6;
+  createPlatform(0, 0, currentZ, 6, 1, 6, '#ffea00');
+  createTrophy(0, 1.5, currentZ);
+
+  resetPlayerPosition();
 }
 
 function clearSceneObjects() {
@@ -328,51 +416,9 @@ function clearSceneObjects() {
   finishTrophy = null;
 }
 
-// OBBY PARKOUR LEVEL BUILDER
-function loadObbyLevel(levelNum) {
-  clearSceneObjects();
-  document.getElementById('currentLevelNum').textContent = levelNum;
-
-  // 1. Start Platform
-  createPlatform(0, 0, 0, 6, 1, 6, '#00ff88');
-
-  // 2. Progressive Obby Course
-  let currentZ = -6;
-  const platformColors = ['#00f0ff', '#ffea00', '#a100ff', '#ff3366'];
-
-  for (let i = 0; i < 8 + levelNum * 3; i++) {
-    const gap = 3 + Math.random() * 2;
-    const heightOffset = (Math.random() - 0.3) * 1.5;
-    const xOffset = (Math.random() - 0.5) * 4;
-    currentZ -= gap;
-
-    const isLava = (i % 4 === 2);
-
-    if (isLava) {
-      // Lava Block (Instant Respawn)
-      createLavaBlock(xOffset, heightOffset, currentZ, 3, 0.4, 3);
-    } else {
-      const color = platformColors[i % platformColors.length];
-      createPlatform(xOffset, heightOffset, currentZ, 3, 0.6, 3, color);
-
-      // Add Coin
-      if (Math.random() > 0.4) {
-        createCoin(xOffset, heightOffset + 1.5, currentZ);
-      }
-    }
-  }
-
-  // 3. Victory Trophy Platform
-  currentZ -= 6;
-  createPlatform(0, 0, currentZ, 6, 1, 6, '#ffea00');
-  createTrophy(0, 1.5, currentZ);
-
-  resetPlayerPosition();
-}
-
 function createPlatform(x, y, z, w, h, d, colorHex) {
   const geo = new THREE.BoxGeometry(w, h, d);
-  const mat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.4 });
+  const mat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.3 });
   const mesh = new THREE.Mesh(geo, mat);
   mesh.position.set(x, y, z);
   mesh.receiveShadow = true;
@@ -384,7 +430,7 @@ function createPlatform(x, y, z, w, h, d, colorHex) {
 
 function createLavaBlock(x, y, z, w, h, d) {
   const geo = new THREE.BoxGeometry(w, h, d);
-  const mat = new THREE.MeshStandardMaterial({ color: '#ff3366', emissive: '#ff0033', emissiveIntensity: 0.6 });
+  const mat = new THREE.MeshStandardMaterial({ color: '#ff007f', emissive: '#ff007f', emissiveIntensity: 0.7 });
   const mesh = new THREE.Mesh(geo, mat);
   mesh.position.set(x, y, z);
   scene.add(mesh);
@@ -425,8 +471,9 @@ function createTrophy(x, y, z) {
 
 // BUILD MODE SANDBOX
 function buildBaseBuildGrid() {
-  const gridGeo = new THREE.BoxGeometry(30, 1, 30);
-  const gridMat = new THREE.MeshStandardMaterial({ color: '#334155', roughness: 0.8 });
+  clearSceneObjects();
+  const gridGeo = new THREE.BoxGeometry(36, 1, 36);
+  const gridMat = new THREE.MeshStandardMaterial({ color: '#1e293b', roughness: 0.8 });
   const gridMesh = new THREE.Mesh(gridGeo, gridMat);
   gridMesh.position.set(0, -0.5, 0);
   gridMesh.receiveShadow = true;
@@ -442,9 +489,8 @@ function selectBlockType(blockType) {
 }
 
 function placeBlockInBuildMode() {
-  if (state.mode !== 'build') return;
+  if (state.activeTab !== 'build') return;
 
-  // Raycast forward from camera
   const raycaster = new THREE.Raycaster();
   raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
 
@@ -464,7 +510,7 @@ function placeBlockInBuildMode() {
 }
 
 function breakBlockInBuildMode() {
-  if (state.mode !== 'build') return;
+  if (state.activeTab !== 'build') return;
 
   const raycaster = new THREE.Raycaster();
   raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
@@ -489,7 +535,7 @@ function addBlockToScene(x, y, z, type) {
     case 'wood': mat = new THREE.MeshStandardMaterial({ color: '#5d4037' }); break;
     case 'gold': mat = new THREE.MeshStandardMaterial({ color: '#ffea00', metalness: 0.8 }); break;
     case 'neon': mat = new THREE.MeshStandardMaterial({ color: '#00f0ff', emissive: '#00f0ff', emissiveIntensity: 0.5 }); break;
-    case 'lava': mat = new THREE.MeshStandardMaterial({ color: '#ff3366', emissive: '#ff3366', emissiveIntensity: 0.8 }); break;
+    case 'lava': mat = new THREE.MeshStandardMaterial({ color: '#ff007f', emissive: '#ff007f', emissiveIntensity: 0.8 }); break;
     case 'rainbow': mat = new THREE.MeshStandardMaterial({ color: '#a100ff' }); break;
     default: mat = new THREE.MeshStandardMaterial({ color: '#ffffff' });
   }
@@ -506,20 +552,7 @@ function addBlockToScene(x, y, z, type) {
 function saveCustomWorld() {
   const data = buildBlocks.map(b => ({ x: b.x, y: b.y, z: b.z, type: b.type }));
   localStorage.setItem('roblox_custom_world', JSON.stringify(data));
-  showToast('💾 Mondo 3D salvato con successo!');
-}
-
-function loadCustomWorldData() {
-  // Utility for building mode
-}
-
-function loadCustomWorldBlocks() {
-  const raw = localStorage.getItem('roblox_custom_world');
-  if (!raw) return;
-  try {
-    const list = JSON.parse(raw);
-    list.forEach(b => addBlockToScene(b.x, b.y, b.z, b.type));
-  } catch(e) {}
+  showToast('💾 Mondo 3D salvato!');
 }
 
 function clearCustomWorld() {
@@ -530,11 +563,68 @@ function clearCustomWorld() {
 }
 
 // ==========================================================================
+// PET HATCHING & AVATAR CUSTOMIZATION
+// ==========================================================================
+
+function hatchEgg(eggType, cost) {
+  if (state.coins < cost) {
+    showToast('❌ Monete insufficienti! Raccogli più monete nell\'Obby!');
+    return;
+  }
+
+  state.coins -= cost;
+  updateHUDStats();
+
+  if (window.confetti) {
+    confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+  }
+
+  const newPet = eggType === 'legendary' ? 'fox' : 'cat';
+  equipPet(newPet);
+  showToast(`🎉 CONGRATULAZIONI! Hai schiuso un Pet 3D: ${newPet.toUpperCase()}!`);
+}
+
+function equipPet(petType) {
+  state.activePet = petType;
+  localStorage.setItem('roblox_active_pet', petType);
+
+  document.querySelectorAll('.pet-select-btn').forEach(b => b.classList.remove('active'));
+
+  init3DPet();
+}
+
+function updateAvatarStyle() {
+  state.avatar.shirt = document.getElementById('shirtColorPicker').value;
+  state.avatar.pants = document.getElementById('pantsColorPicker').value;
+  state.avatar.skin = document.getElementById('skinColorPicker').value;
+  state.avatar.wings = document.getElementById('wingsSelect').value;
+  state.avatar.hat = document.getElementById('hatSelect').value;
+  state.avatar.face = document.getElementById('faceSelect').value;
+
+  localStorage.setItem('roblox_shirt', state.avatar.shirt);
+  localStorage.setItem('roblox_pants', state.avatar.pants);
+  localStorage.setItem('roblox_skin', state.avatar.skin);
+  localStorage.setItem('roblox_wings', state.avatar.wings);
+  localStorage.setItem('roblox_hat', state.avatar.hat);
+  localStorage.setItem('roblox_face', state.avatar.face);
+
+  torsoMesh.material.color.set(state.avatar.shirt);
+  lArmMesh.material.color.set(state.avatar.shirt);
+  rArmMesh.material.color.set(state.avatar.shirt);
+
+  lLegMesh.material.color.set(state.avatar.pants);
+  rLegMesh.material.color.set(state.avatar.pants);
+
+  renderAvatarHat(state.avatar.hat);
+  renderAvatarWings(state.avatar.wings);
+  drawFaceTexture(state.avatar.face);
+}
+
+// ==========================================================================
 // CONTROLS & EVENT LISTENERS
 // ==========================================================================
 
 function setupEventListeners() {
-  // Keyboard
   window.addEventListener('keydown', e => {
     keys[e.code] = true;
     if (e.code === 'KeyE') placeBlockInBuildMode();
@@ -542,18 +632,14 @@ function setupEventListeners() {
     if (e.code === 'Space') doJump();
   });
 
-  window.addEventListener('keyup', e => {
-    keys[e.code] = false;
-  });
+  window.addEventListener('keyup', e => keys[e.code] = false);
 
-  // Window Resize
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  // Mouse Camera Rotation
   let isMouseDown = false;
   let prevMouseX = 0, prevMouseY = 0;
 
@@ -576,7 +662,6 @@ function setupEventListeners() {
     cameraRotationX = Math.max(0.05, Math.min(Math.PI / 2.2, cameraRotationX + deltaY * 0.005));
   });
 
-  // Touch / Mobile Controls
   setupTouchJoystick();
 }
 
@@ -624,7 +709,6 @@ function setupTouchJoystick() {
   window.addEventListener('touchend', endTouch);
   window.addEventListener('touchcancel', endTouch);
 
-  // Jump Button Touch
   document.getElementById('touchBtnJump')?.addEventListener('touchstart', e => {
     e.preventDefault();
     doJump();
@@ -633,7 +717,7 @@ function setupTouchJoystick() {
 
 function doJump() {
   if (isGrounded) {
-    playerVel.y = 0.28;
+    playerVel.y = 0.3;
     isGrounded = false;
     playSynthSound(600, 'sine', 0.15);
   }
@@ -649,21 +733,16 @@ function animate() {
   requestAnimationFrame(animate);
   animFrame++;
 
-  if (state.mode !== 'avatar') {
-    updatePlayerMovement();
-    checkCollisions();
-    animateCoins();
-  } else {
-    // Rotate Player in Avatar Studio Mode
-    playerGroup.rotation.y += 0.01;
-  }
+  updatePlayerMovement();
+  checkCollisions();
+  animateCoins();
+  updatePetMovement();
 
   updateCameraPosition();
   renderer.render(scene, camera);
 }
 
 function updatePlayerMovement() {
-  // Input direction
   let moveX = 0, moveZ = 0;
 
   if (keys['KeyW'] || keys['ArrowUp']) moveZ -= 1;
@@ -671,16 +750,14 @@ function updatePlayerMovement() {
   if (keys['KeyA'] || keys['ArrowLeft']) moveX -= 1;
   if (keys['KeyD'] || keys['ArrowRight']) moveX += 1;
 
-  // Touch joystick override
   if (Math.abs(touchVector.x) > 0.1 || Math.abs(touchVector.y) > 0.1) {
     moveX = touchVector.x;
     moveZ = touchVector.y;
   }
 
-  const speed = keys['ShiftLeft'] ? 0.18 : 0.11;
+  const speed = keys['ShiftLeft'] ? 0.2 : 0.12;
 
   if (moveX !== 0 || moveZ !== 0) {
-    // Move relative to camera angle
     const angle = cameraRotationY;
     const forwardX = Math.sin(angle);
     const forwardZ = Math.cos(angle);
@@ -693,10 +770,8 @@ function updatePlayerMovement() {
     playerVel.x = dirX * speed;
     playerVel.z = dirZ * speed;
 
-    // Rotate Avatar facing direction
     playerGroup.rotation.y = Math.atan2(dirX, dirZ);
 
-    // Walking Limb Animation
     lArmMesh.rotation.x = Math.sin(animFrame * 0.2) * 0.6;
     rArmMesh.rotation.x = -Math.sin(animFrame * 0.2) * 0.6;
     lLegMesh.rotation.x = -Math.sin(animFrame * 0.2) * 0.6;
@@ -704,25 +779,19 @@ function updatePlayerMovement() {
   } else {
     playerVel.x = 0;
     playerVel.z = 0;
-
-    lArmMesh.rotation.x = 0;
-    rArmMesh.rotation.x = 0;
-    lLegMesh.rotation.x = 0;
-    rLegMesh.rotation.x = 0;
+    lArmMesh.rotation.x = 0; rArmMesh.rotation.x = 0;
+    lLegMesh.rotation.x = 0; rLegMesh.rotation.x = 0;
   }
 
-  // Gravity
   playerVel.y -= 0.014;
 
-  // Update Position
   playerPos.x += playerVel.x;
   playerPos.y += playerVel.y;
   playerPos.z += playerVel.z;
 
-  // Death / Respawn Threshold
   if (playerPos.y < -15) {
     resetPlayerPosition();
-    showToast('💥 Ah! Sei caduto! Riprova!');
+    showToast('💥 Caduto! Riprova!');
     playSynthSound(150, 'sawtooth', 0.25);
   }
 
@@ -731,9 +800,6 @@ function updatePlayerMovement() {
 
 function checkCollisions() {
   const playerRadius = 0.5;
-  const playerHeight = 2.8;
-
-  // Check Platforms & Build Blocks
   const allObstacles = platforms.concat(buildBlocks);
   isGrounded = false;
 
@@ -753,7 +819,6 @@ function checkCollisions() {
     }
   }
 
-  // Check Lava Collision
   for (let lava of lavaList) {
     const b = lava.bounds;
     if (
@@ -769,8 +834,7 @@ function checkCollisions() {
     }
   }
 
-  // Check Victory Trophy
-  if (finishTrophy && state.mode === 'obby') {
+  if (finishTrophy && state.activeTab === 'obby3d') {
     const dist = Math.hypot(playerPos.x - finishTrophy.position.x, playerPos.z - finishTrophy.position.z);
     if (dist < 1.8 && Math.abs(playerPos.y - finishTrophy.position.y) < 2) {
       triggerVictory();
@@ -786,9 +850,9 @@ function animateCoins() {
       if (dist < 1.2 && Math.abs(playerPos.y - c.mesh.position.y) < 1.8) {
         c.collected = true;
         scene.remove(c.mesh);
-        state.coins += 10;
-        localStorage.setItem('roblox_coins', state.coins.toString());
-        document.getElementById('coinCount').textContent = state.coins;
+        state.coins += 20;
+        state.xp += 30;
+        updateHUDStats();
         playSynthSound(880, 'sine', 0.1);
       }
     }
@@ -796,13 +860,6 @@ function animateCoins() {
 }
 
 function updateCameraPosition() {
-  if (state.mode === 'avatar') {
-    // Studio Fixed Camera
-    camera.position.set(0, 1.4, 4.2);
-    camera.lookAt(0, 1.4, 0);
-    return;
-  }
-
   const camDist = 7;
   const targetX = playerPos.x - Math.sin(cameraRotationY) * camDist * Math.cos(cameraRotationX);
   const targetY = playerPos.y + 2.5 + Math.sin(cameraRotationX) * camDist;
@@ -818,16 +875,38 @@ function resetPlayerPosition() {
 }
 
 // ==========================================================================
-// VICTORY & TIMER LOGIC
+// HUD STATS & VICTORY
 // ==========================================================================
 
+function updateHUDStats() {
+  localStorage.setItem('roblox_coins', state.coins.toString());
+  localStorage.setItem('roblox_xp', state.xp.toString());
+  localStorage.setItem('roblox_robux', state.robux.toString());
+  localStorage.setItem('roblox_level', state.level.toString());
+
+  document.getElementById('coinCount').textContent = state.coins;
+  document.getElementById('robuxCount').textContent = state.robux.toLocaleString();
+  document.getElementById('playerLevel').textContent = state.level;
+  document.getElementById('playerXp').textContent = state.xp;
+  document.getElementById('playerNameDisplay').textContent = state.playerName;
+
+  const xpPct = Math.min(100, (state.xp % 1000) / 10);
+  document.getElementById('xpBarFill').style.width = `${xpPct}%`;
+}
+
 function triggerVictory() {
+  if (window.confetti) {
+    confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
+  }
+
   playSynthSound(523, 'triangle', 0.2);
   setTimeout(() => playSynthSound(659, 'triangle', 0.2), 150);
   setTimeout(() => playSynthSound(783, 'triangle', 0.4), 300);
 
-  document.getElementById('vicCoins').textContent = state.coins;
-  document.getElementById('vicTime').textContent = document.getElementById('gameTimer').textContent;
+  state.coins += 150;
+  state.xp += 200;
+  updateHUDStats();
+
   document.getElementById('victoryModal').classList.remove('hidden');
 }
 
@@ -837,60 +916,8 @@ function nextLevelOrRestart() {
   loadObbyLevel(state.level);
 }
 
-function resetCurrentMode() {
-  if (state.mode === 'obby') loadObbyLevel(state.level);
-  if (state.mode === 'build') clearCustomWorld();
-}
-
-function startTimer() {
-  if (state.timerInterval) clearInterval(state.timerInterval);
-  state.timerSeconds = 0;
-
-  state.timerInterval = setInterval(() => {
-    state.timerSeconds++;
-    const m = String(Math.floor(state.timerSeconds / 60)).padStart(2, '0');
-    const s = String(state.timerSeconds % 60).padStart(2, '0');
-    document.getElementById('gameTimer').textContent = `${m}:${s}`;
-  }, 1000);
-}
-
 // ==========================================================================
-// AVATAR CUSTOMIZATION UPDATES
-// ==========================================================================
-
-function updateAvatarColors() {
-  state.avatar.shirt = document.getElementById('shirtColorPicker').value;
-  state.avatar.pants = document.getElementById('pantsColorPicker').value;
-  state.avatar.skin = document.getElementById('skinColorPicker').value;
-
-  localStorage.setItem('roblox_shirt', state.avatar.shirt);
-  localStorage.setItem('roblox_pants', state.avatar.pants);
-  localStorage.setItem('roblox_skin', state.avatar.skin);
-
-  torsoMesh.material.color.set(state.avatar.shirt);
-  lArmMesh.material.color.set(state.avatar.shirt);
-  rArmMesh.material.color.set(state.avatar.shirt);
-
-  lLegMesh.material.color.set(state.avatar.pants);
-  rLegMesh.material.color.set(state.avatar.pants);
-
-  drawFaceTexture(state.avatar.face);
-}
-
-function updateAvatarHat() {
-  state.avatar.hat = document.getElementById('hatSelect').value;
-  localStorage.setItem('roblox_hat', state.avatar.hat);
-  renderAvatarHat(state.avatar.hat);
-}
-
-function updateAvatarFace() {
-  state.avatar.face = document.getElementById('faceSelect').value;
-  localStorage.setItem('roblox_face', state.avatar.face);
-  drawFaceTexture(state.avatar.face);
-}
-
-// ==========================================================================
-// AUDIO SYNTHESIZER & TOAST UTILS
+// AUDIO & UTILS
 // ==========================================================================
 
 function initAudioCtx() {
@@ -900,13 +927,13 @@ function initAudioCtx() {
   } catch (e) {}
 }
 
-function toggleAudio() {
-  state.audioEnabled = !state.audioEnabled;
-  document.getElementById('btnAudioToggle').textContent = state.audioEnabled ? '🔊' : '🔇';
+function toggleMusic() {
+  state.musicEnabled = !state.musicEnabled;
+  document.getElementById('btnAudioToggle').textContent = state.musicEnabled ? '🎵' : '🔇';
 }
 
 function playSynthSound(freq, type = 'sine', duration = 0.15) {
-  if (!state.audioEnabled || !audioCtx) return;
+  if (!state.musicEnabled || !audioCtx) return;
   if (audioCtx.state === 'suspended') audioCtx.resume();
 
   const osc = audioCtx.createOscillator();
@@ -930,5 +957,19 @@ function showToast(text) {
   if (!el) return;
   el.textContent = text;
   el.classList.remove('hidden');
-  setTimeout(() => el.classList.add('hidden'), 2500);
+  setTimeout(() => el.classList.add('hidden'), 2800);
+}
+
+function openSettingsModal() {
+  document.getElementById('settingsModal').classList.remove('hidden');
+}
+
+function saveSettings() {
+  const val = document.getElementById('settingPlayerName').value.trim();
+  if (val) {
+    state.playerName = val;
+    localStorage.setItem('roblox_player_name', val);
+    updateHUDStats();
+  }
+  document.getElementById('settingsModal').classList.add('hidden');
 }
