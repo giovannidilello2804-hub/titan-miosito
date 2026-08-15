@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ROBLOX ULTIMATE GAMER HUB 3D - Il Gioco Speciale</title>
-  <meta name="description" content="Esperienza 3D Roblox Ultimate con Obby Neon, Pet 3D, Hatching Uova, Brookhaven, Blox Fruits e Avatar Studio.">
+  <title>Roblox Builder 3D - Il Costruttore di papà</title>
+  <meta name="description" content="Gioco 3D Costruttore stile Roblox/Minecraft. Costruisci case, castelli e città in 3D con modalità Volo e Blueprint.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
@@ -15,286 +15,93 @@
 </head>
 <body>
 
-  <!-- 3D Canvas Background Container -->
+  <!-- 3D Canvas Viewport -->
   <div id="game-container"></div>
 
-  <!-- MAIN ROBLOX HUB HEADER HUD -->
-  <header class="hub-header">
-    <div class="header-left">
-      <!-- Player Profile Card -->
-      <div class="player-card">
-        <div class="avatar-thumbnail" id="hudAvatarThumb">
-          <span class="thumb-icon">👤</span>
-        </div>
-        <div class="player-info">
-          <div class="player-name-row">
-            <span class="player-name" id="playerNameDisplay">PRO GAMER</span>
-            <span class="badge-pro">PRO 🌟</span>
-          </div>
-          <div class="xp-bar-container">
-            <div class="xp-bar-fill" id="xpBarFill" style="width: 65%;"></div>
-            <span class="xp-text">Livello <strong id="playerLevel">15</strong> | XP <span id="playerXp">650</span>/1000</span>
-          </div>
-        </div>
-      </div>
+  <!-- 3D Crosshair Pointer -->
+  <div id="crosshair" class="crosshair">+</div>
 
-      <!-- Currency Counters -->
-      <div class="currency-group">
-        <div class="currency-pill robux">
-          <span class="curr-icon">R$</span>
-          <span id="robuxCount">12,500</span>
-        </div>
-        <div class="currency-pill coins">
-          <span class="curr-icon">🪙</span>
-          <span id="coinCount">450</span>
-        </div>
+  <!-- TOP HUD HEADER BAR -->
+  <header class="hud-bar">
+    <div class="hud-left">
+      <div class="logo-box">
+        <span class="logo-icon">🧱</span>
+        <span class="logo-text">ROBLOX <span class="highlight-yellow">BUILDER 3D</span></span>
       </div>
+      <div class="mode-badge" id="flyStatusBadge">🕊️ VOLO ATTIVO (Premi F)</div>
     </div>
 
-    <!-- Center Navigation Tabs -->
-    <nav class="hub-nav">
-      <button class="nav-tab active" id="tabGames" onclick="switchTab('games')">🎮 Giochi Roblox</button>
-      <button class="nav-tab" id="tabObby3D" onclick="switchTab('obby3d')">🏃‍♂️ Obby 3D Neon</button>
-      <button class="nav-tab" id="tabPets" onclick="switchTab('pets')">🥚 Pet & Uova 3D</button>
-      <button class="nav-tab" id="tabAvatar" onclick="switchTab('avatar')">✨ Avatar Studio</button>
-      <button class="nav-tab" id="tabBuild" onclick="switchTab('build')">🧱 Costruttore 3D</button>
-    </nav>
+    <!-- Quick Blueprints / Templates -->
+    <div class="blueprints-bar">
+      <span class="bp-title">✨ Costruzioni Rapide:</span>
+      <button class="bp-btn" onclick="buildTemplate('house')">🏠 Casetta</button>
+      <button class="bp-btn" onclick="buildTemplate('castle')">🏰 Castello</button>
+      <button class="bp-btn" onclick="buildTemplate('tower')">🗼 Torre Neon</button>
+      <button class="bp-btn" onclick="buildTemplate('tree')">🌳 Albero 3D</button>
+    </div>
 
-    <div class="header-right">
-      <button class="icon-btn" id="btnAudioToggle" onclick="toggleMusic()" title="Musica di Sottofondo">🎵</button>
-      <button class="icon-btn" onclick="openSettingsModal()" title="Impostazioni">⚙️</button>
+    <div class="hud-right">
+      <button class="hud-btn save-btn" onclick="saveWorld()">💾 Salva</button>
+      <button class="hud-btn clear-btn" onclick="clearWorld()">🗑️ Svuota</button>
+      <button class="hud-btn audio-btn" id="btnAudio" onclick="toggleAudio()">🔊</button>
     </div>
   </header>
 
   <!-- NOTIFICATION TOAST -->
-  <div id="toastNotification" class="toast hidden"></div>
+  <div id="toast" class="toast hidden"></div>
 
-  <!-- TAB 1: ROBLOX FEATURED GAMES LAUNCHER GRID -->
-  <div id="viewGames" class="view-panel">
-    <div class="games-hero-banner">
-      <div class="hero-content">
-        <span class="hero-tag">🔥 IL PIÙ GIOCATO OSSI</span>
-        <h1>TOWER OF HELL NEON 3D</h1>
-        <p>Scalata ad alta velocità sulle isole fluttuanti neon con ostacoli animati e Pet 3D!</p>
-        <button class="btn-play-large" onclick="switchTab('obby3d')">▶ GIOCA ORA IN 3D</button>
-      </div>
-    </div>
-
-    <div class="section-title">
-      <h2>🎮 Giochi Roblox Popolari</h2>
-      <span class="subtitle">Scegli la modalità o avvia la sfida 3D</span>
-    </div>
-
-    <div class="games-grid">
-      <!-- Game Card 1 -->
-      <div class="game-card" onclick="startSpecialGame('blox_fruits')">
-        <div class="game-cover blox-fruits">
-          <span class="live-badge">🔴 142k Giocatori</span>
-          <span class="cover-icon">⚔️</span>
-        </div>
-        <div class="game-info">
-          <h3>Blox Fruits 3D</h3>
-          <p>Combatti con spade leggendarie e sblocca Frutti del Diavolo magici!</p>
-          <button class="btn-card-play">⚔️ Entra in Arena</button>
-        </div>
-      </div>
-
-      <!-- Game Card 2 -->
-      <div class="game-card" onclick="startSpecialGame('brookhaven')">
-        <div class="game-cover brookhaven">
-          <span class="live-badge">🔴 210k Giocatori</span>
-          <span class="cover-icon">🏠</span>
-        </div>
-        <div class="game-info">
-          <h3>Brookhaven RP</h3>
-          <p>Esplora la città 3D, guida auto sportive e costruisci la tua villa!</p>
-          <button class="btn-card-play">🚗 Esplora Città</button>
-        </div>
-      </div>
-
-      <!-- Game Card 3 -->
-      <div class="game-card" onclick="switchTab('pets')">
-        <div class="game-cover adopt-me">
-          <span class="live-badge">🔴 98k Giocatori</span>
-          <span class="cover-icon">🐶</span>
-        </div>
-        <div class="game-info">
-          <h3>Adopt Me! Pet Studio</h3>
-          <p>Schiudendo uova magiche sblocchi Pet leggendari che ti seguono in 3D!</p>
-          <button class="btn-card-play">🥚 Schiudi Uova</button>
-        </div>
-      </div>
-
-      <!-- Game Card 4 -->
-      <div class="game-card" onclick="switchTab('obby3d')">
-        <div class="game-cover tower-hell">
-          <span class="live-badge">🔴 185k Giocatori</span>
-          <span class="cover-icon">⚡</span>
-        </div>
-        <div class="game-info">
-          <h3>Tower of Hell Obby</h3>
-          <p>Sfida di parkour ad ostacoli con trampolini, laser e trofeo finale 🏆!</p>
-
-          <button class="btn-card-play">🏃‍♂️ Salta nel Parkour</button>
-        </div>
-      </div>
+  <!-- BOTTOM BLOCK PALETTE BAR -->
+  <div class="block-toolbar">
+    <div class="toolbar-title">🎨 Seleziona Blocco da Piazzare:</div>
+    <div class="palette-list" id="paletteList">
+      <button class="block-slot active" data-type="grass" onclick="setSelectBlock('grass')">
+        <span class="block-icon">🌱</span> Erba
+      </button>
+      <button class="block-slot" data-type="brick" onclick="setSelectBlock('brick')">
+        <span class="block-icon">🧱</span> Mattoni
+      </button>
+      <button class="block-slot" data-type="wood" onclick="setSelectBlock('wood')">
+        <span class="block-icon">🪵</span> Legno
+      </button>
+      <button class="block-slot" data-type="stone" onclick="setSelectBlock('stone')">
+        <span class="block-icon">🪨</span> Pietra
+      </button>
+      <button class="block-slot" data-type="gold" onclick="setSelectBlock('gold')">
+        <span class="block-icon">✨</span> Oro
+      </button>
+      <button class="block-slot" data-type="neon_cyan" onclick="setSelectBlock('neon_cyan')">
+        <span class="block-icon">⚡</span> Neon Ciano
+      </button>
+      <button class="block-slot" data-type="neon_pink" onclick="setSelectBlock('neon_pink')">
+        <span class="block-icon">💖</span> Neon Rosa
+      </button>
+      <button class="block-slot" data-type="water" onclick="setSelectBlock('water')">
+        <span class="block-icon">🌊</span> Acqua
+      </button>
+      <button class="block-slot" data-type="glass" onclick="setSelectBlock('glass')">
+        <span class="block-icon">🪟</span> Vetro
+      </button>
+      <button class="block-slot" data-type="lava" onclick="setSelectBlock('lava')">
+        <span class="block-icon">🔥</span> Lava
+      </button>
     </div>
   </div>
 
-  <!-- TAB 3: PETS & MYSTERY EGG UNBOXING STUDIO -->
-  <div id="viewPets" class="view-panel hidden">
-    <div class="pets-header">
-      <h2>🥚 Schiudi Uova & Pet 3D Companions</h2>
-      <p>Sblocca Pet leggendari che volano e ti seguono nel gioco 3D!</p>
-    </div>
-
-    <div class="eggs-shop-grid">
-      <!-- Egg 1 -->
-      <div class="egg-card">
-        <div class="egg-preview starter">🥚</div>
-        <h3>Uovo Starter</h3>
-        <p>Contiene: Gatto Neon, Cane Corgi</p>
-        <button class="btn-hatch" onclick="hatchEgg('starter', 100)">🪙 100 Monete - SCHIUDI</button>
-      </div>
-
-      <!-- Egg 2 -->
-      <div class="egg-card legendary">
-        <div class="egg-preview legendary">✨ 🥚 ✨</div>
-        <h3>Uovo Leggendario</h3>
-        <p>Contiene: Volpe Neon 🦊, Drago Volante 🐉</p>
-        <button class="btn-hatch legendary" onclick="hatchEgg('legendary', 300)">🪙 300 Monete - SCHIUDI</button>
-      </div>
-    </div>
-
-    <!-- Active Pet Selection -->
-    <div class="active-pet-section">
-      <h3>🐾 Seleziona il tuo Pet Attivo:</h3>
-      <div class="pet-selection-bar" id="petSelectionBar">
-        <button class="pet-select-btn active" onclick="equipPet('cat')">🐱 Gatto Neon</button>
-        <button class="pet-select-btn" onclick="equipPet('fox')">🦊 Volpe Fiammeggiante</button>
-        <button class="pet-select-btn" onclick="equipPet('dragon')">🐉 Drago Ciano</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- TAB 4: AVATAR STUDIO MODAL -->
-  <div id="viewAvatar" class="view-panel hidden">
-    <div class="avatar-studio-layout">
-      <div class="studio-sidebar">
-        <h2>✨ Studio Avatar & Accessori Neon</h2>
-        
-        <div class="custom-group">
-          <label>👕 Maglietta:</label>
-          <input type="color" id="shirtColorPicker" value="#00f0ff" onchange="updateAvatarStyle()">
-        </div>
-
-        <div class="custom-group">
-          <label>👖 Pantaloni:</label>
-          <input type="color" id="pantsColorPicker" value="#1a237e" onchange="updateAvatarStyle()">
-        </div>
-
-        <div class="custom-group">
-          <label>🖐️ Pelle Avatar:</label>
-          <input type="color" id="skinColorPicker" value="#ffe082" onchange="updateAvatarStyle()">
-        </div>
-
-        <div class="custom-group">
-          <label>🪽 Ali Neon Spettacolari:</label>
-          <select id="wingsSelect" onchange="updateAvatarStyle()">
-            <option value="none">Nessuna</option>
-            <option value="cyan">🪽 Ali Neon Cyan</option>
-            <option value="purple">🪽 Ali Viola Magiche</option>
-            <option value="gold">🪽 Ali d'Oro Reali</option>
-          </select>
-        </div>
-
-        <div class="custom-group">
-          <label>👑 Cappello / Elmo:</label>
-          <select id="hatSelect" onchange="updateAvatarStyle()">
-            <option value="crown">👑 Corona d'Oro</option>
-            <option value="cap">🧢 Cappellino Red Gaming</option>
-            <option value="viking">⚔️ Elmo Vichingo</option>
-            <option value="headphones">🎧 Cuffie RGB Neon</option>
-          </select>
-        </div>
-
-        <div class="custom-group">
-          <label>😃 Espressione Viso:</label>
-          <select id="faceSelect" onchange="updateAvatarStyle()">
-            <option value="happy">😃 Sorridente</option>
-            <option value="cool">😎 Occhiali da Sole Cool</option>
-            <option value="ninja">🥷 Maschera Ninja</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TAB 5: BUILD MODE PALETTE BAR -->
-  <div id="buildPaletteBar" class="build-palette hidden">
-    <div class="palette-title">🧱 Scegli Blocco 3D:</div>
-    <div class="palette-items">
-      <button class="palette-item active" data-block="grass" onclick="selectBlockType('grass')">🌱 Erba</button>
-      <button class="palette-item" data-block="brick" onclick="selectBlockType('brick')">🧱 Mattoni</button>
-      <button class="palette-item" data-block="wood" onclick="selectBlockType('wood')">🪵 Legno</button>
-      <button class="palette-item" data-block="gold" onclick="selectBlockType('gold')">✨ Oro</button>
-      <button class="palette-item" data-block="neon" onclick="selectBlockType('neon')">⚡ Neon Cyan</button>
-      <button class="palette-item" data-block="lava" onclick="selectBlockType('lava')">🔥 Lava</button>
-      <button class="palette-item" data-block="rainbow" onclick="selectBlockType('rainbow')">🌈 Arcobaleno</button>
-    </div>
-    <div class="build-actions">
-      <button class="action-btn save" onclick="saveCustomWorld()">💾 Salva Mondo 3D</button>
-      <button class="action-btn clear" onclick="clearCustomWorld()">🗑️ Svuota</button>
-    </div>
-  </div>
-
-  <!-- TOUCH / MOBILE CONTROLS OVERLAY -->
-  <div id="touchControls" class="touch-controls">
-    <div id="joystickZone" class="joystick-container">
+  <!-- TOUCH / MOBILE CONTROLS -->
+  <div class="touch-overlay" id="touchControls">
+    <div id="joystickZone" class="joystick-base">
       <div id="joystickKnob" class="joystick-knob"></div>
     </div>
-    <div class="touch-action-buttons">
-      <button class="touch-btn jump-btn" id="touchBtnJump">⬆ SALTO</button>
-      <button class="touch-btn action-btn-touch hidden" id="touchBtnAction">🧱 PIAZZA</button>
+    <div class="touch-actions">
+      <button class="t-btn place-btn" id="btnTouchPlace">➕ PIAZZA</button>
+      <button class="t-btn break-btn" id="btnTouchBreak">❌ DISTRUGGI</button>
+      <button class="t-btn fly-btn" onclick="toggleFly()">🕊️ VOLA</button>
     </div>
   </div>
 
-  <!-- VICTORY MODAL OVERLAY -->
-  <div id="victoryModal" class="modal-backdrop hidden">
-    <div class="modal-card victory-card">
-      <div class="trophy-bounce">🏆</div>
-      <h2>VITTORIA STREPITOSA!</h2>
-      <p>Hai conquistato il Trofeo d'Oro nel mondo 3D!</p>
-      <div class="victory-stats">
-        <div>Monete guadagnate: <strong id="vicCoins">+150 🪙</strong></div>
-        <div>Esperienza XP: <strong id="vicXp">+200 XP ⭐</strong></div>
-      </div>
-      <div class="modal-buttons">
-        <button class="btn-primary" onclick="nextLevelOrRestart()">🚀 Prossimo Livello 3D</button>
-        <button class="btn-secondary" onclick="switchTab('pets')">🥚 Schiudi Nuovo Pet</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SETTINGS MODAL -->
-  <div id="settingsModal" class="modal-backdrop hidden">
-    <div class="modal-card">
-      <h2>⚙️ Impostazioni Giocatore</h2>
-      <div class="setting-item">
-        <label>Nome Giocatore:</label>
-        <input type="text" id="settingPlayerName" value="PRO GAMER">
-      </div>
-      <div class="modal-buttons" style="margin-top: 20px;">
-        <button class="btn-primary" onclick="saveSettings()">Salva e Chiudi</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- FOOTER HINT BAR -->
-  <footer class="game-footer">
-    <div class="controls-hint">
-      <span>⌨️ <strong>Controlli PC:</strong> W A S D / Frecce = Muoviti | SPAZIO = Salta | Mouse Drag = Ruota Camera 360° | E = Piazza Blocco | Q = Rimuovi Blocco</span>
-    </div>
+  <!-- INSTRUCTIONS BAR -->
+  <footer class="footer-instructions">
+    <span>⌨️ <strong>Controlli PC:</strong> W A S D / Frecce = Muoviti | SPAZIO = Vola Su | SHIFT = Scendi | <strong>CLICK SINISTRO</strong> = Piazza Blocco | <strong>CLICK DESTRO (o Q)</strong> = Rimuovi Blocco | <strong>F</strong> = Attiva/Disattiva Volo</span>
   </footer>
 
   <script src="game.js"></script>
