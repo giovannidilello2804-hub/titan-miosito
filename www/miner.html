@@ -666,17 +666,26 @@
     <div style="background: rgba(18,24,36,0.95); border: 1px solid var(--border-cyan); border-radius: 16px; padding: 20px; margin-bottom: 25px; box-shadow: 0 0 30px rgba(0,240,255,0.15);">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
         <div style="font-weight: 700; color: #fff; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-          <span>📦</span> MATRICE NODI DISPOSITIVI TITAN 3D (ILLUMINAZIONE LIVE NODI)
+          <span>📦</span> MATRICE NODI DISPOSITIVI TITAN 3D (VISIONE 1, 2 O TUTTI E 3 INSIEME)
         </div>
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button onclick="selectPresets('all3')" style="background: rgba(0,255,102,0.15); border: 1px solid #00ff66; color: #00ff66; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer;">
+            ⚡ TUTTI E 3 INSIEME (229.3 KH/s)
+          </button>
+          <button onclick="selectPresets('two')" style="background: rgba(0,240,255,0.15); border: 1px solid #00f0ff; color: #00f0ff; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer;">
+            👥 2 ALLA VOLTA (151.2 KH/s)
+          </button>
+          <button onclick="selectPresets('single')" style="background: rgba(255,183,3,0.15); border: 1px solid #ffb703; color: #ffb703; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer;">
+            1️⃣ 1 ALLA VOLTA (76.4 KH/s)
+          </button>
           <button id="btnAutoCycle" onclick="toggleAutoCycle()" style="background: rgba(255,183,3,0.15); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s;">
-            🔄 AVVIA CICLO ILLUMINAZIONE AUTO (1-2-3-4)
+            🔄 CICLO AUTO (1-2-3)
           </button>
         </div>
       </div>
 
       <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">
-        Clicca sui <strong>Nodi / Dispositivi 3D</strong> qui sotto per illuminarne 1, 2 o più contemporaneamente. I numeri della velocità totale cambiano istantaneamente in tempo reale!
+        Puoi illuminare e vedere <strong>tutti e 3 i tuoi nodi ESP32-S3 contemporaneamente</strong> oppure selezionarne 1 o 2 alla volta! I numeri della velocità e le luci si aggiornano all'istante!
       </p>
 
       <!-- PAKKINE GRID MATRICE -->
@@ -991,6 +1000,36 @@
       updatePakkineUI();
     }
 
+    function selectPresets(mode) {
+      if (autoCycleTimer) {
+        clearInterval(autoCycleTimer);
+        autoCycleTimer = null;
+        const btn = document.getElementById('btnAutoCycle');
+        if (btn) {
+          btn.innerText = '🔄 CICLO AUTO (1-2-3)';
+          btn.style.background = 'rgba(255,183,3,0.15)';
+        }
+      }
+
+      if (mode === 'all3') {
+        pakkinaActive[1] = true;
+        pakkinaActive[2] = true;
+        pakkinaActive[3] = true;
+        pakkinaActive[4] = false;
+      } else if (mode === 'two') {
+        pakkinaActive[1] = true;
+        pakkinaActive[2] = true;
+        pakkinaActive[3] = false;
+        pakkinaActive[4] = false;
+      } else if (mode === 'single') {
+        pakkinaActive[1] = true;
+        pakkinaActive[2] = false;
+        pakkinaActive[3] = false;
+        pakkinaActive[4] = false;
+      }
+      updatePakkineUI();
+    }
+
     function updatePakkineUI() {
       let activeCount = 0;
       let totalHash = 0;
@@ -1022,7 +1061,7 @@
       if (autoCycleTimer) {
         clearInterval(autoCycleTimer);
         autoCycleTimer = null;
-        btn.innerText = '🔄 AVVIA CICLO ILLUMINAZIONE AUTO (1-2-3-4)';
+        btn.innerText = '🔄 CICLO AUTO (1-2-3)';
         btn.style.background = 'rgba(255,183,3,0.15)';
       } else {
         let current = 1;
@@ -1034,13 +1073,11 @@
 
         autoCycleTimer = setInterval(() => {
           current++;
-          if (current > 4) current = 1;
+          if (current > 3) current = 1;
 
-          // Cycle patterns: 1 node -> 2 nodes -> 3 nodes -> 4 nodes
           if (current === 1) { pakkinaActive[1]=true; pakkinaActive[2]=false; pakkinaActive[3]=false; pakkinaActive[4]=false; }
           else if (current === 2) { pakkinaActive[1]=true; pakkinaActive[2]=true; pakkinaActive[3]=false; pakkinaActive[4]=false; }
           else if (current === 3) { pakkinaActive[1]=true; pakkinaActive[2]=true; pakkinaActive[3]=true; pakkinaActive[4]=false; }
-          else if (current === 4) { pakkinaActive[1]=true; pakkinaActive[2]=true; pakkinaActive[3]=true; pakkinaActive[4]=true; }
 
           updatePakkineUI();
         }, 2500);
@@ -1179,7 +1216,7 @@
         const terminal = document.getElementById('cyberTerminal');
         if (terminal && Math.random() > 0.3) {
           const now = new Date().toLocaleTimeString('it-IT');
-          const nodeNum = Math.floor(Math.random() * 4) + 1;
+          const nodeNum = Math.floor(Math.random() * 3) + 1;
           const diff = Math.floor(10000 + Math.random() * 25000);
           const hexHash = Array.from({length: 16}, () => Math.floor(Math.random()*16).toString(16)).join('');
           
