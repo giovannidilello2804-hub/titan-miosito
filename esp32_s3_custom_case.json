@@ -1,0 +1,25 @@
+{
+    "parameterSets": {
+        "10": {
+            "$fn": "60",
+            "board_length": "58.5",
+            "board_thickness": "1.6",
+            "board_width": "28.5",
+            "clearance": "0.6",
+            "comp_height_bot": "3",
+            "comp_height_top": "6",
+            "wall_thickness": "2"
+        },
+        "20": {
+            "$fn": "60",
+            "board_length": "58.5",
+            "board_thickness": "1.6",
+            "board_width": "28.5",
+            "clearance": "0.6",
+            "comp_height_bot": "3",
+            "comp_height_top": "6",
+            "wall_thickness": "2"
+        }
+    },
+    "fileFormatVersion": "1"
+}

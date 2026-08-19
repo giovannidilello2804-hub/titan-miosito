@@ -46,7 +46,7 @@
       border: 1px solid var(--border-cyan);
       border-radius: 20px;
       padding: 35px 25px;
-      max-width: 440px;
+      max-width: 460px;
       width: 100%;
       text-align: center;
       box-shadow: 0 0 40px rgba(0, 240, 255, 0.2);
@@ -390,23 +390,23 @@
 </head>
 <body>
 
-  <!-- SCHERMATA DI LOGIN MANDATORIA AD OGNI ACCESSO -->
+  <!-- SCHERMATA DI LOGIN LOGIN CLIENTE / PROPRIETARIO -->
   <div id="lockScreen">
     <div class="lock-icon">🔐</div>
-    <div class="lock-title">TITAN MINER CONTROL</div>
-    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">Scegli la modalità di accesso al pannello:</p>
+    <div class="lock-title">TITAN CLOUD CONTROL</div>
+    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">Inserisci il tuo PIN personale o prova la Demo:</p>
     
-    <button class="btn-demo-mode" onclick="startDemoMode()">👁️ AVVIA DEMO GENERICA CLIENTE & GUARDA NIDO D'APE 3D</button>
+    <button class="btn-demo-mode" onclick="startDemoMode()">👁️ AVVIA DEMO GENERICA CLIENTE</button>
 
     <div style="margin: 20px 0; display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.8rem;">
       <div style="flex:1; height:1px; background: rgba(255,255,255,0.1);"></div>
-      <span>RICHIEDE PASSWORD PER DATI REALI</span>
+      <span>ACCESSO RISERVATO CLIENTE / ADMIN</span>
       <div style="flex:1; height:1px; background: rgba(255,255,255,0.1);"></div>
     </div>
     
-    <input type="password" id="pinInput" class="pin-input" placeholder="Inserisci PIN / Password" maxlength="12" onkeydown="if(event.key === 'Enter') checkPin()">
-    <button class="btn-login" onclick="checkPin()">🔑 SBLOCCA DATI REALI CON PASSWORD</button>
-    <div id="errorMessage">⚠️ PIN Errato! Accesso Negato ai Dati Reali.</div>
+    <input type="password" id="pinInput" class="pin-input" placeholder="Inserisci PIN Personale" maxlength="12" onkeydown="if(event.key === 'Enter') checkPin()">
+    <button class="btn-login" onclick="checkPin()">🔑 ACCEDI ALLA TUA AREA RISERVATA</button>
+    <div id="errorMessage">⚠️ PIN Errato o Non Valido! Riprova.</div>
   </div>
 
   <!-- MAIN APP CONTAINER -->
@@ -420,7 +420,7 @@
     <!-- Header -->
     <header>
       <div class="logo-title">TITAN <span>MINER</span> CONTROL</div>
-      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Pannello di Monitoraggio in Tempo Reale per ESP32-S3 Solo Mining</p>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Pannello Cloud di Monitoraggio H24 ESP32-S3 Solo Mining</p>
 
       <div class="status-badge-container">
         <div class="status-pill">
@@ -436,7 +436,7 @@
       </div>
     </header>
 
-    <!-- CARD VISTA GRAFICA REALE COVER PLA NIDO D'APE (GARANTITA AL 100% SU OGNI CELLULARE) -->
+    <!-- CARD VISTA GRAFICA REALE COVER PLA NIDO D'APE -->
     <div class="card-honeycomb-showcase">
       <div style="font-weight: 700; color: var(--accent-gold); font-size: 1.25rem; letter-spacing: 1px;">
         🐝 CUSTODIA TITAN 3D IN PLA — CUSTODIA A NIDO D'APE ESAGONALE
@@ -601,22 +601,76 @@
   </div>
 
   <script>
-    const SECRET_PIN = "2804";
-    let isOwnerMode = false;
-    let hashCounter = 18452900;
+    // DATABASE MULTI-CLIENTE TITAN CLOUD
+    const CLIENT_DATABASE = {
+      // 1. ACCESSO REALE PROPRIETARIO GIOVANNI
+      "2804": {
+        name: "👑 ACCESSO PROPRIETARIO (GIOVANNI - DATI REALI)",
+        wallet: "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk",
+        ip: "192.168.1.82",
+        mac: "80:B5:4E:C7:EC:9C",
+        statusText: "ESP32-S3 REALE ONLINE (192.168.1.82)",
+        walletType: "Trust Wallet Giovanni (Reale)",
+        color: "#00f0ff"
+      },
+      "gio": {
+        name: "👑 ACCESSO PROPRIETARIO (GIOVANNI - DATI REALI)",
+        wallet: "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk",
+        ip: "192.168.1.82",
+        mac: "80:B5:4E:C7:EC:9C",
+        statusText: "ESP32-S3 REALE ONLINE (192.168.1.82)",
+        walletType: "Trust Wallet Giovanni (Reale)",
+        color: "#00f0ff"
+      },
+      "admin": {
+        name: "👑 ACCESSO PROPRIETARIO (GIOVANNI - DATI REALI)",
+        wallet: "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk",
+        ip: "192.168.1.82",
+        mac: "80:B5:4E:C7:EC:9C",
+        statusText: "ESP32-S3 REALE ONLINE (192.168.1.82)",
+        walletType: "Trust Wallet Giovanni (Reale)",
+        color: "#00f0ff"
+      },
 
-    // REAL PRIVATE DATA FOR GIOVANNI (STRICTLY LOCKED UNTIL PIN 2804 IS ENTERED)
-    const REAL_WALLET = "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk";
-    const REAL_IP = "192.168.1.82";
-    const REAL_MAC = "80:B5:4E:C7:EC:9C";
+      // 2. ESEMPIO CLIENTE MARCO ROSSI (PIN 1234)
+      "1234": {
+        name: "👤 AREA RISERVATA CLIENTE: MARCO ROSSI",
+        wallet: "bc1qmarco_rossi_btc_wallet_987654321",
+        ip: "192.168.1.105 (Nodo Marco)",
+        mac: "4A:2B:1C:8D:9E:01",
+        statusText: "ESP32-S3 NODO MARCO ONLINE",
+        walletType: "Wallet Bitcoin Personalizzato Marco",
+        color: "#ffb703"
+      },
+
+      // 3. ESEMPIO CLIENTE LUCA BIANCHI (PIN 5678)
+      "5678": {
+        name: "👤 AREA RISERVATA CLIENTE: LUCA BIANCHI",
+        wallet: "bc1qluca_bianchi_btc_wallet_543210987",
+        ip: "192.168.1.108 (Nodo Luca)",
+        mac: "7E:8F:9A:0B:1C:2D",
+        statusText: "ESP32-S3 NODO LUCA ONLINE",
+        walletType: "Wallet Bitcoin Personalizzato Luca",
+        color: "#00ff66"
+      }
+    };
 
     // ANONYMOUS DEMO DATA FOR PUBLIC VISITORS
-    const DEMO_WALLET = "bc1qdemo_cliente_esempio_wallet_123456789";
-    const DEMO_IP = "192.168.1.100 (Nodo Demo)";
-    const DEMO_MAC = "DE:MO:EX:AM:PL:E1";
+    const DEMO_CLIENT = {
+      name: "✨ DEMO GENERICA CLIENTE (DATI SIMULATI)",
+      wallet: "bc1qdemo_cliente_esempio_wallet_123456789",
+      ip: "192.168.1.100 (Nodo Demo)",
+      mac: "DE:MO:EX:AM:PL:E1",
+      statusText: "ESP32-S3 DEMO NODE",
+      walletType: "Wallet Esempio Cliente",
+      color: "#ffb703"
+    };
+
+    let activeClient = DEMO_CLIENT;
+    let hashCounter = 18452900;
 
     function startDemoMode() {
-      isOwnerMode = false;
+      activeClient = DEMO_CLIENT;
       applyModeData();
       document.getElementById('lockScreen').style.display = 'none';
       document.getElementById('mainApp').style.display = 'block';
@@ -625,9 +679,9 @@
     }
 
     function checkPin() {
-      const input = document.getElementById('pinInput').value;
-      if (input === SECRET_PIN || input === "admin" || input === "gio") {
-        isOwnerMode = true;
+      const input = document.getElementById('pinInput').value.trim();
+      if (CLIENT_DATABASE[input]) {
+        activeClient = CLIENT_DATABASE[input];
         applyModeData();
         document.getElementById('lockScreen').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
@@ -641,31 +695,25 @@
     }
 
     function applyModeData() {
-      if (isOwnerMode) {
-        document.getElementById('modeBadge').innerText = '👑 ACCESSO PROPRIETARIO (GIOVANNI - DATI REALI)';
-        document.getElementById('modeBadge').style.borderColor = '#00f0ff';
-        document.getElementById('modeBadge').style.color = '#00f0ff';
-        document.getElementById('espStatusText').innerText = `ESP32-S3 REALE ONLINE (${REAL_IP})`;
-        document.getElementById('espMacText').innerText = `MAC: ${REAL_MAC}`;
-        document.getElementById('espIpVal').innerText = REAL_IP;
-        document.getElementById('btcAddressText').innerText = REAL_WALLET;
-        document.getElementById('walletTypeText').innerText = 'Trust Wallet Giovanni (Reale)';
-        document.getElementById('mempoolLink').href = `https://mempool.space/address/${REAL_WALLET}`;
+      document.getElementById('modeBadge').innerText = activeClient.name;
+      document.getElementById('modeBadge').style.borderColor = activeClient.color;
+      document.getElementById('modeBadge').style.color = activeClient.color;
+
+      document.getElementById('espStatusText').innerText = activeClient.statusText;
+      document.getElementById('espMacText').innerText = `MAC: ${activeClient.mac}`;
+      document.getElementById('espIpVal').innerText = activeClient.ip;
+      document.getElementById('btcAddressText').innerText = activeClient.wallet;
+      document.getElementById('walletTypeText').innerText = activeClient.walletType;
+
+      if (activeClient.wallet.startsWith('bc1qx4e7')) {
+        document.getElementById('mempoolLink').href = `https://mempool.space/address/${activeClient.wallet}`;
       } else {
-        document.getElementById('modeBadge').innerText = '✨ DEMO GENERICA CLIENTE (DATI SIMULATI)';
-        document.getElementById('modeBadge').style.borderColor = '#ffb703';
-        document.getElementById('modeBadge').style.color = '#ffb703';
-        document.getElementById('espStatusText').innerText = 'ESP32-S3 DEMO NODE';
-        document.getElementById('espMacText').innerText = `MAC: ${DEMO_MAC}`;
-        document.getElementById('espIpVal').innerText = DEMO_IP;
-        document.getElementById('btcAddressText').innerText = DEMO_WALLET;
-        document.getElementById('walletTypeText').innerText = 'Wallet Esempio Cliente';
         document.getElementById('mempoolLink').href = 'https://mempool.space';
       }
     }
 
     function logout() {
-      isOwnerMode = false;
+      activeClient = DEMO_CLIENT;
       document.getElementById('mainApp').style.display = 'none';
       document.getElementById('lockScreen').style.display = 'block';
       document.getElementById('pinInput').value = '';
