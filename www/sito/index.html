@@ -1,41 +1,171 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Titan 3D Studio | Stampa 3D, Scansione 3D & Progettazione CAD</title>
-    <meta name="description" content="Laboratorio di Stampa 3D ad alta velocità con Bambu Lab X1C, Anycubic Max grande formato, Scanner 3D e modellazione CAD (Fusion 360, FreeCAD, 123D).">
-    <meta name="msvalidate.01" content="1E7B3B7832D8B37D07C02B8C9C275559">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TITAN 3D (titan3d.it) | Stampa 3D Multicolore & Progettazione di Giovanni Di Lello</title>
+  <meta name="description" content="Laboratorio avanzato di stampa 3D ad alta precisione titan3d.it di Giovanni Di Lello. Materiali 100% atossici ed eco-friendly. Preventivatore 3D interattivo, tecnologie AMS & ACE Pro 2 fino a 4 colori.">
+  <meta name="google-site-verification" content="googleadeb123b383fe22c">
+  <meta name="msvalidate.01" content="1E7B3B7832D8B37D07C02B8C9C275559">
+  <link rel="canonical" href="https://titan3d.it/">
+  <meta property="og:title" content="TITAN 3D (titan3d.it) | Stampa 3D Multicolore & Progettazione di Giovanni Di Lello">
+  <meta property="og:description" content="Laboratorio avanzato di stampa 3D ad alta precisione titan3d.it di Giovanni Di Lello. Materiali 100% atossici ed eco-friendly. Preventivatore 3D interattivo, tecnologie AMS & ACE Pro 2 fino a 4 colori.">
+  <meta property="og:url" content="https://titan3d.it/">
+  <meta property="og:type" content="website">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "TITAN 3D Studio Giovanni Di Lello",
+    "url": "https://titan3d.it/",
+    "logo": "https://titan3d.it/assets/hero.jpg",
+    "description": "Laboratorio avanzato di stampa 3D ad alta precisione, servizi CAD e preventivatore 3D interattivo.",
+    "priceRange": "€€"
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Rajdhani:wght@600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="bg-blur-ambient"></div>
 
-    <!-- Header Navigation -->
-    <header class="navbar">
-        <div class="nav-container">
-            <a href="#" class="brand-logo">
-                <div class="logo-box">3D</div>
-                <div class="logo-text">Titan<span class="highlight">3D Forge</span></div>
-            </a>
-            
-            <nav class="nav-menu">
-                <a href="#home" class="nav-link active">Home</a>
-                <a href="#attrezzatura" class="nav-link">Parco Macchine</a>
-                <a href="#software" class="nav-link">CAD & Modellazione</a>
-                <a href="#servizi" class="nav-link">Servizi</a>
-                <a href="#preventivo" class="nav-link btn-nav">Richiedi Preventivo</a>
-            </nav>
+  <!-- Background Particle / Mesh Glow -->
+  <div class="bg-mesh-overlay"></div>
+
+  <!-- Header Section -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="logo-icon-3d">
+          <div class="cube-inner"></div>
         </div>
-    </header>
+        <div class="logo-text">
+          <span class="brand-title">TITAN <span class="accent-cyan">3D</span> <span style="font-size:0.75em; color:var(--text-muted); font-weight:400; text-transform:none;">.it</span></span>
+          <span class="brand-subtitle">STUDIO GIOVANNI DI LELLO</span>
+        </div>
+      </div>
 
-    <main class="main-content">
-        <!-- Hero Section -->
-        <section id="home" class="hero-card">
-       <!-- PRICING PACKAGES GRID -->
+      <!-- Live Machine Status Traffic Light Badge -->
+      <div class="status-semaforo-badge" id="semaforoBadge">
+        <div class="status-dot green" id="semaforoDot"></div>
+        <div class="status-info">
+          <span class="status-label" id="semaforoLabel">MACCHINE DISPONIBILI</span>
+          <span class="status-sub" id="semaforoSub">2/2 Macchine Pronte</span>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#macchine">Macchine & Canali</a>
+        <a href="#timelapse">Timelapse</a>
+        <a href="/miner.html" style="color: #00f0ff; font-weight: 800;">👥 Area Riservata Clienti</a>
+        <a href="/miner.html" class="nav-miner-btn" style="color: #ffb703; font-weight: 800; background: rgba(255, 183, 3, 0.2); padding: 6px 14px; border-radius: 8px; border: 1px solid #ffb703; box-shadow: 0 0 10px rgba(255,183,3,0.4);">⛏️ MINER BITCOIN CLOUD</a>
+        <a href="#sicurezza" class="text-green">🍃 Eco & Atossico</a>
+        <a href="#preventivatore" class="btn-nav-highlight">Preventivatore 3D</a>
+        <a href="#cad-service">Servizio CAD</a>
+        <button id="bgMusicBtn" onclick="toggleBgMusic()" ondblclick="skipNextMusicTrack()" class="btn-music-toggle" title="Clicca per Avviare/Pausa - Doppio Clic per Prossimo Brano">🎵 <span id="bgMusicStatus">Musica OFF</span></button>
+        <button class="btn-admin-access" onclick="openAdminModal()" title="Pannello Proprietario Giovanni">⚙️ Admin</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Audio Element for Ambient High-Tech Music -->
+  <audio id="bgAudio" loop preload="auto">
+    <source src="assets/bg_music.mp3" type="audio/mpeg">
+    <source src="assets/musica/bg_music.mp3" type="audio/mpeg">
+    <source src="assets/audio/bg_music.mp3" type="audio/mpeg">
+    <source src="assets/musica/musica.mp3" type="audio/mpeg">
+    <source src="assets/audio/musica.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-bg-wrapper">
+      <img src="assets/hero.jpg" alt="Titan 3D Forge Studio di Giovanni Di Lello" class="hero-bg-img">
+      <div class="hero-gradient-overlay"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="cyber-tag">LABORATORIO ARTIGIANALE HIGH-TECH</div>
+      <h1>STAMPA 3D AD ALTA PRECISIONE <br><span class="gradient-text">& MULTICOLORE</span></h1>
+      <p class="hero-description">
+        Stampa 3D professionale a colori ad alta risoluzione. Parco macchine specializzato <strong>Bambu Lab X1 Carbon (AMS 4 Colori)</strong> e <strong>Anycubic S1 Max (350×350×350mm Camera Chiusa + ACE Pro 2)</strong>.
+      </p>
+
+      <!-- Indoor Health & Eco Banner -->
+      <div class="eco-health-banner">
+        <span class="eco-icon">🍃</span>
+        <div class="eco-text">
+          <strong>100% MATERIALI ATOSSICI ED ECO-FRIENDLY:</strong> Usiamo esclusivamente polimeri sicuri ed inodori (PLA bio-amido, PLA alimentare, PETG, TPU) ideali per la casa, prototipi e giocattoli per bambini. Zero esalazioni tossiche (No ABS / No ASA).
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <a href="#preventivatore" class="btn-primary">
+          <span>⚡ CALCOLA PREVENTIVO ISTANTANEO</span>
+        </a>
+        <a href="#simulatore" class="btn-secondary">
+          <span>🔮 PROVA IL SIMULATORE 3D LIVE</span>
+        </a>
+      </div>
+
+      <!-- Fleet Badges -->
+      <div class="hero-fleet-pills">
+        <div class="fleet-pill">
+          <span class="pill-dot cyan"></span>
+          <span>Bambu Lab X1 Carbon + AMS 4 Colori (256×256×256mm)</span>
+        </div>
+        <div class="fleet-pill">
+          <span class="pill-dot amber"></span>
+          <span>Anycubic S1 Max + ACE Pro 2 (350×350×350mm Camera Chiusa)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dedicated Feature Section: ESP32 Solo Miner & Custom Web Dashboard Service -->
+  <section id="custom-miner-service" class="section-container" style="background: linear-gradient(135deg, rgba(18,24,36,0.9) 0%, rgba(10,13,20,0.95) 100%); border: 1px solid rgba(255,183,3,0.35); border-radius: 24px; padding: 40px 25px; margin: 30px auto; max-width: 1200px; box-shadow: 0 0 35px rgba(255,183,3,0.15);">
+    <div class="section-header" style="text-align: center; margin-bottom: 30px;">
+      <div class="section-badge" style="background: rgba(255,183,3,0.15); color: #ffb703; border: 1px solid rgba(255,183,3,0.4); display: inline-block; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 12px;">🔥 NOVITÀ EXCLUSIVE TITAN 3D STUDIO</div>
+      <h2 style="font-size: 2.2rem; margin-bottom: 12px; color: #fff;">CREAZIONE <span class="gradient-text" style="background: linear-gradient(90deg, #ffb703, #00f0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">ESP32 BITCOIN MINER</span> & DASHBOARD WEB</h2>
+      <p style="max-width: 700px; margin: 0 auto; color: #8a99ad; font-size: 1rem; line-height: 1.6;">
+        Progettiamo ed assembliamo il tuo <strong>ESP32-S3 Solo Miner</strong> personalizzato in custodia 3D custom con <strong>Spazio Web Riservato</strong> per controllare temperatura, potenza e Bitcoin minati da qualsiasi parte del mondo!
+      </p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;">
+      
+      <!-- Card 1: Hardware Custom ESP32 -->
+      <div style="background: rgba(10, 13, 20, 0.85); border: 1px solid rgba(0, 240, 255, 0.25); border-radius: 16px; padding: 25px;">
+        <div style="font-size: 2.5rem; margin-bottom: 15px;">⚡</div>
+        <h3 style="color: #00f0ff; font-size: 1.4rem; margin-bottom: 10px;">1. Hardware ESP32-S3 & Cover PLA 3D Anti-Sfilamento</h3>
+        <p style="color: #8a99ad; font-size: 0.95rem; line-height: 1.6;">
+          Flasciamo ed ottimizziamo micro-controller Dual-Core ESP32-S3 (240MHz + 8MB PSRAM) completi di nuova <strong>Custodia 3D v4 in PLA Nido d'Ape</strong> con apertura per 2 porte USB-C e <strong>dentini di trattenuta anti-scivolamento cavo</strong>. Plug & Play: colleghi ed inizia a minare!
+        </p>
+        <ul style="list-style: none; margin-top: 15px; color: #f0f4f8; font-size: 0.88rem; line-height: 1.8;">
+          <li>✔️ Cover PLA v4 ad Alveare (Doppia USB-C + Dentino Anti-Sfilamento Cavo)</li>
+          <li>✔️ Consumo ultrabasso (solo 0.8 Watt = 0.05€/mese)</li>
+          <li>✔️ Piena integrazione con Trust Wallet per accredito vincita</li>
+        </ul>
+      </div>
+
+      <!-- Card 2: Spazio Web & Dashboard Custom con ESP32-CAM -->
+      <div style="background: rgba(10, 13, 20, 0.85); border: 1px solid rgba(255, 183, 3, 0.35); border-radius: 16px; padding: 25px;">
+        <div style="font-size: 2.5rem; margin-bottom: 15px;">🌐</div>
+        <h3 style="color: #ffb703; font-size: 1.4rem; margin-bottom: 10px;">2. Cloud Remoto H24 + Telecamera ESP32-CAM Live</h3>
+        <p style="color: #8a99ad; font-size: 0.95rem; line-height: 1.6;">
+          Creiamo una pagina web dedicata protetta da <strong>PIN personale</strong> per controllare il tuo miner in tempo reale ed includiamo l'integrazione con <strong>ESP32-CAM</strong> per vedere lo stream video live della tua postazione!
+        </p>
+        <ul style="list-style: none; margin-top: 15px; color: #f0f4f8; font-size: 0.88rem; line-height: 1.8;">
+          <li>📹 Streaming Video Live HD con modulo ESP32-CAM e Flash LED</li>
+          <li>⚡ Visione parallela di 1, 2 o tutti e 3 i tuoi Nodi ESP32-S3</li>
+          <li>🔐 Pagina web Cloud riservata protetta da PIN personale</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- PRICING PACKAGES GRID -->
     <div style="margin-top: 35px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px;">
       <h3 style="text-align: center; color: #fff; font-size: 1.6rem; margin-bottom: 8px;">PACCHETTI, SERVIZI & LISTINO PREZZI</h3>
       <p style="text-align: center; color: #8a99ad; font-size: 0.9rem; margin-bottom: 25px;">Scegli la soluzione adatta alle tue esigenze. Passa sopra o tocca per illuminare!</p>
@@ -119,186 +249,337 @@
         <span>⚡ Bonifico Istantaneo</span>
       </div>
     </div>
-            <div class="hero-image-wrapper">
-                <img src="assets/maker_banner.jpg" alt="Laboratorio Stampa 3D e Scansione 3D" class="hero-image">
-                <div class="hero-overlay"></div>
-            </div>
-            <div class="hero-content">
-                <span class="category-badge badge-primary">Laboratorio Maker & Prototipazione</span>
-                <h1 class="hero-title">Stampa 3D ad Alta Velocità, Grande Formato & Scansione 3D</h1>
-                <p class="hero-description">Dall'idea iniziale al modello tridimensionale finito. Realizziamo prototipi, ricambi custom e parti in fibra di carbonio con Bambu Lab X1C, Anycubic Maxi Formato e Scanner 3D ad alta precisione.</p>
-                <div class="hero-actions">
-                    <a href="#preventivo" class="btn btn-glow">Richiedi un Preventivo 3D</a>
-                    <a href="#attrezzatura" class="btn btn-secondary">Esplora l'Attrezzatura</a>
-                </div>
-            </div>
-        </section>
 
-        <!-- Hardware Equipment Showcase -->
-        <section id="attrezzatura" class="equipment-section">
-            <div class="section-title-box">
-                <span class="category-badge badge-accent">Parco Macchine</span>
-                <h2>Stampanti 3D & Hardware di Precisione</h2>
-                <p>Tecnologie all'avanguardia per ogni dimensione, materiale e complessità di stampa</p>
-            </div>
+    <!-- DEDICATED CLIENT AREA PORTAL SECTION -->
+    <div id="area-clienti" style="margin-top: 40px; background: linear-gradient(135deg, rgba(0,240,255,0.08) 0%, rgba(18,24,36,0.95) 100%); border: 2px solid #00f0ff; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 0 35px rgba(0,240,255,0.2);">
+      <div style="background: rgba(0,240,255,0.15); border: 1px solid #00f0ff; color: #00f0ff; font-weight: 800; font-size: 0.8rem; padding: 4px 14px; border-radius: 20px; display: inline-block; margin-bottom: 12px; text-transform: uppercase;">
+        👥 PORTALE UFFICIALE CLIENTI TITAN CLOUD
+      </div>
+      <h3 style="color: #fff; font-size: 1.8rem; margin-bottom: 10px;">AREA RISERVATA CLIENTI MINER</h3>
+      <p style="color: #8a99ad; font-size: 0.95rem; max-width: 620px; margin: 0 auto 25px auto; line-height: 1.6;">
+        Sei già un nostro cliente ed hai acquistato il <strong>Pack Full Miner + Cloud H24</strong>? Inserisci il PIN personale che ti abbiamo fornito per accedere al tuo pannello riservato o prova la modalità Demo!
+      </p>
 
-            <div class="grid grid-3">
-                <!-- Bambu Lab X1-Carbon -->
-                <div class="card card-hardware">
-                    <div class="card-badge badge-bambu">Alta Velocità & Multicolor</div>
-                    <div class="hardware-icon">⚡</div>
-                    <h3>Bambu Lab X1-Carbon (X1C)</h3>
-                    <p class="hardware-specs">Velocità fino a 500 mm/s • Ispezione AI LIDAR • Sistema AMS Multicolor</p>
-                    <p class="hardware-desc">La regina delle stampanti 3D desktop. Permette stampe ultra-rapide e di precisione millimetrica. Ideale per parti multicolor e materiali tecnici avanzati.</p>
-                    <div class="tech-tags">
-                        <span>PLA-CF</span>
-                        <span>PA-CF Carbon</span>
-                        <span>PETG</span>
-                        <span>ABS</span>
-                        <span>TPU</span>
-                    </div>
-                </div>
+      <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+        <a href="/miner.html" style="background: #00f0ff; color: #000; font-weight: 800; padding: 14px 28px; border-radius: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; font-size: 1rem; box-shadow: 0 0 25px rgba(0,240,255,0.4);">
+          <span>🔑 ACCEDI ALLA TUA AREA RISERVATA (CON PIN)</span>
+        </a>
+        <a href="/miner.html" style="background: rgba(255,183,3,0.15); border: 1px solid #ffb703; color: #ffb703; font-weight: 700; padding: 14px 24px; border-radius: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 0.95rem;">
+          <span>👁️ PROVA DEMO LIBERA</span>
+        </a>
+      </div>
+    </div>
+  </section>
 
-                <!-- Anycubic S1 / Kobra Max -->
-                <div class="card card-hardware">
-                    <div class="card-badge badge-maxi">Grande Formato Maxi</div>
-                    <div class="hardware-icon">📐</div>
-                    <h3>Anycubic S1 / Kobra Max</h3>
-                    <p class="hardware-specs">Volume di Stampa Gigante • Pezzi Unici Senza Giunzioni</p>
-                    <p class="hardware-desc">Dedicata ai progetti di grandi dimensioni. Permette di stampare scocche, prototipi industriali voluminosi, cosplay e componenti di grande formato in un solo pezzo.</p>
-                    <div class="tech-tags">
-                        <span>Grande Formato</span>
-                        <span>Prototipazione</span>
-                        <span>Pezzi Unici</span>
-                    </div>
-                </div>
-
-                <!-- 3D Scanner -->
-                <div class="card card-hardware">
-                    <div class="card-badge badge-scan">Reverse Engineering</div>
-                    <div class="hardware-icon">🔍</div>
-                    <h3>Scanner 3D ad Alta Precisione</h3>
-                    <p class="hardware-specs">Acquisizione 3D HD • Digitalizzazione da Oggetto Reale</p>
-                    <p class="hardware-desc">Consente di scansionare oggetti fisici reali, parti meccaniche deteriorate o pezzi di ricambio introvabili e convertirli direttamente in modelli 3D digitali editabili (STL/STEP).</p>
-                    <div class="tech-tags">
-                        <span>Reverse Engineering</span>
-                        <span>Ricambi Custom</span>
-                        <span>Digitalizzazione</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Software CAD Capabilities -->
-        <section id="software" class="software-card">
-            <div class="software-header">
-                <span class="category-badge badge-primary">Modellazione 3D</span>
-                <h2>Competenze CAD & Progettazione Digitale</h2>
-                <p>Disegniamo e modifichiamo i tuoi modelli 3D prima della stampa per garantire tolleranze e resistenza perfette.</p>
-            </div>
-
-            <div class="grid grid-3">
-                <div class="cad-box">
-                    <div class="cad-badge">Fusion 360</div>
-                    <h4>Autodesk Fusion 360</h4>
-                    <p>Modellazione parametrica 3D, progettazione concettuale di parti meccaniche e componenti tecnici.</p>
-                </div>
-                <div class="cad-box">
-                    <div class="cad-badge">FreeCAD</div>
-                    <h4>FreeCAD Parametrico</h4>
-                    <p>Modellazione solida Open Source per la realizzazione di ricambi e componenti su misura.</p>
-                </div>
-                <div class="cad-box">
-                    <div class="cad-badge">123D Design</div>
-                    <h4>123D Design</h4>
-                    <p>Prototipazione rapida espressa per forme geometriche e modifiche veloci su file STL.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Interactive 3D Quote Calculator -->
-        <section id="preventivo" class="calculator-card">
-            <div class="calculator-header">
-                <span class="category-badge badge-accent">Preventivo Istantaneo</span>
-                <h2>Calcola una Stima per il Tuo Progetto 3D</h2>
-                <p>Seleziona i dettagli del lavoro per ottenere un'indicazione di costo e richiedere la fattibilità.</p>
-            </div>
-
-            <form class="calculator-form" id="quote-form">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="service-type">Tipo di Servizio Richiesto:</label>
-                        <select id="service-type" required>
-                            <option value="bambu">Stampa 3D Alta Precisione (Bambu X1C)</option>
-                            <option value="maxi">Stampa 3D Grande Formato (Anycubic Max)</option>
-                            <option value="scan">Scansione 3D + Digitalizzazione</option>
-                            <option value="cad">Progettazione CAD / Disegno 3D da Zero</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="material-type">Materiale di Stampa:</label>
-                        <select id="material-type">
-                            <option value="pla">PLA (Standard / Decorativo / Prototipi)</option>
-                            <option value="petg">PETG (Resistente ad acqua e urti)</option>
-                            <option value="abs">ABS / ASA (Resistente alle alte temperature)</option>
-                            <option value="tpu">TPU Flessibile (Gomma / Guarnizioni)</option>
-                            <option value="carbon">PLA-CF / PA-CF (Fibra di Carbonio Tecnico)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="print-quality">Altezza Strato (Qualità):</label>
-                        <select id="print-quality">
-                            <option value="standard">Standard (0.20 mm) - Veloce</option>
-                            <option value="fine">Alta Definizione (0.12 mm) - Dettagliata</option>
-                            <option value="ultra">Ultra Fine (0.08 mm) - Massima Precisione</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="project-notes">Descrizione Progetto / Note:</label>
-                        <input type="text" id="project-notes" placeholder="Es. Manopola ricambio, Scocca personalizzata, Pezzo 20x20 cm...">
-                    </div>
-                </div>
-
-                <div class="quote-result-box">
-                    <div class="price-estimate">
-                        <span class="price-label">Stima Indicativa:</span>
-                        <span class="price-val" id="estimated-price">€ 15,00 - € 25,00</span>
-                    </div>
-                    <button type="submit" class="btn btn-glow">Invia Richiesta Preventivo</button>
-                </div>
-                <div class="form-feedback" id="quote-feedback"></div>
-            </form>
-        </section>
-    </main>
-
-    <!-- Modal Success -->
-    <div class="modal-overlay" id="success-modal">
-        <div class="modal-card">
-            <button class="modal-close" id="modal-close-btn">&times;</button>
-            <div class="modal-body">
-                <span class="category-badge badge-accent">Richiesta Inviata!</span>
-                <h2>Grazie per la tua richiesta 3D!</h2>
-                <p>Abbiamo ricevuto i dettagli del tuo progetto. Verificheremo la fattibilità con le nostre stampanti 3D Bambu X1C / Anycubic o Scanner 3D e ti ricontatteremo a breve!</p>
-            </div>
-        </div>
+  <!-- Fleet & Social Channels Section -->
+  <section id="macchine" class="section-container">
+    <div class="section-header">
+      <div class="section-badge">PARCO MACCHINE & CANALI DEDICATI</div>
+      <h2>LE NOSTRE 2 POTENTI <span class="gradient-text">STAMPANTI 3D</span></h2>
+      <p>Ogni macchina è ottimizzata per garantire la massima qualità superficiale, grande volume di stampa e tolleranze dimensionali perfette.</p>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-brand">
-                <span class="logo-text">Titan<span class="highlight">3D Forge</span></span>
-                <p>Laboratorio di Stampa 3D, Scansione & CAD • Ospitato su Raspberry Pi 4</p>
-            </div>
-            <div class="footer-copy">
-                &copy; 2026 Titan 3D Forge. Tutti i diritti riservati.
-            </div>
+    <div class="grid-2-col">
+      
+      <!-- Card 1: Bambu Lab X1 Carbon -->
+      <div class="machine-card cyan-glow">
+        <div class="machine-image-wrapper">
+          <img src="assets/bambu_x1c.jpg?v=9999" alt="Bambu Lab X1 Carbon con AMS" class="machine-img">
+          <div class="machine-tag">CORE-XY HIGH SPEED</div>
         </div>
-    </footer>
+        <div class="machine-body">
+          <div class="machine-header-title">
+            <h3>Bambu Lab X1 Carbon</h3>
+            <span class="badge-ams">+ AMS (Stampa fino a 4 Colori)</span>
+          </div>
+          <p class="machine-desc">
+            Top di gamma per filamenti caricati in fibra di carbonio atossica (PLA-CF/PETG-CF), ispezione primo layer via AI LiDAR e stampa ad altissima velocità con cambio colore automatico fino a 4 tonalità in un unico pezzo.
+          </p>
 
-    <script src="app.js"></script>
+          <ul class="machine-specs">
+            <li><span>Volume Max Pezzo:</span> <strong>256 × 256 × 256 mm</strong></li>
+            <li><span>Materiali Sicuri:</span> PLA, PLA Alimentare, PETG, TPU, PLA-CF (No ABS/ASA)</li>
+            <li><span>Sistema Colore:</span> AMS (Automatic Material System - 4 Colori)</li>
+          </ul>
+
+          <a href="https://www.facebook.com/profile.php?id=100007422796036" id="fbChannelLink" target="_blank" rel="noopener noreferrer" class="btn-channel btn-fb">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            <span>PROFILO FACEBOOK (Bambu Lab X1C)</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 2: Anycubic S1 Max -->
+      <div class="machine-card amber-glow">
+        <div class="machine-image-wrapper">
+          <img src="assets/anycubic_s1.jpg?v=9999" alt="Anycubic S1 Max con ACE Pro 2" class="machine-img">
+          <div class="machine-tag">MAX VOLUME 350mm & CAMERA CHIUSA</div>
+        </div>
+        <div class="machine-body">
+          <div class="machine-header-title">
+            <h3>Anycubic S1 Max</h3>
+            <span class="badge-ace">+ ACE Pro 2 (Multi-Color)</span>
+          </div>
+          <p class="machine-desc">
+            Grandioso volume di stampa <strong>350 × 350 × 350 mm</strong> con <strong>struttura a camera chiusa</strong> per la massima protezione e stabilità termica. Dotata del modulo avanzato ACE Pro 2 con essiccazione attiva del filamento.
+          </p>
+
+          <ul class="machine-specs">
+            <li><span>Volume Max Pezzo:</span> <strong>350 × 350 × 350 mm</strong></li>
+            <li><span>Struttura:</span> Camera Chiusa Protezione Silenziosa</li>
+            <li><span>Materiali Sicuri:</span> PLA High Speed, PLA Alimentare, PETG, TPU Flessibile</li>
+            <li><span>Sistema Colore:</span> ACE Pro 2 Engine (Essiccatore integrato)</li>
+          </ul>
+
+          <a href="https://www.youtube.com/watch?v=NJzGKR9L8pc" id="ytChannelLink" target="_blank" rel="noopener noreferrer" class="btn-channel btn-yt">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            <span>CANALE YOUTUBE (Anycubic S1 Max)</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Timelapse Showcase Section -->
+  <section id="timelapse" class="section-container">
+    <div class="section-header">
+      <div class="section-badge">TIMELAPSE STAMPE 3D</div>
+      <h2>LE NOSTRE STAMPE IN <span class="gradient-text">AZIONE</span></h2>
+      <p>Guarda i timelapse delle nostre macchine all'opera. Quando avrai i tuoi video pronti, potrai inserire i tuoi link YouTube qui sotto!</p>
+    </div>
+    
+    <div style="text-align: center; margin-bottom: 25px;">
+      <button onclick="openAdminModal()" class="btn-secondary-small" style="padding: 12px 24px; font-weight: 700; background: rgba(0, 240, 255, 0.15); border: 1px solid var(--cyan-primary); color: var(--cyan-primary); cursor: pointer;">
+        🎥 Carica o Modifica i Tuoi Video Timelapse (Pannello Admin)
+      </button>
+    </div>
+
+    <div class="grid-2-col">
+      <!-- Video 1 Placeholder -->
+      <div class="machine-card cyan-glow" style="padding: 20px;">
+        <div id="timelapseBox1">
+          <!-- Dynamic Video Player Rendered via app.js -->
+        </div>
+        <div class="machine-body" style="padding: 15px 0 0 0; flex: none;">
+          <div class="machine-header-title">
+            <h3 style="font-size: 1.2rem;">Timelapse: Bambu Lab X1C</h3>
+          </div>
+          <p class="machine-desc" style="margin-bottom: 0; font-size: 0.85rem;">Guarda la Bambu Lab X1 Carbon ad alta velocità in azione con cambio colore AMS.</p>
+        </div>
+      </div>
+
+      <!-- Video 2 Placeholder -->
+      <div class="machine-card amber-glow" style="padding: 20px;">
+        <div id="timelapseBox2">
+          <!-- Dynamic Video Player Rendered via app.js -->
+        </div>
+        <div class="machine-body" style="padding: 15px 0 0 0; flex: none;">
+          <div class="machine-header-title">
+            <h3 style="font-size: 1.2rem;">Timelapse: Anycubic S1 Max</h3>
+          </div>
+          <p class="machine-desc" style="margin-bottom: 0; font-size: 0.85rem;">Guarda la Anycubic S1 Max a camera chiusa in azione (350×350×350mm).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Client Account & Dedicated Portal Section -->
+  <section id="area-cliente" class="section-container">
+    <div class="section-header">
+      <div class="section-badge">PORTALE RISERVATO CLIENTE</div>
+      <h2>AREA CLIENTE <span class="gradient-text">& STATO ORDINI LIVE</span></h2>
+      <p>Accedi al tuo spazio personale con le tue credenziali (Email/Telefono o Codice Ordine e Password) per verificare la vidimazione dell'account e lo stato dei tuoi progetti 3D in tempo reale.</p>
+    </div>
+
+    <div class="client-portal-container">
+      
+      <!-- Tab Navigation Header -->
+      <div class="portal-tabs-nav">
+        <button class="portal-tab-btn active" id="tabBtnLogin" onclick="switchPortalTab('login')">
+          <span>🔑 ACCESSO CLIENTE VIDIMATO</span>
+        </button>
+        <button class="portal-tab-btn" id="tabBtnRegister" onclick="switchPortalTab('register')">
+          <span>📝 REGISTRAZIONE NUOVO CLIENTE</span>
+        </button>
+      </div>
+
+      <!-- Tab 1: Accesso / Login & Cerca Ordine -->
+      <div class="portal-tab-content active" id="portalTabLogin">
+        <div style="max-width: 650px; margin: 0 auto;">
+          <div style="margin-bottom: 15px;">
+            <h3 style="font-size: 1.25rem; color: var(--cyan-primary); font-family: var(--font-heading);">🔑 Accedi all'Area Riservata Clienti</h3>
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px;">
+            Inserisci la tua <strong>Email / Numero di Telefono</strong> (oppure il tuo <strong>Codice Ordine</strong>) e la tua <strong>Password</strong> per consultare lo stato vidimazione e la lavorazione dei tuoi pezzi:
+          </p>
+
+          <div class="form-group">
+            <label for="clientSearchCode">Email Personale, Numero di Telefono o Codice Ordine Cliente <span class="req">*</span>:</label>
+            <input type="text" id="clientSearchCode" placeholder="Es. mario.rossi@email.it, 3331234567, TITAN-8492 o cliente1">
+          </div>
+
+          <div class="form-group">
+            <label for="clientSearchPass">La tua Password Account <span class="req">*</span>:</label>
+            <input type="password" id="clientSearchPass" placeholder="Inserisci la tua password">
+          </div>
+
+          <button onclick="searchClientOrder()" class="btn-primary" style="width: 100%; margin-top: 15px; padding: 16px;">
+            <span>🔓 ACCEDI ALL'AREA RISERVATA & VERIFICA ORDINE</span>
+          </button>
+
+          <div style="text-align: center; margin-top: 20px; font-size: 0.88rem; color: var(--text-muted);">
+            Non hai ancora un account? <a href="#area-cliente" onclick="switchPortalTab('register')" style="color: var(--amber-primary); font-weight: 700; text-decoration: underline;">Registrati qui per richiedere la vidimazione →</a>
+          </div>
+
+          <div id="clientOrderResult" class="order-result-box hidden" style="margin-top: 22px;">
+            <!-- Dynamic order details rendered by app.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Registrazione Nuovo Cliente -->
+      <div class="portal-tab-content" id="portalTabRegister">
+        <div style="max-width: 650px; margin: 0 auto;">
+          <div style="margin-bottom: 15px;">
+            <h3 style="font-size: 1.25rem; color: var(--amber-primary); font-family: var(--font-heading);">📝 Richiedi Registrazione Account & Vidimazione</h3>
+          </div>
+
+          <!-- Avviso in Grande per Annotare i Dati -->
+          <div style="background: rgba(255, 153, 0, 0.12); border: 2px solid var(--amber-primary); padding: 16px 20px; border-radius: var(--radius-md); margin-bottom: 20px; box-shadow: 0 0 25px rgba(255, 153, 0, 0.15);">
+            <strong style="color: var(--amber-primary); font-size: 1.1rem; font-family: var(--font-heading); display: block; margin-bottom: 6px;">
+              ⚠️ FONDAMENTALE: SEGNA ED ANNOTA LA TUA EMAIL/TELEFONO E LA PASSWORD!
+            </strong>
+            <p style="font-size: 0.9rem; color: #fff; margin: 0; line-height: 1.45;">
+              Ricordati di <strong>annotare subito il tuo Contatto (Email/Telefono)</strong> e la <strong>Password</strong> che sceglierai qui sotto! Ti serviranno per accedere sempre alla tua Area Riservata Clienti e consultare lo stato vidimato dei tuoi pezzi, la fotocamera live ed i tuoi file STL privati.
+            </p>
+          </div>
+
+          <form id="clientRegisterForm" onsubmit="event.preventDefault(); handleClientRegister();">
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="regName">Nome & Cognome <span class="req">*</span>:</label>
+                <input type="text" id="regName" placeholder="Es. Mario Rossi" required>
+              </div>
+
+              <div class="form-group">
+                <label for="regContact">Email o Telefono <span class="req">*</span>:</label>
+                <input type="text" id="regContact" placeholder="Es. cliente1 o mario.rossi@email.it" required>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 10px;">
+              <label for="regPass">Crea la tua Password <span class="req">*</span>:</label>
+              <input type="password" id="regPass" placeholder="Scegli una password per accedere" required>
+            </div>
+
+            <div class="form-group">
+              <label for="regNotes">Note / Dettagli Progetto (Opzionale):</label>
+              <textarea id="regNotes" rows="2" placeholder="Es. Richiesta pezzi in PETG o prototipo..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-secondary" style="width: 100%; margin-top: 15px; padding: 16px;">
+              <span>✨ RICHIEDI REGISTRAZIONE & VIDIMAZIONE ACCOUNT</span>
+            </button>
+          </form>
+
+          <div style="text-align: center; margin-top: 20px; font-size: 0.88rem; color: var(--text-muted);">
+            Hai già un account? <a href="#area-cliente" onclick="switchPortalTab('login')" style="color: var(--cyan-primary); font-weight: 700; text-decoration: underline;">Accedi all'Area Riservata qui →</a>
+          </div>
+
+          <div id="clientRegisterSuccess" class="hidden" style="margin-top: 20px; padding: 16px; background: rgba(0, 255, 136, 0.1); border: 1px solid var(--green-primary); border-radius: var(--radius-md); color: var(--green-primary); font-size: 0.9rem;">
+            ✓ Richiesta inviata con successo! Account creato in attesa di vidimazione da Giovanni.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Eco & Health Safety Section -->
+  <section id="sicurezza" class="section-container bg-dark-panel">
+    <div class="grid-2-col-valign">
+      <div>
+        <div class="section-badge">SALUTE & AMBIENTE</div>
+        <h2>MATERIALI 100% <span class="gradient-text">ATOSSICI ED ECO-COMPATIBILI</span></h2>
+        <p>
+          Il nostro laboratorio ha a cuore la salute delle persone ed in particolare dei bambini. Per questo motivo <strong>non utilizziamo in alcun modo ABS o ASA</strong> (che rilasciano vapori di stirene tossici), preferendo filamenti naturali certificati ed inodori.
+        </p>
+      </div>
+
+      <div class="eco-features-box">
+        <div class="eco-item">
+          <span class="eco-check">✓</span>
+          <div>
+            <strong>PLA Bio-Polimero (Amido di Mais):</strong> Atossico, ecologico e biodegradabile. Perfetto per oggetti per la casa, giochi per bambini e prototipi.
+          </div>
+        </div>
+        <div class="eco-item">
+          <span class="eco-check">✓</span>
+          <div>
+            <strong>PLA Alimentare Certificato:</strong> Sicuro per contatto diretto con cibo, taglia-pasta e utensili da cucina.
+          </div>
+        </div>
+        <div class="eco-item">
+          <span class="eco-check">✓</span>
+          <div>
+            <strong>PETG Inodore & Sicuro:</strong> Estremamente resistente ai colpi e agli agenti atmosferici senza alcuna emissione di fumi nocivi.
+          </div>
+        </div>
+        <div class="eco-item">
+          <span class="eco-check">✓</span>
+          <div>
+            <strong>TPU Flessibile & Sicuro:</strong> Gomma poliuretanica inodore per pezzi morbidi, guarnizioni e protezioni antiurto.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <div class="brand">
+          <div class="logo-icon-3d">
+            <div class="cube-inner"></div>
+          </div>
+          <div class="logo-text">
+            <span class="brand-title">TITAN <span class="accent-cyan">3D</span> .it</span>
+            <span class="brand-subtitle">STUDIO GIOVANNI DI LELLO</span>
+          </div>
+        </div>
+        <p class="footer-desc">
+          Stampa 3D professionale a colori, progettazione CAD e preventivatore istantaneo. Prodotti 100% atossici ed eco-friendly.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Link Rapidi</h4>
+        <ul class="footer-links">
+          <li><a href="#macchine">Parco Macchine & Canali</a></li>
+          <li><a href="#timelapse">Timelapse Stampa 3D</a></li>
+          <li><a href="#area-cliente">Area Riservata Cliente</a></li>
+          <li><a href="#preventivatore">Preventivatore 3D</a></li>
+          <li><a href="/miner.html">Solo Miner Cloud H24</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contatti & Assistenza</h4>
+        <ul class="footer-links">
+          <li>📍 Laboratorio Studio: Italia</li>
+          <li>📱 WhatsApp Direct: <a href="https://wa.me/393518884949" target="_blank" style="color: var(--cyan-primary);">+39 351 888 4949</a></li>
+          <li>🌐 Sito Ufficiale: <a href="https://titan3d.it" target="_blank" style="color: var(--amber-primary);">titan3d.it</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 TITAN 3D Studio Giovanni Di Lello — Tutti i diritti riservati.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
 </body>
 </html>
