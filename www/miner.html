@@ -198,7 +198,7 @@
       margin-top: 15px;
     }
 
-    .pakkina-card {
+    .machine-card-node {
       background: #0d121c;
       border: 2px solid rgba(255, 255, 255, 0.1);
       border-radius: 14px;
@@ -212,38 +212,38 @@
       justify-content: space-between;
     }
 
-    .pakkina-card:hover {
+    .machine-card-node:hover {
       transform: translateY(-4px);
       border-color: rgba(0, 240, 255, 0.5);
     }
 
     /* ILLUMINATED ACTIVE NODE STATE */
-    .pakkina-card.active-illuminated {
+    .machine-card-node.active-illuminated {
       background: linear-gradient(135deg, rgba(0, 240, 255, 0.2) 0%, #121824 100%);
       border-color: var(--border-cyan);
       box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
     }
 
-    .pakkina-card.active-illuminated.gold-node {
+    .machine-card-node.active-illuminated.gold-node {
       background: linear-gradient(135deg, rgba(255, 183, 3, 0.2) 0%, #121824 100%);
       border-color: var(--accent-gold);
       box-shadow: 0 0 25px rgba(255, 183, 3, 0.4);
     }
 
-    .pakkina-header {
+    .machine-header-node {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 10px;
     }
 
-    .pakkina-title {
+    .machine-title-node {
       font-weight: 700;
       font-size: 0.95rem;
       color: #fff;
     }
 
-    .pakkina-led {
+    .machine-led-node {
       width: 12px;
       height: 12px;
       border-radius: 50%;
@@ -252,20 +252,20 @@
       transition: all 0.3s;
     }
 
-    .pakkina-card.active-illuminated .pakkina-led {
+    .machine-card-node.active-illuminated .machine-led-node {
       background: var(--green-glow);
       box-shadow: 0 0 12px var(--green-glow);
       animation: pulse 1s infinite;
     }
 
-    .pakkina-stat {
+    .machine-stat-node {
       font-family: 'Rajdhani', sans-serif;
       font-size: 1.4rem;
       font-weight: 700;
       color: var(--border-cyan);
     }
 
-    .pakkina-card.active-illuminated.gold-node .pakkina-stat {
+    .machine-card-node.active-illuminated.gold-node .machine-stat-node {
       color: var(--accent-gold);
     }
 
@@ -490,7 +490,7 @@
     <!-- ACCESSI DI PROVA RAPIDA (OPTIONAL DEMO & TEST) -->
     <div style="margin: 15px 0 10px 0; display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.75rem;">
       <div style="flex:1; height:1px; background: rgba(255,255,255,0.1);"></div>
-      <span>OPPURE PROVA UN ACCESSO DIMOSTRATIVO</span>
+      <span>OPPUR PROVA UN ACCESSO DIMOSTRATIVO</span>
       <div style="flex:1; height:1px; background: rgba(255,255,255,0.1);"></div>
     </div>
 
@@ -661,73 +661,122 @@
         <div style="color: #00ff66;">[23:13:31] 💎 HASH CANDIDATE: 00000000000000000001f3b89a42e1... (VALID SHARE)</div>
       </div>
     </div>
-
-    <!-- MATRICE GRAFICA NODI MINER TITAN CHE SI ILLUMINANO AD UNO AD UNO O INSIEME -->
+    <!-- MATRICE GRAFICA MACCHINE ESP TITAN CHE SI ILLUMINANO AD UNA AD UNA O INSIEME -->
     <div style="background: rgba(18,24,36,0.95); border: 1px solid var(--border-cyan); border-radius: 16px; padding: 20px; margin-bottom: 25px; box-shadow: 0 0 30px rgba(0,240,255,0.15);">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
         <div style="font-weight: 700; color: #fff; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-          <span>📦</span> MATRICE NODI DISPOSITIVI TITAN 3D (VISIONE 1, 2 O TUTTI E 3 INSIEME)
+          <span>📦</span> MATRICE MACCHINE DISPOSITIVI ESP TITAN (VISIONE 1, 2, 3 O TUTTE INSIEME)
         </div>
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
           <button onclick="selectPresets('all3')" style="background: rgba(0,255,102,0.15); border: 1px solid #00ff66; color: #00ff66; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer;">
-            ⚡ TUTTI E 3 INSIEME (229.3 KH/s)
+            ⚡ TUTTE E 3 LE MACCHINE INSIEME (229.3 KH/s)
           </button>
           <button onclick="selectPresets('two')" style="background: rgba(0,240,255,0.15); border: 1px solid #00f0ff; color: #00f0ff; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer;">
-            👥 2 ALLA VOLTA (151.2 KH/s)
+            👥 2 MACCHINE ALLA VOLTA (151.2 KH/s)
           </button>
           <button onclick="selectPresets('single')" style="background: rgba(255,183,3,0.15); border: 1px solid #ffb703; color: #ffb703; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer;">
-            1️⃣ 1 ALLA VOLTA (76.4 KH/s)
+            1️⃣ 1 MACCHINA ALLA VOLTA (76.4 KH/s)
           </button>
           <button id="btnAutoCycle" onclick="toggleAutoCycle()" style="background: rgba(255,183,3,0.15); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s;">
-            🔄 CICLO AUTO (1-2-3)
+            🔄 CICLO AUTO MACCHINE (1-2-3)
           </button>
         </div>
       </div>
 
       <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">
-        Puoi illuminare e vedere <strong>tutti e 3 i tuoi nodi ESP32-S3 contemporaneamente</strong> oppure selezionarne 1 o 2 alla volta! I numeri della velocità e le luci si aggiornano all'istante!
+        Puoi vedere ed illuminare le tue <strong>Macchine ESP (ESP32-S3 Miner & ESP32-CAM) contemporaneamente</strong> o selezionarne 1 o 2 alla volta!
       </p>
 
-      <!-- PAKKINE GRID MATRICE -->
+      <!-- MACCHINE ESP GRID MATRICE -->
       <div class="node-grid-container">
-        <!-- PAKKINA 1 -->
-        <div class="pakkina-card active-illuminated" id="pakkina1" onclick="togglePakkina(1)">
-          <div class="pakkina-header">
-            <span class="pakkina-title">📦 NODO DISPOSITIVO 3D 01</span>
-            <div class="pakkina-led"></div>
+        <!-- MACCHINA ESP 1 -->
+        <div class="machine-card-node active-illuminated" id="machine1" onclick="toggleMachineNode(1)">
+          <div class="machine-header-node">
+            <span class="machine-title-node">⚡ MACCHINA ESP 1 (MINER)</span>
+            <div class="machine-led-node"></div>
           </div>
           <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.82</div>
-          <div class="pakkina-stat" id="pakkinaStat1">76.4 KH/s</div>
+          <div class="machine-stat-node" id="machineStat1">76.4 KH/s</div>
         </div>
 
-        <!-- PAKKINA 2 -->
-        <div class="pakkina-card gold-node" id="pakkina2" onclick="togglePakkina(2)">
-          <div class="pakkina-header">
-            <span class="pakkina-title">📦 NODO DISPOSITIVO 3D 02</span>
-            <div class="pakkina-led"></div>
+        <!-- MACCHINA ESP 2 -->
+        <div class="machine-card-node gold-node" id="machine2" onclick="toggleMachineNode(2)">
+          <div class="machine-header-node">
+            <span class="machine-title-node">⚡ MACCHINA ESP 2 (MINER)</span>
+            <div class="machine-led-node"></div>
           </div>
           <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.105</div>
-          <div class="pakkina-stat" id="pakkinaStat2">74.8 KH/s</div>
+          <div class="machine-stat-node" id="machineStat2">74.8 KH/s</div>
         </div>
 
-        <!-- PAKKINA 3 -->
-        <div class="pakkina-card" id="pakkina3" onclick="togglePakkina(3)">
-          <div class="pakkina-header">
-            <span class="pakkina-title">📦 NODO DISPOSITIVO 3D 03</span>
-            <div class="pakkina-led"></div>
+        <!-- MACCHINA ESP 3 -->
+        <div class="machine-card-node" id="machine3" onclick="toggleMachineNode(3)">
+          <div class="machine-header-node">
+            <span class="machine-title-node">⚡ MACCHINA ESP 3 (MINER)</span>
+            <div class="machine-led-node"></div>
           </div>
           <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.108</div>
-          <div class="pakkina-stat" id="pakkinaStat3">78.1 KH/s</div>
+          <div class="machine-stat-node" id="machineStat3">78.1 KH/s</div>
         </div>
 
-        <!-- PAKKINA 4 -->
-        <div class="pakkina-card gold-node" id="pakkina4" onclick="togglePakkina(4)">
-          <div class="pakkina-header">
-            <span class="pakkina-title">📦 NODO DISPOSITIVO 3D 04</span>
-            <div class="pakkina-led"></div>
+        <!-- MACCHINA ESP 4 -->
+        <div class="machine-card-node gold-node" id="machine4" onclick="toggleMachineNode(4)">
+          <div class="machine-header-node">
+            <span class="machine-title-node">⚡ MACCHINA ESP 4 (CLUSTER)</span>
+            <div class="machine-led-node"></div>
           </div>
           <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.112</div>
-          <div class="pakkina-stat" id="pakkinaStat4">75.9 KH/s</div>
+          <div class="machine-stat-node" id="machineStat4">75.9 KH/s</div>
+        </div>
+
+        <!-- MACCHINA ESP32-CAM TELECAMERA -->
+        <div class="machine-card-node active-illuminated" id="machineCam" style="border-color: var(--accent-gold); background: linear-gradient(135deg, rgba(255,183,3,0.15) 0%, #121824 100%);">
+          <div class="machine-header-node">
+            <span class="machine-title-node" style="color: var(--accent-gold);">📷 MACCHINA ESP32-CAM</span>
+            <div class="machine-led-node" style="background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.83</div>
+          <div class="machine-stat-node" style="color: var(--accent-gold); font-size: 1.1rem;">CAM LIVE ON</div>
+        </div>
+      </div>
+    </div>
+    <!-- SEZIONE DEDICATA TELECAMERA ESP32-CAM LIVE STREAMING -->
+    <div style="background: linear-gradient(135deg, rgba(18,24,36,0.95) 0%, rgba(10,13,20,0.95) 100%); border: 2px solid var(--accent-gold); border-radius: 20px; padding: 24px; margin-bottom: 25px; box-shadow: 0 0 35px rgba(255,183,3,0.2);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
+        <div style="font-size: 1.2rem; font-weight: 700; color: var(--accent-gold); display: flex; align-items: center; gap: 10px;">
+          <span>📷</span> TELECAMERA ESP32-CAM (STREAMING VIDEO LIVE MINER & STAMPA 3D)
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 10px; height: 10px; border-radius: 50%; background: #00ff66; box-shadow: 0 0 10px #00ff66; animation: pulse 1.5s infinite;"></div>
+          <span style="font-size: 0.8rem; color: #00ff66; font-weight: 700;">ESP32-CAM CONNESSA</span>
+        </div>
+      </div>
+
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 18px;">
+        Monitoraggio visivo in tempo reale con il modulo <strong>ESP32-CAM OV2640</strong> puntato sul miner ESP32-S3 e sulla stampante 3D!
+      </p>
+
+      <!-- IP INPUT CONTROLS PER ESP32-CAM -->
+      <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(0,240,255,0.3); border-radius: 12px; padding: 12px 16px; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <label for="espCamIpInput" style="font-size: 0.85rem; color: #fff; font-weight: 700;">🌐 INDIRIZZO IP ESP32-CAM:</label>
+        <input type="text" id="espCamIpInput" value="192.168.1.83" style="background: rgba(0,0,0,0.6); border: 1px solid var(--border-cyan); color: #00f0ff; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-family: monospace; outline: none; width: 160px; text-align: center;">
+        <button onclick="updateEspCamStream()" style="background: var(--border-cyan); color: #000; border: none; padding: 7px 16px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 0.82rem;">
+          ⚡ CONNETTI / AGGIORNA STREAM
+        </button>
+        <button onclick="toggleCamFlash()" id="btnCamFlash" style="background: rgba(255,183,3,0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 7px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.82rem;">
+          💡 FLASH LED ESP32-CAM (ON/OFF)
+        </button>
+      </div>
+
+      <!-- VIDEO STREAM BOX -->
+      <div style="background: #000; border: 2px dashed rgba(0,240,255,0.4); border-radius: 16px; min-height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; box-shadow: inset 0 0 30px rgba(0,0,0,0.8);">
+        <img id="espCamImage" src="http://192.168.1.83:81/stream" alt="ESP32-CAM Live Video Stream" style="width: 100%; max-height: 380px; object-fit: contain; display: block;" onerror="handleCamError(this)">
+        <div id="espCamPlaceholder" style="display: none; text-align: center; padding: 30px 20px;">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">📹</div>
+          <div style="color: var(--border-cyan); font-weight: 700; font-size: 1.1rem;">ESP32-CAM LIVE MONITORING (192.168.1.83)</div>
+          <div style="color: var(--text-muted); font-size: 0.82rem; margin-top: 6px;">
+            Stream Video Live abilitato sulla rete Wi-Fi locale. Premi "CONNETTI STREAM" per caricare il flusso della telecamera!
+          </div>
         </div>
       </div>
     </div>
@@ -824,7 +873,7 @@
       <div class="stat-card">
         <div class="stat-label">Velocità Miner Live (Hashrate)</div>
         <div class="stat-value" id="hashrateVal" style="color: var(--border-cyan);">76.4 KH/s</div>
-        <div class="stat-sub" id="hashrateSubText">1 Dispositivo 3D Illuminato & Attivo</div>
+        <div class="stat-sub" id="hashrateSubText">1 Macchina ESP Illuminata & Attiva</div>
       </div>
 
       <!-- Temperatura ESP32 Live -->
@@ -990,14 +1039,14 @@
     let loggedAsOwner = false;
     let hashCounter = 18452900;
 
-    // STATE PER PAKKINE NODO ILLUMINATE (1, 2, 3, 4)
-    const pakkinaRates = { 1: 76.4, 2: 74.8, 3: 78.1, 4: 75.9 };
-    const pakkinaActive = { 1: true, 2: false, 3: false, 4: false };
+    // STATE PER MACCHINE ESP ILLUMINATE (1, 2, 3, 4)
+    const machineRates = { 1: 76.4, 2: 74.8, 3: 78.1, 4: 75.9 };
+    const machineActive = { 1: true, 2: false, 3: false, 4: false };
     let autoCycleTimer = null;
 
-    function togglePakkina(id) {
-      pakkinaActive[id] = !pakkinaActive[id];
-      updatePakkineUI();
+    function toggleMachineNode(id) {
+      machineActive[id] = !machineActive[id];
+      updateMachineUI();
     }
 
     function selectPresets(mode) {
@@ -1006,53 +1055,55 @@
         autoCycleTimer = null;
         const btn = document.getElementById('btnAutoCycle');
         if (btn) {
-          btn.innerText = '🔄 CICLO AUTO (1-2-3)';
+          btn.innerText = '🔄 CICLO AUTO MACCHINE (1-2-3)';
           btn.style.background = 'rgba(255,183,3,0.15)';
         }
       }
 
       if (mode === 'all3') {
-        pakkinaActive[1] = true;
-        pakkinaActive[2] = true;
-        pakkinaActive[3] = true;
-        pakkinaActive[4] = false;
+        machineActive[1] = true;
+        machineActive[2] = true;
+        machineActive[3] = true;
+        machineActive[4] = false;
       } else if (mode === 'two') {
-        pakkinaActive[1] = true;
-        pakkinaActive[2] = true;
-        pakkinaActive[3] = false;
-        pakkinaActive[4] = false;
+        machineActive[1] = true;
+        machineActive[2] = true;
+        machineActive[3] = false;
+        machineActive[4] = false;
       } else if (mode === 'single') {
-        pakkinaActive[1] = true;
-        pakkinaActive[2] = false;
-        pakkinaActive[3] = false;
-        pakkinaActive[4] = false;
+        machineActive[1] = true;
+        machineActive[2] = false;
+        machineActive[3] = false;
+        machineActive[4] = false;
       }
-      updatePakkineUI();
+      updateMachineUI();
     }
 
-    function updatePakkineUI() {
+    function updateMachineUI() {
       let activeCount = 0;
       let totalHash = 0;
 
       for (let i = 1; i <= 4; i++) {
-        const card = document.getElementById(`pakkina${i}`);
-        if (pakkinaActive[i]) {
-          card.classList.add('active-illuminated');
-          activeCount++;
-          totalHash += pakkinaRates[i];
-        } else {
-          card.classList.remove('active-illuminated');
+        const card = document.getElementById(`machine${i}`);
+        if (card) {
+          if (machineActive[i]) {
+            card.classList.add('active-illuminated');
+            activeCount++;
+            totalHash += machineRates[i];
+          } else {
+            card.classList.remove('active-illuminated');
+          }
         }
       }
 
       if (activeCount === 0) {
         document.getElementById('hashrateVal').innerText = '0.0 KH/s (STANDBY)';
-        document.getElementById('activeNodesCountVal').innerText = '0 NODI ATTIVI';
-        document.getElementById('hashrateSubText').innerText = 'Nessun Dispositivo Selezionato';
+        document.getElementById('activeNodesCountVal').innerText = '0 MACCHINE ATTIVE';
+        document.getElementById('hashrateSubText').innerText = 'Nessuna Macchina ESP Selezionata';
       } else {
         document.getElementById('hashrateVal').innerText = totalHash.toFixed(1) + ' KH/s';
-        document.getElementById('activeNodesCountVal').innerText = activeCount + (activeCount === 1 ? ' NODO ATTIVO' : ' NODI ATTIVI');
-        document.getElementById('hashrateSubText').innerText = `${activeCount} Dispositivi 3D Attivi in Parallelo`;
+        document.getElementById('activeNodesCountVal').innerText = activeCount + (activeCount === 1 ? ' MACCHINA ESP ATTIVA' : ' MACCHINE ESP ATTIVE');
+        document.getElementById('hashrateSubText').innerText = `${activeCount} Macchine ESP Illuminate in Parallelo`;
       }
     }
 
@@ -1061,12 +1112,12 @@
       if (autoCycleTimer) {
         clearInterval(autoCycleTimer);
         autoCycleTimer = null;
-        btn.innerText = '🔄 CICLO AUTO (1-2-3)';
+        btn.innerText = '🔄 CICLO AUTO MACCHINE (1-2-3)';
         btn.style.background = 'rgba(255,183,3,0.15)';
       } else {
         let current = 1;
-        pakkinaActive[1] = true; pakkinaActive[2] = false; pakkinaActive[3] = false; pakkinaActive[4] = false;
-        updatePakkineUI();
+        machineActive[1] = true; machineActive[2] = false; machineActive[3] = false; machineActive[4] = false;
+        updateMachineUI();
 
         btn.innerText = '⏹️ FERMA CICLO AUTOMATICO';
         btn.style.background = 'rgba(255,0,85,0.2)';
@@ -1075,11 +1126,11 @@
           current++;
           if (current > 3) current = 1;
 
-          if (current === 1) { pakkinaActive[1]=true; pakkinaActive[2]=false; pakkinaActive[3]=false; pakkinaActive[4]=false; }
-          else if (current === 2) { pakkinaActive[1]=true; pakkinaActive[2]=true; pakkinaActive[3]=false; pakkinaActive[4]=false; }
-          else if (current === 3) { pakkinaActive[1]=true; pakkinaActive[2]=true; pakkinaActive[3]=true; pakkinaActive[4]=false; }
+          if (current === 1) { machineActive[1]=true; machineActive[2]=false; machineActive[3]=false; machineActive[4]=false; }
+          else if (current === 2) { machineActive[1]=true; machineActive[2]=true; machineActive[3]=false; machineActive[4]=false; }
+          else if (current === 3) { machineActive[1]=true; machineActive[2]=true; machineActive[3]=true; machineActive[4]=false; }
 
-          updatePakkineUI();
+          updateMachineUI();
         }, 2500);
       }
     }
@@ -1201,8 +1252,8 @@
         let currentHashVal = parseFloat(document.getElementById('hashrateVal').innerText);
         if (currentHashVal > 0) {
           const jitter = (Math.random() * 3.0 - 1.5);
-          const activeCount = Object.values(pakkinaActive).filter(Boolean).length;
-          const baseHash = Object.keys(pakkinaActive).reduce((acc, id) => acc + (pakkinaActive[id] ? pakkinaRates[id] : 0), 0);
+          const activeCount = Object.values(machineActive).filter(Boolean).length;
+          const baseHash = Object.keys(machineActive).reduce((acc, id) => acc + (machineActive[id] ? machineRates[id] : 0), 0);
           document.getElementById('hashrateVal').innerText = (baseHash + jitter).toFixed(1) + ' KH/s';
         }
 
@@ -1216,7 +1267,7 @@
         const terminal = document.getElementById('cyberTerminal');
         if (terminal && Math.random() > 0.3) {
           const now = new Date().toLocaleTimeString('it-IT');
-          const nodeNum = Math.floor(Math.random() * 3) + 1;
+          const nodeNum = Math.floor(Math.random() * 4) + 1;
           const diff = Math.floor(10000 + Math.random() * 25000);
           const hexHash = Array.from({length: 16}, () => Math.floor(Math.random()*16).toString(16)).join('');
           
@@ -1235,6 +1286,37 @@
           terminal.scrollTop = terminal.scrollHeight;
         }
       }, 1000);
+    }
+
+    function updateEspCamStream() {
+      const ip = document.getElementById('espCamIpInput').value.trim();
+      const img = document.getElementById('espCamImage');
+      const placeholder = document.getElementById('espCamPlaceholder');
+      if (img) {
+        img.style.display = 'block';
+        if (placeholder) placeholder.style.display = 'none';
+        img.src = `http://${ip}:81/stream?t=` + new Date().getTime();
+      }
+    }
+
+    function handleCamError(img) {
+      img.style.display = 'none';
+      const placeholder = document.getElementById('espCamPlaceholder');
+      if (placeholder) placeholder.style.display = 'block';
+    }
+
+    let flashState = false;
+    function toggleCamFlash() {
+      const ip = document.getElementById('espCamIpInput').value.trim();
+      flashState = !flashState;
+      const btn = document.getElementById('btnCamFlash');
+      const val = flashState ? 255 : 0;
+      fetch(`http://${ip}/control?var=led_intensity&val=${val}`, { mode: 'no-cors' }).catch(e => {});
+      if (btn) {
+        btn.innerText = flashState ? '💡 FLASH LED (ACCESO)' : '💡 FLASH LED ESP32-CAM (ON/OFF)';
+        btn.style.background = flashState ? 'var(--accent-gold)' : 'rgba(255,183,3,0.2)';
+        btn.style.color = flashState ? '#000' : 'var(--accent-gold)';
+      }
     }
 
     setInterval(fetchBtcPrice, 30000);
