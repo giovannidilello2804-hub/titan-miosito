@@ -392,45 +392,31 @@
 
   <!-- SCHERMATA DI ACCESSO DEDICATA CLIENTI SOLO MINING & ADMIN -->
   <div id="lockScreen">
-    <div class="lock-icon">⛏️</div>
-    <div class="lock-title">ACCESSO CLIENTI SOLO MINING</div>
-    <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 18px; line-height: 1.4;">
-      Portale Cloud H24 per il monitoraggio dei nodi <strong>ESP32-S3 Solo Mining</strong> di TITAN 3D Studio.
+    <div class="lock-icon">🔐</div>
+    <div class="lock-title">TITAN CLOUD CONTROL</div>
+    <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 20px; line-height: 1.4;">
+      Accesso Riservato Clienti & Amministratore <strong>ESP32-S3 Solo Mining Cloud</strong>.
     </p>
 
-    <!-- FORM PIN -->
-    <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(0,240,255,0.3); padding: 18px; border-radius: 14px; margin-bottom: 20px;">
-      <label style="color: var(--border-cyan); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 6px;">
-        🔑 Inserisci il tuo PIN Personale Cliente:
+    <!-- BOX LOGIN CON PASSWORD / PIN -->
+    <div style="background: rgba(0,0,0,0.4); border: 2px solid var(--border-cyan); padding: 22px 18px; border-radius: 16px; margin-bottom: 20px; box-shadow: inset 0 0 20px rgba(0,240,255,0.15);">
+      <label for="pinInput" style="color: #fff; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 8px;">
+        🔑 Inserisci la Password o PIN Personale:
       </label>
-      <input type="password" id="pinInput" class="pin-input" placeholder="Es. 1234 / 5678 / 2804" maxlength="12" onkeydown="if(event.key === 'Enter') checkPin()">
-      <button class="btn-login" onclick="checkPin()">⚡ ENTRA NELLA TUA AREA RISERVATA</button>
-      <div id="errorMessage">⚠️ PIN Errato o Non Valido! Riprova.</div>
+      <input type="password" id="pinInput" class="pin-input" placeholder="Digita la tua Password / PIN" maxlength="16" onkeydown="if(event.key === 'Enter') checkPin()" autofocus>
+      <button class="btn-login" onclick="checkPin()">⚡ ENTRA CON PASSWORD / PIN</button>
+      <div id="errorMessage">⚠️ Password o PIN Errato! Riprova.</div>
     </div>
 
-    <!-- TASTI RAPIDI DI SELEZIONE CLIENTI E DEMO -->
+    <!-- ACCESSI DI PROVA RAPIDA (OPTIONAL DEMO & TEST) -->
     <div style="margin: 15px 0 10px 0; display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.75rem;">
       <div style="flex:1; height:1px; background: rgba(255,255,255,0.1);"></div>
-      <span>PROVA RAPIDA NODO CLIENTE / DEMO</span>
+      <span>OPPURE PROVA UN ACCESSO DIMOSTRATIVO</span>
       <div style="flex:1; height:1px; background: rgba(255,255,255,0.1);"></div>
     </div>
 
-    <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
-      <button onclick="quickClientLogin('1234')" style="background: rgba(255,183,3,0.12); border: 1px solid #ffb703; color: #ffb703; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
-        <span>👤 Nodo Cliente Marco Rossi</span>
-        <span style="font-size: 0.75rem; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px;">PIN 1234</span>
-      </button>
-
-      <button onclick="quickClientLogin('5678')" style="background: rgba(0,255,102,0.12); border: 1px solid #00ff66; color: #00ff66; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
-        <span>👤 Nodo Cliente Luca Bianchi</span>
-        <span style="font-size: 0.75rem; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px;">PIN 5678</span>
-      </button>
-      
+    <div style="display: flex; flex-direction: column; gap: 8px;">
       <button class="btn-demo-mode" onclick="startDemoMode()">👁️ AVVIA DEMO LIBERA VISITATORI</button>
-    </div>
-
-    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px;">
-      👑 Proprietario Giovanni: digita PIN <code style="color: #00f0ff;">2804</code> per il pannello Admin
     </div>
   </div>
 
