@@ -728,6 +728,44 @@
           <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.112</div>
           <div class="pakkina-stat" id="pakkinaStat4">75.9 KH/s</div>
         </div>
+    <!-- SEZIONE DEDICATA TELECAMERA ESP32-CAM LIVE STREAMING -->
+    <div style="background: linear-gradient(135deg, rgba(18,24,36,0.95) 0%, rgba(10,13,20,0.95) 100%); border: 2px solid var(--accent-gold); border-radius: 20px; padding: 24px; margin-bottom: 25px; box-shadow: 0 0 35px rgba(255,183,3,0.2);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
+        <div style="font-size: 1.2rem; font-weight: 700; color: var(--accent-gold); display: flex; align-items: center; gap: 10px;">
+          <span>📷</span> TELECAMERA ESP32-CAM (STREAMING VIDEO LIVE MINER & STAMPA 3D)
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 10px; height: 10px; border-radius: 50%; background: #00ff66; box-shadow: 0 0 10px #00ff66; animation: pulse 1.5s infinite;"></div>
+          <span style="font-size: 0.8rem; color: #00ff66; font-weight: 700;">ESP32-CAM CONNESSA</span>
+        </div>
+      </div>
+
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 18px;">
+        Monitoraggio visivo in tempo reale con il modulo <strong>ESP32-CAM OV2640</strong> puntato sul miner ESP32-S3 e sulla stampante 3D!
+      </p>
+
+      <!-- IP INPUT CONTROLS PER ESP32-CAM -->
+      <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(0,240,255,0.3); border-radius: 12px; padding: 12px 16px; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <label for="espCamIpInput" style="font-size: 0.85rem; color: #fff; font-weight: 700;">🌐 INDIRIZZO IP ESP32-CAM:</label>
+        <input type="text" id="espCamIpInput" value="192.168.1.83" style="background: rgba(0,0,0,0.6); border: 1px solid var(--border-cyan); color: #00f0ff; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-family: monospace; outline: none; width: 160px; text-align: center;">
+        <button onclick="updateEspCamStream()" style="background: var(--border-cyan); color: #000; border: none; padding: 7px 16px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 0.82rem;">
+          ⚡ CONNETTI / AGGIORNA STREAM
+        </button>
+        <button onclick="toggleCamFlash()" id="btnCamFlash" style="background: rgba(255,183,3,0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 7px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.82rem;">
+          💡 FLASH LED ESP32-CAM (ON/OFF)
+        </button>
+      </div>
+
+      <!-- VIDEO STREAM BOX -->
+      <div style="background: #000; border: 2px dashed rgba(0,240,255,0.4); border-radius: 16px; min-height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; box-shadow: inset 0 0 30px rgba(0,0,0,0.8);">
+        <img id="espCamImage" src="http://192.168.1.83:81/stream" alt="ESP32-CAM Live Video Stream" style="width: 100%; max-height: 380px; object-fit: contain; display: block;" onerror="handleCamError(this)">
+        <div id="espCamPlaceholder" style="display: none; text-align: center; padding: 30px 20px;">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">📹</div>
+          <div style="color: var(--border-cyan); font-weight: 700; font-size: 1.1rem;">ESP32-CAM LIVE MONITORING (192.168.1.83)</div>
+          <div style="color: var(--text-muted); font-size: 0.82rem; margin-top: 6px;">
+            Stream Video Live abilitato sulla rete Wi-Fi locale. Premi "CONNETTI STREAM" per caricare il flusso della telecamera!
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1236,6 +1274,37 @@
           terminal.scrollTop = terminal.scrollHeight;
         }
       }, 1000);
+    }
+
+    function updateEspCamStream() {
+      const ip = document.getElementById('espCamIpInput').value.trim();
+      const img = document.getElementById('espCamImage');
+      const placeholder = document.getElementById('espCamPlaceholder');
+      if (img) {
+        img.style.display = 'block';
+        if (placeholder) placeholder.style.display = 'none';
+        img.src = `http://${ip}:81/stream?t=` + new Date().getTime();
+      }
+    }
+
+    function handleCamError(img) {
+      img.style.display = 'none';
+      const placeholder = document.getElementById('espCamPlaceholder');
+      if (placeholder) placeholder.style.display = 'block';
+    }
+
+    let flashState = false;
+    function toggleCamFlash() {
+      const ip = document.getElementById('espCamIpInput').value.trim();
+      flashState = !flashState;
+      const btn = document.getElementById('btnCamFlash');
+      const val = flashState ? 255 : 0;
+      fetch(`http://${ip}/control?var=led_intensity&val=${val}`, { mode: 'no-cors' }).catch(e => {});
+      if (btn) {
+        btn.innerText = flashState ? '💡 FLASH LED (ACCESO)' : '💡 FLASH LED ESP32-CAM (ON/OFF)';
+        btn.style.background = flashState ? 'var(--accent-gold)' : 'rgba(255,183,3,0.2)';
+        btn.style.color = flashState ? '#000' : 'var(--accent-gold)';
+      }
     }
 
     setInterval(fetchBtcPrice, 30000);
