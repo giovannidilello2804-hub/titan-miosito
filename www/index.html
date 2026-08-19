@@ -167,31 +167,87 @@
 
     <!-- PRICING PACKAGES GRID -->
     <div style="margin-top: 35px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px;">
-      <h3 style="text-align: center; color: #fff; font-size: 1.5rem; margin-bottom: 20px;">PACCHETTI & LISTINO PREZZI (PASSA SOPRA O TOCCA PER ILLUMINARE)</h3>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+      <h3 style="text-align: center; color: #fff; font-size: 1.6rem; margin-bottom: 8px;">PACCHETTI, SERVIZI & LISTINO PREZZI</h3>
+      <p style="text-align: center; color: #8a99ad; font-size: 0.9rem; margin-bottom: 25px;">Scegli la soluzione adatta alle tue esigenze. Passa sopra o tocca per illuminare!</p>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 25px;">
         
-        <!-- Pack 1 -->
-        <div class="pricing-card-hover" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(0,240,255,0.3); border-radius: 14px; padding: 20px; text-align: center;">
-          <div style="color: #8a99ad; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">BASIC MINER</div>
-          <div style="color: #fff; font-size: 2rem; font-weight: 700; margin: 10px 0;">34,90 €</div>
-          <p style="color: #8a99ad; font-size: 0.85rem; line-height: 1.5;">ESP32-S3 Solo Miner + Cover PLA 3D + Cavo USB</p>
+        <!-- Pack 1: Basic (Senza Gestione Cloud) -->
+        <div class="pricing-card-hover" style="background: rgba(18,24,36,0.9); border: 1px solid rgba(0,240,255,0.4); border-radius: 18px; padding: 25px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="background: rgba(0,240,255,0.1); color: #00f0ff; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; display: inline-block; margin-bottom: 12px; text-transform: uppercase;">FAIDA SOLO — FAI DA TE</div>
+            <h4 style="color: #fff; font-size: 1.3rem; margin-bottom: 6px;">BASIC MINER 3D</h4>
+            <div style="color: #fff; font-size: 2.2rem; font-weight: 900; margin: 10px 0;">34,90 €</div>
+            <div style="color: #ff0055; font-size: 0.8rem; font-weight: 700; margin-bottom: 15px;">❌ SENZA GESTIONE CLOUD H24</div>
+            
+            <ul style="color: #8a99ad; font-size: 0.85rem; line-height: 1.6; text-align: left; list-style: none; padding: 0; margin-bottom: 20px;">
+              <li style="margin-bottom: 8px;">✅ 1x ESP32-S3 Solo Miner Flashato (75 KH/s)</li>
+              <li style="margin-bottom: 8px;">✅ 1x Custodia PLA 3D Custom Nido d'Ape</li>
+              <li style="margin-bottom: 8px;">✅ 1x Cavo USB di Alimentazione</li>
+              <li style="margin-bottom: 8px;">⚠️ Configurazione Wi-Fi Autonoma a casa tua</li>
+              <li style="margin-bottom: 8px;">🛑 Nessun pannello web Cloud H24 incluso</li>
+            </ul>
+          </div>
+
+          <a href="https://wa.me/393518884949?text=Ciao%20Giovanni!%20Vorrei%20ordinare%20il%20BASIC%20MINER%203D%20da%2034.90€" target="_blank" style="background: rgba(0,240,255,0.15); border: 1px solid #00f0ff; color: #00f0ff; font-weight: 700; padding: 12px; border-radius: 10px; text-decoration: none; text-align: center; font-size: 0.88rem; display: block; transition: all 0.2s;">
+            💬 ORDINA SU WHATSAPP (34,90€)
+          </a>
         </div>
 
-        <!-- Pack 2 -->
-        <div class="pricing-card-hover gold-glow" style="background: rgba(255,183,3,0.1); border: 1px solid #ffb703; border-radius: 14px; padding: 20px; text-align: center; position: relative;">
-          <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #ffb703; color: #000; font-size: 0.75rem; font-weight: 900; padding: 2px 10px; border-radius: 10px; text-transform: uppercase;">IL PIÙ VENDUTO</div>
-          <div style="color: #ffb703; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">FULL MINER + CLOUD H24</div>
-          <div style="color: #fff; font-size: 2rem; font-weight: 700; margin: 10px 0;">59,90 €</div>
-          <p style="color: #8a99ad; font-size: 0.85rem; line-height: 1.5;">ESP32-S3 + Cover PLA 3D + Spazio Web Cloud H24 con PIN</p>
+        <!-- Pack 2: Full Cloud (Con Gestione Cloud & Assistenza) -->
+        <div class="pricing-card-hover gold-glow" style="background: linear-gradient(135deg, rgba(255,183,3,0.15) 0%, rgba(18,24,36,0.95) 100%); border: 2px solid #ffb703; border-radius: 18px; padding: 25px; position: relative; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #ffb703; color: #000; font-size: 0.75rem; font-weight: 900; padding: 3px 14px; border-radius: 12px; text-transform: uppercase; box-shadow: 0 0 10px rgba(255,183,3,0.6);">IL PIÙ VENDUTO & CONSIGLIATO</div>
+          
+          <div>
+            <div style="background: rgba(255,183,3,0.2); color: #ffb703; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; display: inline-block; margin-top: 10px; margin-bottom: 12px; text-transform: uppercase;">ALL-INCLUSIVE CHIAVI IN MANO</div>
+            <h4 style="color: #ffb703; font-size: 1.3rem; margin-bottom: 6px;">FULL MINER + CLOUD H24</h4>
+            <div style="color: #fff; font-size: 2.2rem; font-weight: 900; margin: 10px 0;">59,90 €</div>
+            <div style="color: #00ff66; font-size: 0.8rem; font-weight: 700; margin-bottom: 15px;">✅ CON GESTIONE CLOUD H24 & ASSISTENZA</div>
+            
+            <ul style="color: #d1d5db; font-size: 0.85rem; line-height: 1.6; text-align: left; list-style: none; padding: 0; margin-bottom: 20px;">
+              <li style="margin-bottom: 8px;">✅ 1x ESP32-S3 Solo Miner in Cover PLA 3D</li>
+              <li style="margin-bottom: 8px;">🌐 <strong>Spazio Web Cloud dedicato H24 per 1 Anno</strong></li>
+              <li style="margin-bottom: 8px;">🔐 Accesso protetto con il tuo PIN Personale</li>
+              <li style="margin-bottom: 8px;">📱 Monitori da Smartphone: Hashrate, Temp e Wallet</li>
+              <li style="margin-bottom: 8px;">🛠️ <strong>Assistenza Prioritaria & Configurazione inclusa</strong></li>
+            </ul>
+          </div>
+
+          <a href="https://wa.me/393518884949?text=Ciao%20Giovanni!%20Vorrei%20ordinare%20il%20FULL%20MINER%20%2B%20CLOUD%20H24%20da%2059.90€" target="_blank" style="background: #ffb703; color: #000; font-weight: 800; padding: 12px; border-radius: 10px; text-decoration: none; text-align: center; font-size: 0.9rem; display: block; box-shadow: 0 0 15px rgba(255,183,3,0.5);">
+            💬 ORDINA CON CLOUD H24 (59,90€)
+          </a>
         </div>
 
-        <!-- Pack 3 -->
-        <div class="pricing-card-hover purple-glow" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(181,23,158,0.4); border-radius: 14px; padding: 20px; text-align: center;">
-          <div style="color: #e0aaff; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">TITAN FARM CLUSTER</div>
-          <div style="color: #fff; font-size: 2rem; font-weight: 700; margin: 10px 0;">119,90 €</div>
-          <p style="color: #8a99ad; font-size: 0.85rem; line-height: 1.5;">3x ESP32-S3 + Cover PLA 3D Multi-Rack + Spazio Web Cloud</p>
+        <!-- Pack 3: Titan Farm Cluster -->
+        <div class="pricing-card-hover purple-glow" style="background: rgba(18,24,36,0.9); border: 1px solid rgba(181,23,158,0.5); border-radius: 18px; padding: 25px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="background: rgba(181,23,158,0.2); color: #e0aaff; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; display: inline-block; margin-bottom: 12px; text-transform: uppercase;">CLUSTER POTENZIATO</div>
+            <h4 style="color: #e0aaff; font-size: 1.3rem; margin-bottom: 6px;">TITAN FARM CLUSTER</h4>
+            <div style="color: #fff; font-size: 2.2rem; font-weight: 900; margin: 10px 0;">119,90 €</div>
+            <div style="color: #00ff66; font-size: 0.8rem; font-weight: 700; margin-bottom: 15px;">✅ CON GESTIONE CLOUD MULTI-NODO H24</div>
+            
+            <ul style="color: #8a99ad; font-size: 0.85rem; line-height: 1.6; text-align: left; list-style: none; padding: 0; margin-bottom: 20px;">
+              <li style="margin-bottom: 8px;">⚡ <strong>3x ESP32-S3 Solo Miner</strong> (Tripla Potenza SHA-256)</li>
+              <li style="margin-bottom: 8px;">🏗️ Cover PLA 3D Multi-Rack da Scrivania</li>
+              <li style="margin-bottom: 8px;">🌐 Spazio Web Cloud per gestire l'intera Farm</li>
+              <li style="margin-bottom: 8px;">👑 Assistenza VIP & Setup personalizzato</li>
+            </ul>
+          </div>
+
+          <a href="https://wa.me/393518884949?text=Ciao%20Giovanni!%20Vorrei%20ordinare%20il%20TITAN%20FARM%20CLUSTER%20da%20119.90€" target="_blank" style="background: rgba(181,23,158,0.2); border: 1px solid #e0aaff; color: #e0aaff; font-weight: 700; padding: 12px; border-radius: 10px; text-decoration: none; text-align: center; font-size: 0.88rem; display: block; transition: all 0.2s;">
+            💬 ORDINA TITAN FARM (119,90€)
+          </a>
         </div>
 
+      </div>
+
+      <!-- Payment Methods Banner -->
+      <div style="margin-top: 25px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; text-align: center; color: #8a99ad; font-size: 0.85rem; display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap;">
+        <span>💳 <strong>Metodi di Pagamento Accettati:</strong></span>
+        <span>🅿️ PayPal</span>
+        <span>💳 Carta di Credito / Debito</span>
+        <span>⚡ Bonifico Istantaneo</span>
+        <span>📦 Contanti alla Consegna / Consegna a Mano</span>
       </div>
     </div>
 
