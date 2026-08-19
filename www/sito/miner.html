@@ -447,6 +447,22 @@
       </div>
     </header>
 
+    <!-- CARD INFO CLIENTE REGISTRATO (TITAN SERIAL ID & EMAIL) -->
+    <div id="clientInfoBanner" style="background: rgba(18,24,36,0.9); border: 1px solid rgba(0,240,255,0.3); border-radius: 14px; padding: 15px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+      <div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">🏷️ NUMERO PROGRESSIVO DISPOSITIVO TITAN</div>
+        <div style="font-size: 1.1rem; font-weight: 700; color: var(--border-cyan);" id="clientSerialVal">TITAN-MINER-001</div>
+      </div>
+      <div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">📧 EMAIL REGISTRATA CLIENTE</div>
+        <div style="font-size: 0.95rem; font-weight: 700; color: #fff;" id="clientEmailVal">marco.rossi@gmail.com</div>
+      </div>
+      <div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">📅 ATTIVAZIONE CLOUD H24</div>
+        <div style="font-size: 0.85rem; font-weight: 700; color: var(--green-glow);" id="clientActivationVal">Attivo fino al 19/08/2027</div>
+      </div>
+    </div>
+
     <!-- ADMIN MANAGEMENT PANEL (VISIBLE ONLY IN OWNER MODE - PIN 2804) -->
     <div id="adminProfitPanel" style="display: none; background: linear-gradient(135deg, rgba(0,240,255,0.1) 0%, rgba(18,24,36,0.95) 100%); border: 2px solid #00f0ff; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 0 40px rgba(0,240,255,0.2);">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
@@ -482,39 +498,42 @@
         <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; color: #fff;">
           <thead>
             <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); color: #8a99ad; text-transform: uppercase; font-size: 0.75rem;">
+              <th style="padding: 10px;">Progressivo TITAN</th>
               <th style="padding: 10px;">Cliente</th>
-              <th style="padding: 10px;">Pacchetto Acquistato</th>
-              <th style="padding: 10px;">Prezzo</th>
+              <th style="padding: 10px;">Email Registrata</th>
+              <th style="padding: 10px;">Pacchetto</th>
+              <th style="padding: 10px;">Incasso</th>
               <th style="padding: 10px;">Guadagno Netto</th>
-              <th style="padding: 10px;">PIN Assegnato</th>
-              <th style="padding: 10px;">Stato Cloud</th>
+              <th style="padding: 10px;">PIN</th>
               <th style="padding: 10px; text-align: center;">Azione Admin</th>
             </tr>
           </thead>
           <tbody>
             <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-              <td style="padding: 12px 10px; font-weight: 700; color: #00f0ff;">Marco Rossi</td>
-              <td style="padding: 12px 10px;">Pack 2: Full Miner + Cloud H24</td>
+              <td style="padding: 12px 10px;"><code style="color: #00f0ff; font-weight: 700;">TITAN-MINER-001</code></td>
+              <td style="padding: 12px 10px; font-weight: 700; color: #fff;">Marco Rossi</td>
+              <td style="padding: 12px 10px; color: #8a99ad;">marco.rossi@gmail.com</td>
+              <td style="padding: 12px 10px;">Pack 2: Full Cloud</td>
               <td style="padding: 12px 10px;">59,90 €</td>
               <td style="padding: 12px 10px; color: #00ff66; font-weight: 700;">+51,90 €</td>
               <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: #ffb703;">1234</code></td>
-              <td style="padding: 12px 10px;"><span style="color: #00ff66;">🟢 Attivo H24</span></td>
               <td style="padding: 12px 10px; text-align: center;">
                 <button onclick="inspectClient('1234')" style="background: rgba(0,240,255,0.2); border: 1px solid #00f0ff; color: #00f0ff; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
-                  👁️ VEDI AREA MARCO
+                  👁️ ISPEZIONE MARCO
                 </button>
               </td>
             </tr>
             <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-              <td style="padding: 12px 10px; font-weight: 700; color: #00f0ff;">Luca Bianchi</td>
-              <td style="padding: 12px 10px;">Pack 3: Titan Farm Cluster</td>
+              <td style="padding: 12px 10px;"><code style="color: #00f0ff; font-weight: 700;">TITAN-MINER-002</code></td>
+              <td style="padding: 12px 10px; font-weight: 700; color: #fff;">Luca Bianchi</td>
+              <td style="padding: 12px 10px; color: #8a99ad;">luca.bianchi@outlook.it</td>
+              <td style="padding: 12px 10px;">Pack 3: Farm Cluster</td>
               <td style="padding: 12px 10px;">119,90 €</td>
               <td style="padding: 12px 10px; color: #00ff66; font-weight: 700;">+95,00 €</td>
               <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: #ffb703;">5678</code></td>
-              <td style="padding: 12px 10px;"><span style="color: #00ff66;">🟢 Attivo H24</span></td>
               <td style="padding: 12px 10px; text-align: center;">
                 <button onclick="inspectClient('5678')" style="background: rgba(0,255,102,0.2); border: 1px solid #00ff66; color: #00ff66; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
-                  👁️ VEDI AREA LUCA
+                  👁️ ISPEZIONE LUCA
                 </button>
               </td>
             </tr>
@@ -704,6 +723,9 @@
       "2804": {
         isOwner: true,
         name: "👑 ACCESSO PROPRIETARIO (GIOVANNI - DATI REALI)",
+        serialNumber: "TITAN-MINER-000-MASTER",
+        email: "giovanni@titan3d.it",
+        activationDate: "Attivo dal 19/08/2026",
         wallet: "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk",
         ip: "192.168.1.82",
         mac: "80:B5:4E:C7:EC:9C",
@@ -714,6 +736,9 @@
       "gio": {
         isOwner: true,
         name: "👑 ACCESSO PROPRIETARIO (GIOVANNI - DATI REALI)",
+        serialNumber: "TITAN-MINER-000-MASTER",
+        email: "giovanni@titan3d.it",
+        activationDate: "Attivo dal 19/08/2026",
         wallet: "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk",
         ip: "192.168.1.82",
         mac: "80:B5:4E:C7:EC:9C",
@@ -724,6 +749,9 @@
       "admin": {
         isOwner: true,
         name: "👑 ACCESSO PROPRIETARIO (GIOVANNI - DATI REALI)",
+        serialNumber: "TITAN-MINER-000-MASTER",
+        email: "giovanni@titan3d.it",
+        activationDate: "Attivo dal 19/08/2026",
         wallet: "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk",
         ip: "192.168.1.82",
         mac: "80:B5:4E:C7:EC:9C",
@@ -736,6 +764,9 @@
       "1234": {
         isOwner: false,
         name: "👤 AREA RISERVATA CLIENTE: MARCO ROSSI",
+        serialNumber: "TITAN-MINER-001-NODO",
+        email: "marco.rossi@gmail.com",
+        activationDate: "Attivo fino al 19/08/2027",
         wallet: "bc1qmarco_rossi_btc_wallet_987654321",
         ip: "192.168.1.105 (Nodo Marco)",
         mac: "4A:2B:1C:8D:9E:01",
@@ -748,6 +779,9 @@
       "5678": {
         isOwner: false,
         name: "👤 AREA RISERVATA CLIENTE: LUCA BIANCHI",
+        serialNumber: "TITAN-MINER-002-CLUSTER",
+        email: "luca.bianchi@outlook.it",
+        activationDate: "Attivo fino al 19/08/2027",
         wallet: "bc1qluca_bianchi_btc_wallet_543210987",
         ip: "192.168.1.108 (Nodo Luca)",
         mac: "7E:8F:9A:0B:1C:2D",
@@ -761,6 +795,9 @@
     const DEMO_CLIENT = {
       isOwner: false,
       name: "✨ DEMO GENERICA CLIENTE (DATI SIMULATI)",
+      serialNumber: "TITAN-MINER-DEMO-999",
+      email: "cliente.demo@titan3d.it",
+      activationDate: "Modalità Dimostrativa Cloud",
       wallet: "bc1qdemo_cliente_esempio_wallet_123456789",
       ip: "192.168.1.100 (Nodo Demo)",
       mac: "DE:MO:EX:AM:PL:E1",
@@ -836,6 +873,11 @@
       document.getElementById('espIpVal').innerText = activeClient.ip;
       document.getElementById('btcAddressText').innerText = activeClient.wallet;
       document.getElementById('walletTypeText').innerText = activeClient.walletType;
+
+      // UPDATE SERIAL NUMBER, EMAIL AND ACTIVATION DATE
+      document.getElementById('clientSerialVal').innerText = activeClient.serialNumber || 'TITAN-MINER-001';
+      document.getElementById('clientEmailVal').innerText = activeClient.email || 'non-specificata@email.it';
+      document.getElementById('clientActivationVal').innerText = activeClient.activationDate || 'Attivo';
 
       // SHOW ADMIN PROFIT PANEL ONLY TO GIOVANNI (PIN 2804) WHEN NOT INSPECTING
       const adminPanel = document.getElementById('adminProfitPanel');
