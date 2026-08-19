@@ -1610,3 +1610,28 @@ input[type="range"] {
   font-weight: 800;
   font-size: 0.85rem;
 }
+
+/* --------------------------------------------------------------------------
+   Glowing Neon Hover Animations for Pricing Cards
+   -------------------------------------------------------------------------- */
+.pricing-card-hover {
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  cursor: pointer;
+}
+
+.pricing-card-hover:hover, .pricing-card-hover:active {
+  transform: translateY(-8px) scale(1.03) !important;
+  box-shadow: 0 0 35px rgba(0, 240, 255, 0.6), 0 0 70px rgba(0, 240, 255, 0.3) !important;
+  border-color: #00f0ff !important;
+}
+
+.pricing-card-hover.gold-glow:hover, .pricing-card-hover.gold-glow:active {
+  box-shadow: 0 0 45px rgba(255, 183, 3, 0.8), 0 0 90px rgba(255, 183, 3, 0.4) !important;
+  border-color: #ffb703 !important;
+}
+
+.pricing-card-hover.purple-glow:hover, .pricing-card-hover.purple-glow:active {
+  box-shadow: 0 0 45px rgba(224, 170, 255, 0.8), 0 0 90px rgba(181, 23, 158, 0.4) !important;
+  border-color: #e0aaff !important;
+}
+
