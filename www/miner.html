@@ -190,6 +190,85 @@
       100% { opacity: 0.4; transform: scale(0.9); }
     }
 
+    /* PAKKINE / NODE CARDS ILLUMINATED STYLES */
+    .node-grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .pakkina-card {
+      background: #0d121c;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .pakkina-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0, 240, 255, 0.5);
+    }
+
+    /* ILLUMINATED ACTIVE NODE STATE */
+    .pakkina-card.active-illuminated {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.2) 0%, #121824 100%);
+      border-color: var(--border-cyan);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
+    }
+
+    .pakkina-card.active-illuminated.gold-node {
+      background: linear-gradient(135deg, rgba(255, 183, 3, 0.2) 0%, #121824 100%);
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 25px rgba(255, 183, 3, 0.4);
+    }
+
+    .pakkina-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .pakkina-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #fff;
+    }
+
+    .pakkina-led {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #444;
+      box-shadow: none;
+      transition: all 0.3s;
+    }
+
+    .pakkina-card.active-illuminated .pakkina-led {
+      background: var(--green-glow);
+      box-shadow: 0 0 12px var(--green-glow);
+      animation: pulse 1s infinite;
+    }
+
+    .pakkina-stat {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--border-cyan);
+    }
+
+    .pakkina-card.active-illuminated.gold-node .pakkina-stat {
+      color: var(--accent-gold);
+    }
+
     /* CARD VEDIBILE PERFETTAMENTE A NIDO D'APE IN ALTA DEFINIZIONE */
     .card-honeycomb-showcase {
       background: linear-gradient(135deg, #121824 0%, #0a0d14 100%);
@@ -552,33 +631,64 @@
       </button>
     </div>
 
-    <!-- SELECTOR NODI MINING COLLEGATI (1 O 2 ALLA VOLTA) -->
-    <div style="background: rgba(18,24,36,0.95); border: 1px solid var(--border-cyan); border-radius: 16px; padding: 18px 22px; margin-bottom: 25px; box-shadow: 0 0 25px rgba(0,240,255,0.15);">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 15px;">
-        <div style="font-weight: 700; color: #fff; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
-          <span>🌐</span> NODI MINING ESP32-S3 COLLEGATI IN RETE (SELEZIONE NODO LIVE)
+    <!-- MATRICE GRAFICA PAKKINE/NODI CHE SI ILLUMINANO AD UNO AD UNO O INSIEME -->
+    <div style="background: rgba(18,24,36,0.95); border: 1px solid var(--border-cyan); border-radius: 16px; padding: 20px; margin-bottom: 25px; box-shadow: 0 0 30px rgba(0,240,255,0.15);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+        <div style="font-weight: 700; color: #fff; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+          <span>📦</span> MATRICE PAKKINE MINING TITAN (ILLUMINAZIONE LIVE NODI)
         </div>
-        <span style="font-size: 0.8rem; color: var(--green-glow); background: rgba(0,255,102,0.12); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--green-glow);">
-          🟢 Rete Mesh Nodi: 100% Attiva 24/7
-        </span>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button id="btnAutoCycle" onclick="toggleAutoCycle()" style="background: rgba(255,183,3,0.15); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+            🔄 AVVIA CICLO ILLUMINAZIONE AUTO (1-2-3-4)
+          </button>
+        </div>
       </div>
 
-      <!-- TASTI SELEZIONE NODO 1, NODO 2, O PARALLELO -->
-      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-        <button id="btnNode1" onclick="switchNode(1)" style="flex: 1; min-width: 160px; background: rgba(0,240,255,0.2); border: 2px solid #00f0ff; color: #fff; padding: 12px 16px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s;">
-          <span>⚡ NODO #1 ESP32-S3</span>
-          <span style="background: #00f0ff; color: #000; font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; font-weight: 900;">76.4 KH/s</span>
-        </button>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">
+        Clicca sulle <strong>pakkine / nodi</strong> qui sotto per illuminarne 1, 2 o più contemporaneamente. I numeri della velocità totale cambiano istantaneamente in tempo reale!
+      </p>
 
-        <button id="btnNode2" onclick="switchNode(2)" style="flex: 1; min-width: 160px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: #8a99ad; padding: 12px 16px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s;">
-          <span>⚡ NODO #2 ESP32-S3</span>
-          <span style="background: rgba(255,183,3,0.2); color: #ffb703; font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; font-weight: 900;">74.8 KH/s</span>
-        </button>
+      <!-- PAKKINE GRID MATRICE -->
+      <div class="node-grid-container">
+        <!-- PAKKINA 1 -->
+        <div class="pakkina-card active-illuminated" id="pakkina1" onclick="togglePakkina(1)">
+          <div class="pakkina-header">
+            <span class="pakkina-title">📦 PAKKINA NODO 01</span>
+            <div class="pakkina-led"></div>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.82</div>
+          <div class="pakkina-stat" id="pakkinaStat1">76.4 KH/s</div>
+        </div>
 
-        <button id="btnNodeBoth" onclick="switchNode('both')" style="flex: 1; min-width: 180px; background: rgba(181,23,158,0.15); border: 1px solid #e0aaff; color: #e0aaff; padding: 12px 16px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s;">
-          <span>🔀 PARALLELO (NODO 1 + 2)</span>
-          <span style="background: #e0aaff; color: #000; font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; font-weight: 900;">151.2 KH/s</span>
-        </button>
+        <!-- PAKKINA 2 -->
+        <div class="pakkina-card gold-node" id="pakkina2" onclick="togglePakkina(2)">
+          <div class="pakkina-header">
+            <span class="pakkina-title">📦 PAKKINA NODO 02</span>
+            <div class="pakkina-led"></div>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.105</div>
+          <div class="pakkina-stat" id="pakkinaStat2">74.8 KH/s</div>
+        </div>
+
+        <!-- PAKKINA 3 -->
+        <div class="pakkina-card" id="pakkina3" onclick="togglePakkina(3)">
+          <div class="pakkina-header">
+            <span class="pakkina-title">📦 PAKKINA NODO 03</span>
+            <div class="pakkina-led"></div>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.108</div>
+          <div class="pakkina-stat" id="pakkinaStat3">78.1 KH/s</div>
+        </div>
+
+        <!-- PAKKINA 4 -->
+        <div class="pakkina-card gold-node" id="pakkina4" onclick="togglePakkina(4)">
+          <div class="pakkina-header">
+            <span class="pakkina-title">📦 PAKKINA NODO 04</span>
+            <div class="pakkina-led"></div>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.112</div>
+          <div class="pakkina-stat" id="pakkinaStat4">75.9 KH/s</div>
+        </div>
       </div>
     </div>
 
@@ -674,12 +784,12 @@
       <div class="stat-card">
         <div class="stat-label">Velocità Miner Live (Hashrate)</div>
         <div class="stat-value" id="hashrateVal" style="color: var(--border-cyan);">76.4 KH/s</div>
-        <div class="stat-sub">Fluttuazione SHA-256 Dual-Core Active</div>
+        <div class="stat-sub" id="hashrateSubText">1 Pakkina Illuminata & Attiva</div>
       </div>
 
       <!-- Temperatura ESP32 Live -->
       <div class="stat-card temp">
-        <div class="stat-label">Temperatura ESP32-S3</div>
+        <div class="stat-label">Temperatura Nodi</div>
         <div class="stat-value" id="tempVal">41.8 °C</div>
         <div class="stat-sub" id="tempSubText">Stato Termico: Ottimale / Freddo</div>
       </div>
@@ -700,15 +810,15 @@
 
       <!-- Stato Operativo Miner -->
       <div class="stat-card">
-        <div class="stat-label">Stato Operativo</div>
-        <div class="stat-value" style="color: var(--green-glow);">MINING ATTIVO</div>
+        <div class="stat-label">Stato Operativo Rete</div>
+        <div class="stat-value" style="color: var(--green-glow);" id="activeNodesCountVal">1 NODO ATTIVO</div>
         <div class="stat-sub">Connesso a Solo CKPool (24/7)</div>
       </div>
 
       <!-- IP & Rete locale -->
       <div class="stat-card">
         <div class="stat-label">Indirizzo IP & Consumo</div>
-        <div class="stat-value" id="espIpVal" style="font-size: 1.4rem;">192.168.1.100</div>
+        <div class="stat-value" id="espIpVal" style="font-size: 1.4rem;">192.168.1.82</div>
         <div class="stat-sub">Consumo: 0.8 Watt (~0.05€/mese)</div>
       </div>
 
@@ -840,45 +950,69 @@
     let loggedAsOwner = false;
     let hashCounter = 18452900;
 
-    let currentNodeSelection = 1;
+    // STATE PER PAKKINE NODO ILLUMINATE (1, 2, 3, 4)
+    const pakkinaRates = { 1: 76.4, 2: 74.8, 3: 78.1, 4: 75.9 };
+    const pakkinaActive = { 1: true, 2: false, 3: false, 4: false };
+    let autoCycleTimer = null;
 
-    function switchNode(mode) {
-      currentNodeSelection = mode;
-      
-      const btn1 = document.getElementById('btnNode1');
-      const btn2 = document.getElementById('btnNode2');
-      const btnBoth = document.getElementById('btnNodeBoth');
+    function togglePakkina(id) {
+      pakkinaActive[id] = !pakkinaActive[id];
+      updatePakkineUI();
+    }
 
-      btn1.style.background = 'rgba(255,255,255,0.05)';
-      btn1.style.border = '1px solid rgba(255,255,255,0.2)';
-      btn1.style.color = '#8a99ad';
+    function updatePakkineUI() {
+      let activeCount = 0;
+      let totalHash = 0;
 
-      btn2.style.background = 'rgba(255,255,255,0.05)';
-      btn2.style.border = '1px solid rgba(255,255,255,0.2)';
-      btn2.style.color = '#8a99ad';
+      for (let i = 1; i <= 4; i++) {
+        const card = document.getElementById(`pakkina${i}`);
+        if (pakkinaActive[i]) {
+          card.classList.add('active-illuminated');
+          activeCount++;
+          totalHash += pakkinaRates[i];
+        } else {
+          card.classList.remove('active-illuminated');
+        }
+      }
 
-      btnBoth.style.background = 'rgba(255,255,255,0.05)';
-      btnBoth.style.border = '1px solid rgba(255,255,255,0.2)';
-      btnBoth.style.color = '#8a99ad';
-
-      if (mode === 1) {
-        btn1.style.background = 'rgba(0,240,255,0.2)';
-        btn1.style.border = '2px solid #00f0ff';
-        btn1.style.color = '#fff';
-        document.getElementById('hashrateVal').innerText = '76.4 KH/s';
-        document.getElementById('tempVal').innerText = '41.8 °C';
-      } else if (mode === 2) {
-        btn2.style.background = 'rgba(255,183,3,0.2)';
-        btn2.style.border = '2px solid #ffb703';
-        btn2.style.color = '#fff';
-        document.getElementById('hashrateVal').innerText = '74.8 KH/s';
-        document.getElementById('tempVal').innerText = '39.5 °C';
+      if (activeCount === 0) {
+        document.getElementById('hashrateVal').innerText = '0.0 KH/s (STANDBY)';
+        document.getElementById('activeNodesCountVal').innerText = '0 NODI ATTIVI';
+        document.getElementById('hashrateSubText').innerText = 'Nessuna Pakkina Illuminata';
       } else {
-        btnBoth.style.background = 'rgba(181,23,158,0.25)';
-        btnBoth.style.border = '2px solid #e0aaff';
-        btnBoth.style.color = '#fff';
-        document.getElementById('hashrateVal').innerText = '151.2 KH/s (2 Nodi)';
-        document.getElementById('tempVal').innerText = '40.6 °C (Media)';
+        document.getElementById('hashrateVal').innerText = totalHash.toFixed(1) + ' KH/s';
+        document.getElementById('activeNodesCountVal').innerText = activeCount + (activeCount === 1 ? ' NODO ATTIVO' : ' NODI ATTIVI');
+        document.getElementById('hashrateSubText').innerText = `${activeCount} Pakkine Illuminate in Parallelo`;
+      }
+    }
+
+    function toggleAutoCycle() {
+      const btn = document.getElementById('btnAutoCycle');
+      if (autoCycleTimer) {
+        clearInterval(autoCycleTimer);
+        autoCycleTimer = null;
+        btn.innerText = '🔄 AVVIA CICLO ILLUMINAZIONE AUTO (1-2-3-4)';
+        btn.style.background = 'rgba(255,183,3,0.15)';
+      } else {
+        let current = 1;
+        pakkinaActive[1] = true; pakkinaActive[2] = false; pakkinaActive[3] = false; pakkinaActive[4] = false;
+        updatePakkineUI();
+
+        btn.innerText = '⏹️ FERMA CICLO AUTOMATICO';
+        btn.style.background = 'rgba(255,0,85,0.2)';
+
+        autoCycleTimer = setInterval(() => {
+          current++;
+          if (current > 4) current = 1;
+
+          // Cycle patterns: 1 node -> 2 nodes -> 3 nodes -> 4 nodes
+          if (current === 1) { pakkinaActive[1]=true; pakkinaActive[2]=false; pakkinaActive[3]=false; pakkinaActive[4]=false; }
+          else if (current === 2) { pakkinaActive[1]=true; pakkinaActive[2]=true; pakkinaActive[3]=false; pakkinaActive[4]=false; }
+          else if (current === 3) { pakkinaActive[1]=true; pakkinaActive[2]=true; pakkinaActive[3]=true; pakkinaActive[4]=false; }
+          else if (current === 4) { pakkinaActive[1]=true; pakkinaActive[2]=true; pakkinaActive[3]=true; pakkinaActive[4]=true; }
+
+          updatePakkineUI();
+        }, 2500);
       }
     }
 
@@ -890,11 +1024,6 @@
       document.getElementById('mainApp').style.display = 'block';
       fetchBtcPrice();
       startLiveAnimation();
-    }
-
-    function quickClientLogin(pin) {
-      document.getElementById('pinInput').value = pin;
-      checkPin();
     }
 
     function checkPin() {
@@ -914,7 +1043,6 @@
       }
     }
 
-    // FUNCTION FOR GIOVANNI TO INSPECT ANY CLIENT'S PAGE IN REALTIME
     function inspectClient(clientPin) {
       if (CLIENT_DATABASE[clientPin]) {
         activeClient = CLIENT_DATABASE[clientPin];
@@ -946,12 +1074,10 @@
       document.getElementById('btcAddressText').innerText = activeClient.wallet;
       document.getElementById('walletTypeText').innerText = activeClient.walletType;
 
-      // UPDATE SERIAL NUMBER, EMAIL AND ACTIVATION DATE
       document.getElementById('clientSerialVal').innerText = activeClient.serialNumber || 'TITAN-MINER-001';
       document.getElementById('clientEmailVal').innerText = activeClient.email || 'non-specificata@email.it';
       document.getElementById('clientActivationVal').innerText = activeClient.activationDate || 'Attivo';
 
-      // SHOW ADMIN PROFIT PANEL ONLY TO GIOVANNI (PIN 2804) WHEN NOT INSPECTING
       const adminPanel = document.getElementById('adminProfitPanel');
       if (loggedAsOwner && !isInspecting) {
         adminPanel.style.display = 'block';
@@ -969,6 +1095,7 @@
     function logout() {
       loggedAsOwner = false;
       activeClient = DEMO_CLIENT;
+      if (autoCycleTimer) clearInterval(autoCycleTimer);
       document.getElementById('inspectingBanner').style.display = 'none';
       document.getElementById('mainApp').style.display = 'none';
       document.getElementById('lockScreen').style.display = 'block';
@@ -1003,8 +1130,13 @@
 
     function startLiveAnimation() {
       setInterval(() => {
-        const hr = (74.2 + Math.random() * 4.3).toFixed(1);
-        document.getElementById('hashrateVal').innerText = hr + ' KH/s';
+        let currentHashVal = parseFloat(document.getElementById('hashrateVal').innerText);
+        if (currentHashVal > 0) {
+          const jitter = (Math.random() * 3.0 - 1.5);
+          const activeCount = Object.values(pakkinaActive).filter(Boolean).length;
+          const baseHash = Object.keys(pakkinaActive).reduce((acc, id) => acc + (pakkinaActive[id] ? pakkinaRates[id] : 0), 0);
+          document.getElementById('hashrateVal').innerText = (baseHash + jitter).toFixed(1) + ' KH/s';
+        }
 
         const temp = (40.8 + Math.random() * 1.6).toFixed(1);
         document.getElementById('tempVal').innerText = temp + ' °C';
