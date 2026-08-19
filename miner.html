@@ -373,16 +373,16 @@
     <div class="lock-title">TITAN MINER CONTROL</div>
     <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">Scegli la modalità di accesso al pannello:</p>
     
-    <button class="btn-demo-mode" onclick="startDemoMode()">👁️ AVVIA DEMO INTERATTIVA LIVE</button>
+    <button class="btn-demo-mode" onclick="startDemoMode()">👁️ AVVIA DEMO GENERICA CLIENTE</button>
 
     <div style="margin: 20px 0; display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.8rem;">
       <div style="flex:1; height:1px; background: rgba(255,255,255,0.1);"></div>
-      <span>OPPURE ACCESSO PROPRIETARIO</span>
+      <span>OPPUR ACCESSO PROPRIETARIO (RISERVATO)</span>
       <div style="flex:1; height:1px; background: rgba(255,255,255,0.1);"></div>
     </div>
     
     <input type="password" id="pinInput" class="pin-input" placeholder="Inserisci PIN Proprietario" maxlength="12" onkeydown="if(event.key === 'Enter') checkPin()">
-    <button class="btn-login" onclick="checkPin()">🔑 SBLOCCA COME PROPRIETARIO</button>
+    <button class="btn-login" onclick="checkPin()">🔑 SBLOCCA DATI REALI PROPRIETARIO</button>
     <div id="errorMessage">⚠️ PIN Errato! Accesso Negato.</div>
   </div>
 
@@ -390,7 +390,7 @@
   <div id="mainApp">
     
     <div class="logout-bar">
-      <div class="demo-badge" id="modeBadge">✨ MODALITÀ DEMO INTERATTIVA LIVE</div>
+      <div class="demo-badge" id="modeBadge">✨ DEMO GENERICA CLIENTE (DATI SIMULATI)</div>
       <button class="btn-logout" onclick="logout()">🔒 Esci</button>
     </div>
 
@@ -402,10 +402,10 @@
       <div class="status-badge-container">
         <div class="status-pill">
           <div class="dot-live"></div>
-          <span id="espStatusText">ESP32-S3 ONLINE (192.168.1.82)</span>
+          <span id="espStatusText">ESP32-S3 DEMO NODE</span>
         </div>
         <div class="status-pill">
-          <span>MAC: 80:B5:4E:C7:EC:9C</span>
+          <span id="espMacText">MAC: DE:MO:EX:AM:PL:E1</span>
         </div>
         <div class="status-pill">
           <span>⚙️ Dual Core 240MHz (8MB PSRAM)</span>
@@ -461,7 +461,7 @@
       <!-- IP & Rete locale -->
       <div class="stat-card">
         <div class="stat-label">Indirizzo IP & Consumo</div>
-        <div class="stat-value" style="font-size: 1.5rem;">192.168.1.82</div>
+        <div class="stat-value" id="espIpVal" style="font-size: 1.4rem;">192.168.1.100</div>
         <div class="stat-sub">Consumo: 0.8 Watt (~0.05€/mese)</div>
       </div>
 
@@ -473,10 +473,10 @@
         <div class="wallet-title">
           <span>🪙</span> Indirizzo Wallet Bitcoin di Accredito Vincita
         </div>
-        <span style="font-size: 0.8rem; color: var(--text-muted);">Trust Wallet / Bech32</span>
+        <span style="font-size: 0.8rem; color: var(--text-muted);" id="walletTypeText">Wallet Esempio Cliente</span>
       </div>
       <div class="wallet-box">
-        <span id="btcAddressText">bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk</span>
+        <span id="btcAddressText">bc1qdemo_cliente_esempio_wallet_123456789</span>
         <button class="btn-copy" onclick="copyAddress()">COPIA</button>
       </div>
     </div>
@@ -486,7 +486,7 @@
       <button class="btn-action" onclick="simulateShare()" style="background: rgba(0,240,255,0.15); border-color: var(--border-cyan);">
         <span>⚡</span> Simula Share Trovata (Test Live)
       </button>
-      <a href="https://mempool.space/address/bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk" target="_blank" class="btn-action">
+      <a id="mempoolLink" href="https://mempool.space" target="_blank" class="btn-action">
         <span>🔍</span> Verifica Mempool.space
       </a>
       <a href="https://public-pool.io" target="_blank" class="btn-action">
@@ -501,12 +501,22 @@
 
   <script>
     const SECRET_PIN = "2804";
-    let isDemoMode = false;
+    let isOwnerMode = false;
     let hashCounter = 18452900;
 
+    // REAL PRIVATE DATA FOR GIOVANNI (UNLOCKED ONLY WITH PIN 2804)
+    const REAL_WALLET = "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk";
+    const REAL_IP = "192.168.1.82";
+    const REAL_MAC = "80:B5:4E:C7:EC:9C";
+
+    // ANONYMOUS DEMO DATA FOR PUBLIC VISITORS
+    const DEMO_WALLET = "bc1qdemo_cliente_esempio_wallet_123456789";
+    const DEMO_IP = "192.168.1.100 (Nodo Demo)";
+    const DEMO_MAC = "DE:MO:EX:AM:PL:E1";
+
     function startDemoMode() {
-      isDemoMode = true;
-      document.getElementById('modeBadge').innerText = '✨ MODALITÀ DEMO INTERATTIVA LIVE';
+      isOwnerMode = false;
+      applyModeData();
       document.getElementById('lockScreen').style.display = 'none';
       document.getElementById('mainApp').style.display = 'block';
       fetchBtcPrice();
@@ -516,9 +526,9 @@
     function checkPin() {
       const input = document.getElementById('pinInput').value;
       if (input === SECRET_PIN || input === "admin" || input === "gio") {
-        isDemoMode = false;
+        isOwnerMode = true;
         sessionStorage.setItem('titan_miner_auth', 'true');
-        document.getElementById('modeBadge').innerText = '👑 ACCESSO PROPRIETARIO (GIOVANNI)';
+        applyModeData();
         document.getElementById('lockScreen').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
         fetchBtcPrice();
@@ -530,15 +540,40 @@
       }
     }
 
+    function applyModeData() {
+      if (isOwnerMode) {
+        document.getElementById('modeBadge').innerText = '👑 ACCESSO PROPRIETARIO (GIOVANNI - DATI REALI)';
+        document.getElementById('modeBadge').style.borderColor = '#00f0ff';
+        document.getElementById('modeBadge').style.color = '#00f0ff';
+        document.getElementById('espStatusText').innerText = `ESP32-S3 REALE ONLINE (${REAL_IP})`;
+        document.getElementById('espMacText').innerText = `MAC: ${REAL_MAC}`;
+        document.getElementById('espIpVal').innerText = REAL_IP;
+        document.getElementById('btcAddressText').innerText = REAL_WALLET;
+        document.getElementById('walletTypeText').innerText = 'Trust Wallet Giovanni (Reale)';
+        document.getElementById('mempoolLink').href = `https://mempool.space/address/${REAL_WALLET}`;
+      } else {
+        document.getElementById('modeBadge').innerText = '✨ DEMO GENERICA CLIENTE (DATI SIMULATI)';
+        document.getElementById('modeBadge').style.borderColor = '#ffb703';
+        document.getElementById('modeBadge').style.color = '#ffb703';
+        document.getElementById('espStatusText').innerText = 'ESP32-S3 DEMO NODE';
+        document.getElementById('espMacText').innerText = `MAC: ${DEMO_MAC}`;
+        document.getElementById('espIpVal').innerText = DEMO_IP;
+        document.getElementById('btcAddressText').innerText = DEMO_WALLET;
+        document.getElementById('walletTypeText').innerText = 'Wallet Esempio Cliente';
+        document.getElementById('mempoolLink').href = 'https://mempool.space';
+      }
+    }
+
     function logout() {
       sessionStorage.removeItem('titan_miner_auth');
+      isOwnerMode = false;
       document.getElementById('mainApp').style.display = 'none';
       document.getElementById('lockScreen').style.display = 'block';
     }
 
     if (sessionStorage.getItem('titan_miner_auth') === 'true') {
-      isDemoMode = false;
-      document.getElementById('modeBadge').innerText = '👑 ACCESSO PROPRIETARIO (GIOVANNI)';
+      isOwnerMode = true;
+      applyModeData();
       document.getElementById('lockScreen').style.display = 'none';
       document.getElementById('mainApp').style.display = 'block';
       fetchBtcPrice();
