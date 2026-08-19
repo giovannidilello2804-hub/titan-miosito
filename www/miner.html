@@ -466,7 +466,7 @@
         </div>
       </div>
 
-      <!-- Client Table -->
+      <!-- Client Table with LIVE INSPECT BUTTON FOR GIOVANNI -->
       <div style="overflow-x: auto;">
         <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; color: #fff;">
           <thead>
@@ -477,6 +477,7 @@
               <th style="padding: 10px;">Guadagno Netto</th>
               <th style="padding: 10px;">PIN Assegnato</th>
               <th style="padding: 10px;">Stato Cloud</th>
+              <th style="padding: 10px; text-align: center;">Azione Admin</th>
             </tr>
           </thead>
           <tbody>
@@ -487,6 +488,11 @@
               <td style="padding: 12px 10px; color: #00ff66; font-weight: 700;">+51,90 €</td>
               <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: #ffb703;">1234</code></td>
               <td style="padding: 12px 10px;"><span style="color: #00ff66;">🟢 Attivo H24</span></td>
+              <td style="padding: 12px 10px; text-align: center;">
+                <button onclick="inspectClient('1234')" style="background: rgba(0,240,255,0.2); border: 1px solid #00f0ff; color: #00f0ff; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
+                  👁️ VEDI AREA MARCO
+                </button>
+              </td>
             </tr>
             <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
               <td style="padding: 12px 10px; font-weight: 700; color: #00f0ff;">Luca Bianchi</td>
@@ -495,10 +501,25 @@
               <td style="padding: 12px 10px; color: #00ff66; font-weight: 700;">+95,00 €</td>
               <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: #ffb703;">5678</code></td>
               <td style="padding: 12px 10px;"><span style="color: #00ff66;">🟢 Attivo H24</span></td>
+              <td style="padding: 12px 10px; text-align: center;">
+                <button onclick="inspectClient('5678')" style="background: rgba(0,255,102,0.2); border: 1px solid #00ff66; color: #00ff66; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
+                  👁️ VEDI AREA LUCA
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
+    </div>
+
+    <!-- BANNER PER QUANDO GIOVANNI STA ISPEZIONANDO L'AREA DI UN CLIENTE -->
+    <div id="inspectingBanner" style="display: none; background: rgba(255,183,3,0.15); border: 1px solid #ffb703; padding: 12px 20px; border-radius: 12px; margin-bottom: 20px; justify-content: space-between; align-items: center;">
+      <div style="color: #ffb703; font-weight: 700; font-size: 0.95rem;" id="inspectingText">
+        👑 MODALITÀ ADMIN: STAI ISPEZIONANDO L'AREA DEL CLIENTE: MARCO ROSSI
+      </div>
+      <button onclick="backToOwnerAdmin()" style="background: #ffb703; color: #000; border: none; padding: 6px 14px; border-radius: 6px; font-weight: 800; font-size: 0.8rem; cursor: pointer;">
+        🔙 TORNA AL TUO PANNELLO ADMIN
+      </button>
     </div>
 
     <!-- CARD VISTA GRAFICA REALE COVER PLA NIDO D'APE -->
@@ -700,7 +721,7 @@
         color: "#00f0ff"
       },
 
-      // 2. ESEMPIO CLIENTE MARCO ROSSI (PIN 1234)
+      // 2. CLIENTE MARCO ROSSI (PIN 1234)
       "1234": {
         isOwner: false,
         name: "👤 AREA RISERVATA CLIENTE: MARCO ROSSI",
@@ -712,7 +733,7 @@
         color: "#ffb703"
       },
 
-      // 3. ESEMPIO CLIENTE LUCA BIANCHI (PIN 5678)
+      // 3. CLIENTE LUCA BIANCHI (PIN 5678)
       "5678": {
         isOwner: false,
         name: "👤 AREA RISERVATA CLIENTE: LUCA BIANCHI",
@@ -738,9 +759,11 @@
     };
 
     let activeClient = DEMO_CLIENT;
+    let loggedAsOwner = false;
     let hashCounter = 18452900;
 
     function startDemoMode() {
+      loggedAsOwner = false;
       activeClient = DEMO_CLIENT;
       applyModeData();
       document.getElementById('lockScreen').style.display = 'none';
@@ -753,6 +776,7 @@
       const input = document.getElementById('pinInput').value.trim();
       if (CLIENT_DATABASE[input]) {
         activeClient = CLIENT_DATABASE[input];
+        loggedAsOwner = !!activeClient.isOwner;
         applyModeData();
         document.getElementById('lockScreen').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
@@ -765,7 +789,28 @@
       }
     }
 
-    function applyModeData() {
+    // FUNCTION FOR GIOVANNI TO INSPECT ANY CLIENT'S PAGE IN REALTIME
+    function inspectClient(clientPin) {
+      if (CLIENT_DATABASE[clientPin]) {
+        activeClient = CLIENT_DATABASE[clientPin];
+        document.getElementById('adminProfitPanel').style.display = 'none';
+        
+        const banner = document.getElementById('inspectingBanner');
+        banner.style.display = 'flex';
+        document.getElementById('inspectingText').innerText = `👑 MODALITÀ ADMIN: STAI ISPEZIONANDO L'AREA DI: ${activeClient.name}`;
+
+        applyModeData(true);
+      }
+    }
+
+    function backToOwnerAdmin() {
+      activeClient = CLIENT_DATABASE["2804"];
+      document.getElementById('inspectingBanner').style.display = 'none';
+      document.getElementById('adminProfitPanel').style.display = 'block';
+      applyModeData();
+    }
+
+    function applyModeData(isInspecting = false) {
       document.getElementById('modeBadge').innerText = activeClient.name;
       document.getElementById('modeBadge').style.borderColor = activeClient.color;
       document.getElementById('modeBadge').style.color = activeClient.color;
@@ -776,19 +821,25 @@
       document.getElementById('btcAddressText').innerText = activeClient.wallet;
       document.getElementById('walletTypeText').innerText = activeClient.walletType;
 
-      // SHOW ADMIN PROFIT PANEL ONLY TO GIOVANNI (PIN 2804)
+      // SHOW ADMIN PROFIT PANEL ONLY TO GIOVANNI (PIN 2804) WHEN NOT INSPECTING
       const adminPanel = document.getElementById('adminProfitPanel');
-      if (activeClient.isOwner) {
+      if (loggedAsOwner && !isInspecting) {
         adminPanel.style.display = 'block';
+      } else if (!isInspecting) {
+        adminPanel.style.display = 'none';
+      }
+
+      if (activeClient.wallet.startsWith('bc1qx4e7')) {
         document.getElementById('mempoolLink').href = `https://mempool.space/address/${activeClient.wallet}`;
       } else {
-        adminPanel.style.display = 'none';
         document.getElementById('mempoolLink').href = 'https://mempool.space';
       }
     }
 
     function logout() {
+      loggedAsOwner = false;
       activeClient = DEMO_CLIENT;
+      document.getElementById('inspectingBanner').style.display = 'none';
       document.getElementById('mainApp').style.display = 'none';
       document.getElementById('lockScreen').style.display = 'block';
       document.getElementById('pinInput').value = '';
