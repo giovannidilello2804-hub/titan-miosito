@@ -109,10 +109,10 @@
       display: none;
     }
 
-    /* MAIN APP (Hidden until login) */
+    /* MAIN APP Container */
     #mainApp {
       display: none;
-      max-width: 800px;
+      max-width: 850px;
       width: 100%;
     }
 
@@ -139,7 +139,7 @@
     .status-badge-container {
       display: flex;
       justify-content: center;
-      gap: 15px;
+      gap: 12px;
       margin-top: 15px;
       flex-wrap: wrap;
     }
@@ -172,7 +172,7 @@
 
     .grid-stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 20px;
       margin-bottom: 25px;
     }
@@ -205,6 +205,10 @@
 
     .stat-card.gold::before {
       background: var(--accent-gold);
+    }
+
+    .stat-card.temp::before {
+      background: #ff5500;
     }
 
     .stat-label {
@@ -346,7 +350,7 @@
     <div id="errorMessage">⚠️ PIN Errato! Accesso Negato.</div>
   </div>
 
-  <!-- MAIN APP CONTAINER (Nascosta fino al Login) -->
+  <!-- MAIN APP CONTAINER -->
   <div id="mainApp">
     
     <div class="logout-bar">
@@ -356,7 +360,7 @@
     <!-- Header -->
     <header>
       <div class="logo-title">TITAN <span>MINER</span> CONTROL</div>
-      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Pannello di Controllo per ESP32-S3 Solo Mining (Bitcoin)</p>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Pannello di Monitoraggio Diretto per ESP32-S3 Solo Mining</p>
 
       <div class="status-badge-container">
         <div class="status-pill">
@@ -364,36 +368,59 @@
           <span>ESP32-S3 ONLINE (192.168.1.82)</span>
         </div>
         <div class="status-pill">
-          <span>⚙️ Hardware: Dual Core 240MHz (8MB PSRAM)</span>
+          <span>MAC: 80:B5:4E:C7:EC:9C</span>
+        </div>
+        <div class="status-pill">
+          <span>⚙️ Dual Core 240MHz (8MB PSRAM)</span>
         </div>
       </div>
     </header>
 
-    <!-- Stats Grid -->
+    <!-- DIRECT PARAMETERS GRID -->
     <div class="grid-stats">
+
+      <!-- Stato Operativo Miner -->
+      <div class="stat-card">
+        <div class="stat-label">Stato Operativo</div>
+        <div class="stat-value" style="color: var(--green-glow);">MINING ATTIVO</div>
+        <div class="stat-sub">Connesso a Solo CKPool (24/7)</div>
+      </div>
+
+      <!-- Temperatura ESP32 -->
+      <div class="stat-card temp">
+        <div class="stat-label">Temperatura ESP32-S3</div>
+        <div class="stat-value" id="tempVal">41.8 °C</div>
+        <div class="stat-sub">Stato Termico: Ottimale / Freddo</div>
+      </div>
+
+      <!-- Hashrate -->
       <div class="stat-card">
         <div class="stat-label">Velocità Miner (Hashrate)</div>
         <div class="stat-value" id="hashrateVal">~75.0 KH/s</div>
         <div class="stat-sub">SHA-256 Dual Core Active</div>
       </div>
 
+      <!-- Prezzo Bitcoin Live -->
       <div class="stat-card gold">
         <div class="stat-label">Prezzo Bitcoin Live</div>
         <div class="stat-value" id="btcPriceVal">€ ...</div>
         <div class="stat-sub" id="btcRewardVal">Premio Blocco (3.125 BTC): € ...</div>
       </div>
 
+      <!-- Consumo Energetico -->
       <div class="stat-card">
-        <div class="stat-label">Stato Connessione Wi-Fi</div>
-        <div class="stat-value" style="color: var(--green-glow);">CONNESSO</div>
-        <div class="stat-sub">Rete Wi-Fi 2.4G Attiva</div>
+        <div class="stat-label">Consumo Energetico</div>
+        <div class="stat-value">0.8 Watt</div>
+        <div class="stat-sub">Spesa: ~0.05€ / mese in bolletta</div>
       </div>
 
+      <!-- IP & Rete locale -->
       <div class="stat-card">
-        <div class="stat-label">Consumo Stimato</div>
-        <div class="stat-value">0.8 W</div>
-        <div class="stat-sub">~0.05€ / mese in bolletta</div>
+        <div class="stat-label">Indirizzo IP Locale</div>
+        <div class="stat-value" style="font-size: 1.5rem;">192.168.1.82</div>
+        <div class="stat-sub">Rete Wi-Fi 2.4GHz Domestica</div>
       </div>
+
     </div>
 
     <!-- Wallet Address Card -->
