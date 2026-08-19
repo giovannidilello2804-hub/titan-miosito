@@ -3,6 +3,8 @@
   "rewrites": [
     { "source": "/miner", "destination": "/miner.html" },
     { "source": "/miner.html", "destination": "/miner.html" },
+    { "source": "/sito", "destination": "/index.html" },
+    { "source": "/sito/miner", "destination": "/miner.html" },
     { "source": "/BingSiteAuth.xml", "destination": "/BingSiteAuth.xml" },
     { "source": "/bingsiteauth.xml", "destination": "/BingSiteAuth.xml" }
   ]
