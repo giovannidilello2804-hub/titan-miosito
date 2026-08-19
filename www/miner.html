@@ -7,8 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Rajdhani:wght@600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <!-- Three.js per la visualizzazione 3D Interattiva della Cover PLA Nido d'Ape -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     :root {
       --bg-dark: #0a0d14;
@@ -192,26 +190,27 @@
       100% { opacity: 0.4; transform: scale(0.9); }
     }
 
-    /* 3D Viewer Container Card */
-    .card-3d-viewer {
-      background: var(--card-bg);
-      border: 1px solid var(--accent-gold);
+    /* CARD VEDIBILE PERFETTAMENTE A NIDO D'APE IN ALTA DEFINIZIONE */
+    .card-honeycomb-showcase {
+      background: linear-gradient(135deg, #121824 0%, #0a0d14 100%);
+      border: 2px solid var(--accent-gold);
       border-radius: 20px;
-      padding: 20px;
+      padding: 24px;
       margin-bottom: 25px;
       text-align: center;
-      box-shadow: 0 0 30px rgba(255, 183, 3, 0.15);
+      box-shadow: 0 0 35px rgba(255, 183, 3, 0.25);
     }
 
-    #canvas3dContainer {
-      width: 100%;
-      height: 320px;
-      background: #06080d;
-      border-radius: 14px;
-      overflow: hidden;
+    .honeycomb-svg-box {
+      background: #04060a;
+      border: 1px solid var(--border-cyan);
+      border-radius: 16px;
+      padding: 15px;
       margin: 15px 0;
-      position: relative;
-      border: 1px solid rgba(0, 240, 255, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.2);
     }
 
     .grid-stats {
@@ -397,7 +396,7 @@
     <div class="lock-title">TITAN MINER CONTROL</div>
     <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">Scegli la modalità di accesso al pannello:</p>
     
-    <button class="btn-demo-mode" onclick="startDemoMode()">👁️ AVVIA DEMO GENERICA CLIENTE & VISUALIZZATORE 3D</button>
+    <button class="btn-demo-mode" onclick="startDemoMode()">👁️ AVVIA DEMO GENERICA CLIENTE & GUARDA NIDO D'APE 3D</button>
 
     <div style="margin: 20px 0; display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.8rem;">
       <div style="flex:1; height:1px; background: rgba(255,255,255,0.1);"></div>
@@ -437,19 +436,81 @@
       </div>
     </header>
 
-    <!-- CARD VISUALIZZATORE 3D INTERATTIVO COVER PLA NIDO D'APE -->
-    <div class="card-3d-viewer">
-      <div style="font-weight: 700; color: var(--accent-gold); font-size: 1.2rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
-        <span>🖨️</span> MODELLO 3D COVER PLA APERTA SOPRA E SOTTO (NIDO D'APE DOPPIO)
+    <!-- CARD VISTA GRAFICA REALE COVER PLA NIDO D'APE (GARANTITA AL 100% SU OGNI CELLULARE) -->
+    <div class="card-honeycomb-showcase">
+      <div style="font-weight: 700; color: var(--accent-gold); font-size: 1.25rem; letter-spacing: 1px;">
+        🐝 CUSTODIA TITAN 3D IN PLA — CUSTODIA A NIDO D'APE ESAGONALE
       </div>
       <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 6px;">
-        👇 <strong>Trascina con il dito per ruotare: la scocca ha la griglia esagonale aperta SIA SOPRA CHE SOTTO per far fluire l'aria calda!</strong>
+        Scocca per ESP32-S3 stampata in 3D con <strong>Griglia ad Alveare Esagonale Passante (Sopra & Sotto)</strong> per l'espulsione continua del calore!
       </p>
 
-      <div id="canvas3dContainer"></div>
+      <!-- DIAGRAMMA GRAFICO SVG AD ALTA DEFINIZIONE DEL NIDO D'APE -->
+      <div class="honeycomb-svg-box">
+        <svg width="340" height="180" viewBox="0 0 340 180" xmlns="http://www.w3.org/2000/svg">
+          <!-- Outer Gold Case Frame -->
+          <rect x="10" y="10" width="320" height="160" rx="16" fill="#121824" stroke="#ffb703" stroke-width="4"/>
+          <!-- Inner Cyberpunk Rim -->
+          <rect x="20" y="20" width="300" height="140" rx="10" fill="#06080d" stroke="#00f0ff" stroke-width="1.5" stroke-dasharray="6,4"/>
+          
+          <!-- Inner ESP32 Chip Graphic -->
+          <rect x="120" y="65" width="100" height="50" rx="6" fill="#1b2434" stroke="#ffb703" stroke-width="2"/>
+          <text x="170" y="95" font-family="'Space Grotesk', sans-serif" font-size="12" font-weight="bold" fill="#00f0ff" text-anchor="middle">ESP32-S3 CHIP</text>
+          
+          <!-- Green LED -->
+          <circle cx="290" cy="40" r="5" fill="#00ff66"/>
+          <circle cx="290" cy="40" r="9" fill="none" stroke="#00ff66" stroke-width="1" opacity="0.6"/>
 
-      <div style="font-size: 0.8rem; color: var(--border-cyan); font-weight: 600;">
-        🧊 Scocca PLA Titan 3D • Griglie Esagonali Passanti (Sopra & Sotto) • Effetto Camino (41.8°C)
+          <!-- TRUE ESAGONI NIDO D'APE GRID -->
+          <g fill="none" stroke="#00f0ff" stroke-width="2">
+            <!-- Row 1 -->
+            <polygon points="45,30 55,24 65,30 65,42 55,48 45,42"/>
+            <polygon points="75,30 85,24 95,30 95,42 85,48 75,42"/>
+            <polygon points="105,30 115,24 125,30 125,42 115,48 105,42"/>
+            <polygon points="215,30 225,24 235,30 235,42 225,48 215,42"/>
+            <polygon points="245,30 255,24 265,30 265,42 255,48 245,42"/>
+
+            <!-- Row 2 Offset -->
+            <polygon points="30,50 40,44 50,50 50,62 40,68 30,62"/>
+            <polygon points="60,50 70,44 80,50 80,62 70,68 60,62"/>
+            <polygon points="90,50 100,44 110,50 110,62 100,68 90,62"/>
+            <polygon points="230,50 240,44 250,50 250,62 240,68 230,62"/>
+            <polygon points="260,50 270,44 280,50 280,62 270,68 260,62"/>
+
+            <!-- Row 3 Offset -->
+            <polygon points="45,70 55,64 65,70 65,82 55,88 45,82"/>
+            <polygon points="75,70 85,64 95,70 95,82 85,88 75,82"/>
+            <polygon points="245,70 255,64 265,70 265,82 255,88 245,82"/>
+
+            <!-- Row 4 Offset -->
+            <polygon points="30,90 40,84 50,90 50,102 40,108 30,102"/>
+            <polygon points="60,90 70,84 80,90 80,102 70,108 60,102"/>
+            <polygon points="90,90 100,84 110,90 110,102 100,108 90,102"/>
+            <polygon points="230,90 240,84 250,90 250,102 240,108 230,90"/>
+            <polygon points="260,90 270,84 280,90 280,102 270,108 260,90"/>
+
+            <!-- Row 5 Bottom Grid -->
+            <polygon points="45,110 55,104 65,110 65,122 55,128 45,122"/>
+            <polygon points="75,110 85,104 95,110 95,122 85,128 75,122"/>
+            <polygon points="105,110 115,104 125,110 125,122 115,128 105,122"/>
+            <polygon points="215,110 225,104 235,110 235,122 225,128 215,122"/>
+            <polygon points="245,110 255,104 265,110 265,122 255,128 245,122"/>
+            <polygon points="275,110 285,104 295,110 295,122 285,128 275,122"/>
+
+            <!-- Row 6 Bottom Row -->
+            <polygon points="60,130 70,124 80,130 80,142 70,148 60,142"/>
+            <polygon points="90,130 100,124 110,130 110,142 100,148 90,142"/>
+            <polygon points="230,130 240,124 250,130 250,142 240,148 230,142"/>
+            <polygon points="260,130 270,124 280,130 280,142 270,148 260,142"/>
+          </g>
+
+          <!-- Label -->
+          <text x="170" y="152" font-family="'Space Grotesk', sans-serif" font-size="11" font-weight="bold" fill="#ffb703" text-anchor="middle">TITAN 3D — COVER PLA ALVEARE NIDO D'APE</text>
+        </svg>
+      </div>
+
+      <div style="font-size: 0.82rem; color: var(--border-cyan); font-weight: 700;">
+        🧊 Modellata ed Incisa per Stampa 3D Bambu Lab X1C / Anycubic S1 Max (File CAD: esp32_s3_custom_case.scad)
       </div>
     </div>
 
@@ -543,7 +604,6 @@
     const SECRET_PIN = "2804";
     let isOwnerMode = false;
     let hashCounter = 18452900;
-    let threeInitialized = false;
 
     // REAL PRIVATE DATA FOR GIOVANNI (STRICTLY LOCKED UNTIL PIN 2804 IS ENTERED)
     const REAL_WALLET = "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk";
@@ -562,7 +622,6 @@
       document.getElementById('mainApp').style.display = 'block';
       fetchBtcPrice();
       startLiveAnimation();
-      setTimeout(init3DViewer, 150);
     }
 
     function checkPin() {
@@ -574,7 +633,6 @@
         document.getElementById('mainApp').style.display = 'block';
         fetchBtcPrice();
         startLiveAnimation();
-        setTimeout(init3DViewer, 150);
       } else {
         const err = document.getElementById('errorMessage');
         err.style.display = 'block';
@@ -650,169 +708,6 @@
         hashCounter += Math.floor(74000 + Math.random() * 4000);
         document.getElementById('totalHashesVal').innerText = hashCounter.toLocaleString('it-IT');
       }, 1000);
-    }
-
-    // INTERACTIVE THREE.JS 3D CANVAS VIEWER FOR PLA COVER WITH HONEYCOMB (TOP AND BOTTOM)
-    function init3DViewer() {
-      if (threeInitialized) return;
-
-      const container = document.getElementById('canvas3dContainer');
-      const width = container.clientWidth || 340;
-      const height = container.clientHeight || 320;
-
-      if (width === 0 || height === 0) return;
-      threeInitialized = true;
-
-      const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x06080d);
-
-      const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-      camera.position.set(0, 25, 45);
-
-      const renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setSize(width, height);
-      container.innerHTML = '';
-      container.appendChild(renderer.domElement);
-
-      // Lights
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-      scene.add(ambientLight);
-
-      const pointLight1 = new THREE.PointLight(0x00f0ff, 2.0, 100);
-      pointLight1.position.set(25, 35, 25);
-      scene.add(pointLight1);
-
-      const pointLight2 = new THREE.PointLight(0xffb703, 1.8, 100);
-      pointLight2.position.set(-25, -20, -20);
-      scene.add(pointLight2);
-
-      // 3D ESP32 Group
-      const caseGroup = new THREE.Group();
-
-      // Base Cyberpunk Chassis (Black Matte PLA)
-      const caseGeo = new THREE.BoxGeometry(28, 10, 14);
-      const caseMat = new THREE.MeshStandardMaterial({ 
-        color: 0x121824, 
-        roughness: 0.4, 
-        metalness: 0.7 
-      });
-      const caseMesh = new THREE.Mesh(caseGeo, caseMat);
-      caseGroup.add(caseMesh);
-
-      // Gold PLA Top Cover Frame
-      const coverGeo = new THREE.BoxGeometry(26, 2, 12);
-      const coverMat = new THREE.MeshStandardMaterial({ 
-        color: 0xffb703, 
-        roughness: 0.2, 
-        metalness: 0.9 
-      });
-      const coverMesh = new THREE.Mesh(coverGeo, coverMat);
-      coverMesh.position.y = 5.2;
-      caseGroup.add(coverMesh);
-
-      // TOP HONEYCOMB VENTS (Bright Cyan Glowing Hexagonal Cells)
-      for (let x = -9; x <= 9; x += 3.6) {
-        for (let z = -4; z <= 4; z += 2.8) {
-          const hexGeo = new THREE.CylinderGeometry(1.3, 1.3, 2.4, 6);
-          const hexMat = new THREE.MeshStandardMaterial({ 
-            color: 0x00f0ff,
-            emissive: 0x00a8ff,
-            emissiveIntensity: 0.6,
-            roughness: 0.1
-          });
-          const hexMesh = new THREE.Mesh(hexGeo, hexMat);
-          hexMesh.position.set(x, 5.3, z);
-          hexMesh.rotation.y = Math.PI / 6;
-          caseGroup.add(hexMesh);
-        }
-      }
-
-      // BOTTOM HONEYCOMB VENTS (PASSTHROUGH VENTS ON BOTTOM BASE AS WELL)
-      for (let x = -9; x <= 9; x += 3.6) {
-        for (let z = -4; z <= 4; z += 2.8) {
-          const hexGeoBot = new THREE.CylinderGeometry(1.3, 1.3, 2.4, 6);
-          const hexMatBot = new THREE.MeshStandardMaterial({ 
-            color: 0x00f0ff,
-            emissive: 0x00a8ff,
-            emissiveIntensity: 0.6,
-            roughness: 0.1
-          });
-          const hexMeshBot = new THREE.Mesh(hexGeoBot, hexMatBot);
-          hexMeshBot.position.set(x, -5.3, z);
-          hexMeshBot.rotation.y = Math.PI / 6;
-          caseGroup.add(hexMeshBot);
-        }
-      }
-
-      // ESP32 Microcontroller Chip Inside
-      const chipGeo = new THREE.BoxGeometry(8, 1.5, 8);
-      const chipMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.9 });
-      const chipMesh = new THREE.Mesh(chipGeo, chipMat);
-      chipMesh.position.set(0, 1.8, 0);
-      caseGroup.add(chipMesh);
-
-      // Green Power LED
-      const ledGeo = new THREE.SphereGeometry(0.9, 16, 16);
-      const ledMat = new THREE.MeshBasicMaterial({ color: 0x00ff66 });
-      const ledMesh = new THREE.Mesh(ledGeo, ledMat);
-      ledMesh.position.set(10, 4.5, 4);
-      caseGroup.add(ledMesh);
-
-      scene.add(caseGroup);
-      camera.lookAt(0, 0, 0);
-
-      // Interaction Variables
-      let isDragging = false;
-      let previousMousePosition = { x: 0, y: 0 };
-
-      container.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        previousMousePosition = { x: e.clientX, y: e.clientY };
-      });
-
-      container.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        const deltaX = e.clientX - previousMousePosition.x;
-        const deltaY = e.clientY - previousMousePosition.y;
-
-        caseGroup.rotation.y += deltaX * 0.012;
-        caseGroup.rotation.x += deltaY * 0.012;
-
-        previousMousePosition = { x: e.clientX, y: e.clientY };
-      });
-
-      window.addEventListener('mouseup', () => { isDragging = false; });
-
-      // Touch events for mobile phones
-      container.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 1) {
-          isDragging = true;
-          previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        }
-      });
-
-      container.addEventListener('touchmove', (e) => {
-        if (!isDragging || e.touches.length !== 1) return;
-        const deltaX = e.touches[0].clientX - previousMousePosition.x;
-        const deltaY = e.touches[0].clientY - previousMousePosition.y;
-
-        caseGroup.rotation.y += deltaX * 0.012;
-        caseGroup.rotation.x += deltaY * 0.012;
-
-        previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-      });
-
-      window.addEventListener('touchend', () => { isDragging = false; });
-
-      // Render Loop
-      function animate() {
-        requestAnimationFrame(animate);
-        if (!isDragging) {
-          caseGroup.rotation.y += 0.008; // Continuous smooth rotation
-        }
-        renderer.render(scene, camera);
-      }
-      animate();
     }
 
     setInterval(fetchBtcPrice, 30000);
