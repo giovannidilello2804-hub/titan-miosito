@@ -207,6 +207,10 @@
       background: var(--accent-gold);
     }
 
+    .stat-card.green::before {
+      background: var(--green-glow);
+    }
+
     .stat-card.temp::before {
       background: #ff5500;
     }
@@ -379,6 +383,13 @@
     <!-- DIRECT PARAMETERS GRID -->
     <div class="grid-stats">
 
+      <!-- BITCOIN MINATI AL MOMENTO -->
+      <div class="stat-card green" style="grid-column: span 2;">
+        <div class="stat-label">🪙 Bitcoin Minati al Momento</div>
+        <div class="stat-value" style="color: var(--green-glow); font-size: 2.2rem;">0.00000000 BTC</div>
+        <div class="stat-sub" id="totalMinedSub">Solo Mining Attivo — In attesa di trovare il Blocco da 3.125 BTC (~275.000€)</div>
+      </div>
+
       <!-- Stato Operativo Miner -->
       <div class="stat-card">
         <div class="stat-label">Stato Operativo</div>
@@ -498,6 +509,7 @@
         
         document.getElementById('btcPriceVal').innerText = '€ ' + priceEur.toLocaleString('it-IT');
         document.getElementById('btcRewardVal').innerText = 'Premio Blocco (3.125 BTC): € ' + blockRewardEur;
+        document.getElementById('totalMinedSub').innerText = `Solo Mining Attivo — In attesa di trovare il Blocco da 3.125 BTC (~${blockRewardEur}€)`;
       } catch (e) {
         document.getElementById('btcPriceVal').innerText = '€ 88.500';
         document.getElementById('btcRewardVal').innerText = 'Premio Blocco: € 276.500';
