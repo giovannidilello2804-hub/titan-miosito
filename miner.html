@@ -1122,40 +1122,43 @@
       // 1. ACCESSO REALE PROPRIETARIO GIOVANNI
       "2804": {
         isOwner: true,
+        ducoUser: "Giovanni2804",
         name: "👑 ACCESSO PROPRIETARIO (GIOVANNI - DATI REALI)",
         serialNumber: "TITAN-MINER-000-MASTER",
         email: "giovanni@titan3d.it",
         activationDate: "Attivo dal 19/08/2026",
         wallet: "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk",
-        ip: "192.168.1.82",
+        ip: "192.168.1.86",
         mac: "80:B5:4E:C7:EC:9C",
-        statusText: "ESP32-S3 REALE ONLINE (192.168.1.82)",
+        statusText: "ESP32-CAM REALE ONLINE (192.168.1.86)",
         walletType: "Trust Wallet Giovanni (Reale)",
         color: "#00f0ff"
       },
       "gio": {
         isOwner: true,
+        ducoUser: "Giovanni2804",
         name: "👑 ACCESSO PROPRIETARIO (GIOVANNI - DATI REALI)",
         serialNumber: "TITAN-MINER-000-MASTER",
         email: "giovanni@titan3d.it",
         activationDate: "Attivo dal 19/08/2026",
         wallet: "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk",
-        ip: "192.168.1.82",
+        ip: "192.168.1.86",
         mac: "80:B5:4E:C7:EC:9C",
-        statusText: "ESP32-S3 REALE ONLINE (192.168.1.82)",
+        statusText: "ESP32-CAM REALE ONLINE (192.168.1.86)",
         walletType: "Trust Wallet Giovanni (Reale)",
         color: "#00f0ff"
       },
       "admin": {
         isOwner: true,
+        ducoUser: "Giovanni2804",
         name: "👑 ACCESSO PROPRIETARIO (GIOVANNI - DATI REALI)",
         serialNumber: "TITAN-MINER-000-MASTER",
         email: "giovanni@titan3d.it",
         activationDate: "Attivo dal 19/08/2026",
         wallet: "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk",
-        ip: "192.168.1.82",
+        ip: "192.168.1.86",
         mac: "80:B5:4E:C7:EC:9C",
-        statusText: "ESP32-S3 REALE ONLINE (192.168.1.82)",
+        statusText: "ESP32-CAM REALE ONLINE (192.168.1.86)",
         walletType: "Trust Wallet Giovanni (Reale)",
         color: "#00f0ff"
       },
@@ -1163,6 +1166,7 @@
       // 2. CLIENTE MARCO ROSSI (PIN 1234)
       "1234": {
         isOwner: false,
+        ducoUser: null,
         name: "👤 AREA RISERVATA CLIENTE: MARCO ROSSI",
         serialNumber: "TITAN-MINER-001-NODO",
         email: "marco.rossi@gmail.com",
@@ -1178,6 +1182,7 @@
       // 3. CLIENTE LUCA BIANCHI (PIN 5678)
       "5678": {
         isOwner: false,
+        ducoUser: null,
         name: "👤 AREA RISERVATA CLIENTE: LUCA BIANCHI",
         serialNumber: "TITAN-MINER-002-CLUSTER",
         email: "luca.bianchi@outlook.it",
@@ -1494,15 +1499,40 @@
 
     async function fetchDucoData() {
       try {
-        const response = await fetch('https://server.duinocoin.com/v2/users/Giovanni2804');
+        const targetUser = (activeClient && activeClient.ducoUser) ? activeClient.ducoUser : (loggedAsOwner ? "Giovanni2804" : null);
+
+        if (!targetUser) {
+          // Modalità Demo o Altro Cliente: mostra dati dimostrativi senza mai mostrare i dati privati di Giovanni
+          const demoBal = 0.4520;
+          const demoHash = 76.5;
+          const demoFiatVal = (demoBal * currentDucoPriceUsd).toFixed(6);
+          const demoFiatEur = (demoBal * currentDucoPriceUsd * 0.92).toFixed(6);
+
+          if (document.getElementById('ducoBalanceVal')) document.getElementById('ducoBalanceVal').innerText = demoBal.toFixed(4) + ' ᕲ';
+          if (document.getElementById('ducoFiatVal')) document.getElementById('ducoFiatVal').innerText = `≈ $${demoFiatVal} USD (€ ${demoFiatEur} EUR)`;
+          if (document.getElementById('ducoHashrateVal')) document.getElementById('ducoHashrateVal').innerText = demoHash.toFixed(1) + ' kH/s';
+          if (document.getElementById('ducoDailyVal')) document.getElementById('ducoDailyVal').innerText = '~4.0 ᕲ / giorno';
+          if (document.getElementById('ducoThreadsVal')) document.getElementById('ducoThreadsVal').innerText = '1 Nodo (2 Threads)';
+          if (document.getElementById('ducoSharesVal')) document.getElementById('ducoSharesVal').innerText = '100% OK';
+          if (document.getElementById('ducoPoolVal')) document.getElementById('ducoPoolVal').innerText = 'Pool: mcjohn-node-2';
+          if (document.getElementById('ducoLiveStatusText')) {
+            document.getElementById('ducoLiveStatusText').innerText = 'NODO DEMO ATTIVO';
+            document.getElementById('ducoLiveStatusText').parentElement.style.borderColor = '#ffb703';
+            document.getElementById('ducoLiveStatusText').parentElement.style.color = '#ffb703';
+          }
+          if (document.getElementById('ducoLastTxText')) document.getElementById('ducoLastTxText').innerHTML = 'Ultimo accredito: <strong style="color:#00ff66;">+0.1 ᕲ</strong> (Demo reward)';
+          return;
+        }
+
+        const response = await fetch(`https://server.duinocoin.com/v2/users/${targetUser}`);
         const data = await response.json();
         if (data.success && data.result) {
           const res = data.result;
           const balance = res.balance ? res.balance.balance : 0;
-          const priceUsd = res.prices && res.prices.max ? res.prices.max : 0.000072;
+          const priceUsd = res.prices && res.prices.max ? res.prices.max : 0.0000722;
+          currentDucoPriceUsd = priceUsd;
           const miners = res.miners || [];
           
-          // Calcolo hashrate totale reale
           let totalHash = 0;
           let acceptedShares = 0;
           let poolName = 'mcjohn-node-2';
@@ -1515,24 +1545,19 @@
           const hashrateKh = totalHash > 0 ? (totalHash / 1000).toFixed(1) : '163.5';
           const fiatVal = (balance * priceUsd).toFixed(6);
           const fiatEur = (balance * priceUsd * 0.92).toFixed(6);
+          const estDaily = miners.length > 0 ? (miners.length * 4.0) : 8.0;
 
-          // Aggiornamento sezioni Dashboard e Lock Screen
           const balText = balance.toFixed(4) + ' ᕲ';
           const hashText = hashrateKh + ' kH/s';
           
           if (document.getElementById('ducoBalanceVal')) document.getElementById('ducoBalanceVal').innerText = balText;
-          if (document.getElementById('lockDucoBal')) document.getElementById('lockDucoBal').innerText = balText;
-          
           if (document.getElementById('ducoFiatVal')) document.getElementById('ducoFiatVal').innerText = `≈ $${fiatVal} USD (€ ${fiatEur} EUR)`;
           if (document.getElementById('ducoHashrateVal')) document.getElementById('ducoHashrateVal').innerText = hashText;
-          if (document.getElementById('lockDucoHash')) document.getElementById('lockDucoHash').innerText = hashText;
-          
           if (document.getElementById('ducoDailyVal')) document.getElementById('ducoDailyVal').innerText = `~${estDaily.toFixed(1)} ᕲ / giorno`;
           if (document.getElementById('ducoThreadsVal')) document.getElementById('ducoThreadsVal').innerText = `${miners.length} Nodi (${miners.length * 2} Threads @ 240MHz)`;
           if (document.getElementById('ducoSharesVal')) document.getElementById('ducoSharesVal').innerText = `${acceptedShares} Shares (100% OK)`;
           if (document.getElementById('ducoPoolVal')) document.getElementById('ducoPoolVal').innerText = `Pool: ${poolName}`;
 
-          // Aggiornamento Matrice Nodi Grafica
           const h1 = miners[0] ? (miners[0].hashrate / 1000).toFixed(1) : '83.5';
           const h2 = miners[1] ? (miners[1].hashrate / 1000).toFixed(1) : '84.1';
           if (document.getElementById('machineStat1')) document.getElementById('machineStat1').innerText = h1 + ' KH/s';
