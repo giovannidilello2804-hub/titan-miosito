@@ -823,7 +823,7 @@
         </div>
         <div style="display: flex; align-items: center; gap: 8px;">
           <div style="width: 10px; height: 10px; border-radius: 50%; background: #00ff66; box-shadow: 0 0 10px #00ff66; animation: pulse 1.5s infinite;"></div>
-          <span style="font-size: 0.8rem; color: #00ff66; font-weight: 700;">ESP32-CAM CONNESSA (192.168.1.86)</span>
+          <span style="font-size: 0.8rem; color: #00ff66; font-weight: 700;" id="espCamStatusBadge">ESP32-CAM CONNESSA (192.168.1.86)</span>
         </div>
       </div>
 
@@ -848,7 +848,7 @@
         <img id="espCamImage" src="http://192.168.1.86:81/stream" alt="ESP32-CAM Live Video Stream" style="width: 100%; max-height: 380px; object-fit: contain; display: block;" onerror="handleCamError(this)">
         <div id="espCamPlaceholder" style="display: none; text-align: center; padding: 30px 20px;">
           <div style="font-size: 2.5rem; margin-bottom: 10px;">📹</div>
-          <div style="color: var(--border-cyan); font-weight: 700; font-size: 1.1rem;">ESP32-CAM LIVE MONITORING (192.168.1.86)</div>
+          <div style="color: var(--border-cyan); font-weight: 700; font-size: 1.1rem;" id="espCamPlaceholderText">ESP32-CAM LIVE MONITORING (192.168.1.86)</div>
           <div style="color: var(--text-muted); font-size: 0.82rem; margin-top: 6px;">
             Stream Video Live abilitato sulla rete Wi-Fi locale. Premi "CONNETTI STREAM" per caricare il flusso della telecamera!
           </div>
@@ -1430,6 +1430,26 @@
         document.getElementById('mempoolLink').href = `https://mempool.space/address/${activeClient.wallet}`;
       } else {
         document.getElementById('mempoolLink').href = 'https://mempool.space';
+      }
+
+      // Sincronizzazione dinamica e isolamento privacy Telecamera ESP32-CAM
+      const camIpInput = document.getElementById('espCamIpInput');
+      const camStatusBadge = document.getElementById('espCamStatusBadge');
+      const camPlaceholderText = document.getElementById('espCamPlaceholderText');
+
+      if (loggedAsOwner) {
+        if (camIpInput) camIpInput.value = "192.168.1.86";
+        if (camStatusBadge) camStatusBadge.innerText = "ESP32-CAM REALE ONLINE (192.168.1.86)";
+        if (camPlaceholderText) camPlaceholderText.innerText = "ESP32-CAM LIVE MONITORING (192.168.1.86)";
+      } else if (activeClient && activeClient.ip && !activeClient.name.includes("DEMO")) {
+        const clientCamIp = activeClient.ip.split(' ')[0] || "192.168.1.105";
+        if (camIpInput) camIpInput.value = clientCamIp;
+        if (camStatusBadge) camStatusBadge.innerText = `ESP32-CAM CLIENTE (${clientCamIp})`;
+        if (camPlaceholderText) camPlaceholderText.innerText = `TELECAMERA NODO CLIENTE (${clientCamIp})`;
+      } else {
+        if (camIpInput) camIpInput.value = "192.168.1.100";
+        if (camStatusBadge) camStatusBadge.innerText = "ESP32-CAM DEMO (SIMULATA)";
+        if (camPlaceholderText) camPlaceholderText.innerText = "TELECAMERA LIVE DIMOSTRATIVA";
       }
     }
 
