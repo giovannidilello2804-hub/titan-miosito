@@ -474,6 +474,13 @@
 
   <!-- SCHERMATA DI ACCESSO DEDICATA CLIENTI SOLO MINING & ADMIN -->
   <div id="lockScreen">
+    <!-- PULSANTE TORNA ALLA HOME PRINCIPALE -->
+    <div style="text-align: left; margin-bottom: 15px;">
+      <a href="index.html" style="display: inline-flex; align-items: center; gap: 8px; color: var(--border-cyan); text-decoration: none; font-size: 0.85rem; font-weight: 800; background: rgba(0,240,255,0.1); border: 1px solid var(--border-cyan); padding: 8px 16px; border-radius: 10px; transition: all 0.2s; box-shadow: 0 0 10px rgba(0,240,255,0.15);">
+        <span>⬅️</span> Torna al Sito Principale (Titan 3D)
+      </a>
+    </div>
+
     <div class="lock-icon">🔐</div>
     <div class="lock-title">TITAN CLOUD CONTROL</div>
     <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 20px; line-height: 1.4;">
@@ -534,13 +541,20 @@
   <div id="mainApp">
     
     <div class="logout-bar">
-      <div class="demo-badge" id="modeBadge">✨ DEMO GENERICA CLIENTE</div>
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <a href="index.html" style="text-decoration: none; color: #fff; background: rgba(0,240,255,0.15); border: 1px solid var(--border-cyan); padding: 6px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 0 10px rgba(0,240,255,0.2);">
+          <span>⬅️</span> Torna al Sito
+        </a>
+        <div class="demo-badge" id="modeBadge">✨ DEMO GENERICA CLIENTE</div>
+      </div>
       <button class="btn-logout" onclick="logout()">🔒 Blocca Pannello</button>
     </div>
 
     <!-- Header -->
     <header>
-      <div class="logo-title">TITAN <span>MINER</span> CONTROL</div>
+      <a href="index.html" style="text-decoration: none; color: inherit; display: inline-block;">
+        <div class="logo-title">TITAN <span>MINER</span> CONTROL</div>
+      </a>
       <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Pannello Cloud di Monitoraggio H24 ESP32-S3 Solo Mining</p>
 
       <div class="status-badge-container">
