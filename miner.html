@@ -497,6 +497,21 @@
     <div style="display: flex; flex-direction: column; gap: 8px;">
       <button class="btn-demo-mode" onclick="startDemoMode()">👁️ AVVIA DEMO LIBERA VISITATORI</button>
     </div>
+
+    <!-- LIVE MONITORING BADGE ESP32-CAM -->
+    <div style="background: linear-gradient(135deg, rgba(0,240,255,0.15) 0%, rgba(18,24,36,0.95) 100%); border: 1px solid var(--border-cyan); border-radius: 14px; padding: 14px 16px; margin-top: 18px; text-align: left; box-shadow: 0 0 20px rgba(0,240,255,0.15);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 10px; height: 10px; border-radius: 50%; background: #00ff66; box-shadow: 0 0 8px #00ff66; animation: pulse 1.5s infinite;"></div>
+          <span style="font-size: 0.82rem; font-weight: 800; color: #fff;">ESP32-CAM MINER ONLINE</span>
+        </div>
+        <span style="font-size: 0.72rem; color: #ffb703; font-weight: 700; background: rgba(255,183,3,0.15); padding: 2px 8px; border-radius: 6px;">IP 192.168.1.86</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: #f0f4f8; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px;">
+        <span>Saldo DUCO: <strong style="color: var(--border-cyan);" id="lockDucoBal">0.7142 ᕲ</strong></span>
+        <span>Velocità: <strong style="color: #00ff66;" id="lockDucoHash">167.6 kH/s</strong></span>
+      </div>
+    </div>
   </div>
 
   <!-- MAIN APP CONTAINER -->
@@ -689,54 +704,54 @@
 
       <!-- MACCHINE ESP GRID MATRICE -->
       <div class="node-grid-container">
-        <!-- MACCHINA ESP 1 -->
+        <!-- MACCHINA ESP 1 (CORE 1) -->
         <div class="machine-card-node active-illuminated" id="machine1" onclick="toggleMachineNode(1)">
           <div class="machine-header-node">
-            <span class="machine-title-node">⚡ MACCHINA ESP 1 (MINER)</span>
+            <span class="machine-title-node">⚡ NODO 1 (ESP32-CAM CORE 1)</span>
             <div class="machine-led-node"></div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.82</div>
-          <div class="machine-stat-node" id="machineStat1">76.4 KH/s</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.86 (Thread 1)</div>
+          <div class="machine-stat-node" id="machineStat1">83.5 KH/s</div>
         </div>
 
-        <!-- MACCHINA ESP 2 -->
-        <div class="machine-card-node gold-node" id="machine2" onclick="toggleMachineNode(2)">
+        <!-- MACCHINA ESP 2 (CORE 2) -->
+        <div class="machine-card-node active-illuminated gold-node" id="machine2" onclick="toggleMachineNode(2)">
           <div class="machine-header-node">
-            <span class="machine-title-node">⚡ MACCHINA ESP 2 (MINER)</span>
+            <span class="machine-title-node">⚡ NODO 2 (ESP32-CAM CORE 2)</span>
             <div class="machine-led-node"></div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.105</div>
-          <div class="machine-stat-node" id="machineStat2">74.8 KH/s</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.86 (Thread 2)</div>
+          <div class="machine-stat-node" id="machineStat2">84.1 KH/s</div>
         </div>
 
         <!-- MACCHINA ESP 3 -->
         <div class="machine-card-node" id="machine3" onclick="toggleMachineNode(3)">
           <div class="machine-header-node">
-            <span class="machine-title-node">⚡ MACCHINA ESP 3 (MINER)</span>
+            <span class="machine-title-node">⚡ NODO 3 (STANDBY / ESP8266)</span>
             <div class="machine-led-node"></div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.108</div>
-          <div class="machine-stat-node" id="machineStat3">78.1 KH/s</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">In Attesa Secondo Miner</div>
+          <div class="machine-stat-node" id="machineStat3">STANDBY</div>
         </div>
 
         <!-- MACCHINA ESP 4 -->
         <div class="machine-card-node gold-node" id="machine4" onclick="toggleMachineNode(4)">
           <div class="machine-header-node">
-            <span class="machine-title-node">⚡ MACCHINA ESP 4 (CLUSTER)</span>
+            <span class="machine-title-node">⚡ NODO 4 (CLUSTER EXPANSION)</span>
             <div class="machine-led-node"></div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.112</div>
-          <div class="machine-stat-node" id="machineStat4">75.9 KH/s</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">Predisposto 4 Nodi</div>
+          <div class="machine-stat-node" id="machineStat4">STANDBY</div>
         </div>
 
         <!-- MACCHINA ESP32-CAM TELECAMERA -->
         <div class="machine-card-node active-illuminated" id="machineCam" style="border-color: var(--accent-gold); background: linear-gradient(135deg, rgba(255,183,3,0.15) 0%, #121824 100%);">
           <div class="machine-header-node">
-            <span class="machine-title-node" style="color: var(--accent-gold);">📷 MACCHINA ESP32-CAM</span>
+            <span class="machine-title-node" style="color: var(--accent-gold);">📷 ESP32-CAM (LIVE NODE)</span>
             <div class="machine-led-node" style="background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
           </div>
           <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.86</div>
-          <div class="machine-stat-node" style="color: var(--accent-gold); font-size: 1.1rem;">CAM LIVE ON</div>
+          <div class="machine-stat-node" id="machineStatCam" style="color: var(--accent-gold); font-size: 1.1rem;">167.6 kH/s (ONLINE)</div>
         </div>
       </div>
     </div>
@@ -1412,32 +1427,52 @@
           const fiatVal = (balance * priceUsd).toFixed(6);
           const fiatEur = (balance * priceUsd * 0.92).toFixed(6);
 
-          // Stima giornaliera basata su hashrate
-          const estDaily = miners.length > 0 ? (miners.length * 4.0) : 8.0;
+          // Aggiornamento sezioni Dashboard e Lock Screen
+          const balText = balance.toFixed(4) + ' ᕲ';
+          const hashText = hashrateKh + ' kH/s';
+          
+          if (document.getElementById('ducoBalanceVal')) document.getElementById('ducoBalanceVal').innerText = balText;
+          if (document.getElementById('lockDucoBal')) document.getElementById('lockDucoBal').innerText = balText;
+          
+          if (document.getElementById('ducoFiatVal')) document.getElementById('ducoFiatVal').innerText = `≈ $${fiatVal} USD (€ ${fiatEur} EUR)`;
+          if (document.getElementById('ducoHashrateVal')) document.getElementById('ducoHashrateVal').innerText = hashText;
+          if (document.getElementById('lockDucoHash')) document.getElementById('lockDucoHash').innerText = hashText;
+          
+          if (document.getElementById('ducoDailyVal')) document.getElementById('ducoDailyVal').innerText = `~${estDaily.toFixed(1)} ᕲ / giorno`;
+          if (document.getElementById('ducoThreadsVal')) document.getElementById('ducoThreadsVal').innerText = `${miners.length} Nodi (${miners.length * 2} Threads @ 240MHz)`;
+          if (document.getElementById('ducoSharesVal')) document.getElementById('ducoSharesVal').innerText = `${acceptedShares} Shares (100% OK)`;
+          if (document.getElementById('ducoPoolVal')) document.getElementById('ducoPoolVal').innerText = `Pool: ${poolName}`;
 
-          document.getElementById('ducoBalanceVal').innerText = balance.toFixed(4) + ' ᕲ';
-          document.getElementById('ducoFiatVal').innerText = `≈ $${fiatVal} USD (€ ${fiatEur} EUR)`;
-          document.getElementById('ducoHashrateVal').innerText = hashrateKh + ' kH/s';
-          document.getElementById('ducoDailyVal').innerText = `~${estDaily.toFixed(1)} ᕲ / giorno`;
-          document.getElementById('ducoThreadsVal').innerText = `${miners.length} Nodi (${miners.length * 2} Threads @ 240MHz)`;
-          document.getElementById('ducoSharesVal').innerText = `${acceptedShares} Shares (100% OK)`;
-          document.getElementById('ducoPoolVal').innerText = `Pool: ${poolName}`;
+          // Aggiornamento Matrice Nodi Grafica
+          const h1 = miners[0] ? (miners[0].hashrate / 1000).toFixed(1) : '83.5';
+          const h2 = miners[1] ? (miners[1].hashrate / 1000).toFixed(1) : '84.1';
+          if (document.getElementById('machineStat1')) document.getElementById('machineStat1').innerText = h1 + ' KH/s';
+          if (document.getElementById('machineStat2')) document.getElementById('machineStat2').innerText = h2 + ' KH/s';
+          if (document.getElementById('machineStatCam')) document.getElementById('machineStatCam').innerText = hashText + ' (ONLINE)';
 
           if (miners.length > 0) {
-            document.getElementById('ducoLiveStatusText').innerText = 'ESP32-CAM MINING ATTIVO';
-            document.getElementById('ducoLiveStatusText').parentElement.style.borderColor = '#00ff66';
-            document.getElementById('ducoLiveStatusText').parentElement.style.color = '#00ff66';
+            if (document.getElementById('ducoLiveStatusText')) {
+              document.getElementById('ducoLiveStatusText').innerText = 'ESP32-CAM MINING ATTIVO';
+              document.getElementById('ducoLiveStatusText').parentElement.style.borderColor = '#00ff66';
+              document.getElementById('ducoLiveStatusText').parentElement.style.color = '#00ff66';
+            }
           } else {
-            document.getElementById('ducoLiveStatusText').innerText = 'STANDBY MINER';
-            document.getElementById('ducoLiveStatusText').parentElement.style.borderColor = '#ffb703';
-            document.getElementById('ducoLiveStatusText').parentElement.style.color = '#ffb703';
+            if (document.getElementById('ducoLiveStatusText')) {
+              document.getElementById('ducoLiveStatusText').innerText = 'STANDBY MINER';
+              document.getElementById('ducoLiveStatusText').parentElement.style.borderColor = '#ffb703';
+              document.getElementById('ducoLiveStatusText').parentElement.style.color = '#ffb703';
+            }
           }
 
           // Ultime transazioni / ricompense
           if (res.transactions && res.transactions.length > 0) {
             const lastTx = res.transactions[res.transactions.length - 1];
-            document.getElementById('ducoLastTxText').innerHTML = `Ultimo accredito: <strong style="color:#00ff66;">+${lastTx.amount} ᕲ</strong> (${lastTx.memo || 'Mining reward'})`;
-            document.getElementById('ducoLastTxTime').innerText = `${lastTx.datetime || 'Oggi'}`;
+            if (document.getElementById('ducoLastTxText')) {
+              document.getElementById('ducoLastTxText').innerHTML = `Ultimo accredito: <strong style="color:#00ff66;">+${lastTx.amount} ᕲ</strong> (${lastTx.memo || 'Mining reward'})`;
+            }
+            if (document.getElementById('ducoLastTxTime')) {
+              document.getElementById('ducoLastTxTime').innerText = `${lastTx.datetime || 'Oggi'}`;
+            }
           }
         }
       } catch (e) {
@@ -1445,6 +1480,9 @@
       }
     }
 
+    // Avvio immediato al caricamento pagina
+    fetchDucoData();
+    fetchBtcPrice();
     setInterval(fetchBtcPrice, 30000);
     setInterval(fetchDucoData, 8000);
   </script>
