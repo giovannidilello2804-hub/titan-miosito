@@ -352,6 +352,20 @@ function applySocialAndTimelapseLinks() {
   if (box2) {
     box2.innerHTML = renderUniversalVideoPlayer(state.publicTimelapse2 || "assets/anycubic/timelapse_anycubic.mp4", "Timelapse Anycubic S1 Max");
   }
+function initSemaforo() {
+  let saved = null;
+  try {
+    const raw = localStorage.getItem("titan_admin_semaforo");
+    if (raw) saved = JSON.parse(raw);
+  } catch (e) {
+    saved = null;
+  }
+
+  const status = saved ? saved.status : (state.semaforoStatus || "green");
+  const labelText = saved ? saved.labelText : (state.semaforoText || "MACCHINE DISPONIBILI");
+  const subText = saved ? saved.subText : (state.semaforoSub || "2/2 Macchine Pronte");
+
+  setSemaforo(status, labelText, subText);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -360,8 +374,12 @@ document.addEventListener("DOMContentLoaded", () => {
   init3DSimulator();
   initStlDragDrop();
   applySocialAndTimelapseLinks();
-  if (savedSemaforo) setSemaforo(savedSemaforo.status, savedSemaforo.labelText, savedSemaforo.subText);
+  initSemaforo();
   calculateQuote();
+});
+
+window.addEventListener("load", () => {
+  initSemaforo();
 });
 
 // --------------------------------------------------------------------------
@@ -2002,6 +2020,7 @@ function openAdminModal() {
     renderAdminMaterialsPricing();
     renderAdminPalettesManager();
     renderAdminClientsList();
+    initSemaforo();
   } else {
     alert("❌ Password errata! Accesso negato.");
   }
