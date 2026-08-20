@@ -2030,13 +2030,6 @@ function closeAdminModal() {
   document.getElementById("adminModal").classList.add("hidden");
 }
 
-window.addEventListener("click", (e) => {
-  const modal = document.getElementById("adminModal");
-  if (e.target === modal) {
-    closeAdminModal();
-  }
-});
-
 function setSemaforo(status, labelText, subText) {
   state.semaforoStatus = status;
   state.semaforoText = labelText;
