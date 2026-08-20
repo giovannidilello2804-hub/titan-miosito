@@ -932,12 +932,66 @@
       </div>
 
       <!-- ULTIMA TRANSAZIONE / PREMI -->
-      <div style="background: rgba(0,0,0,0.4); border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 0.85rem;">
+      <div style="background: rgba(0,0,0,0.4); border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 0.85rem; margin-bottom: 20px;">
         <div style="display: flex; align-items: center; gap: 8px;">
           <span style="font-size: 1.2rem;">🏆</span>
           <span style="color: #fff;" id="ducoLastTxText">Ultimo accredito: <strong>+0.5 ᕲ</strong> (Rewarded achievement: Airwave resource hunter)</span>
         </div>
         <div style="color: var(--text-muted); font-size: 0.75rem;" id="ducoLastTxTime">Pochi istanti fa</div>
+      </div>
+
+      <!-- PORTALE TRASFORMAZIONE DUCO IN EURO (€) & CRIPTOVALUTE -->
+      <div style="background: linear-gradient(135deg, rgba(0,240,255,0.08) 0%, rgba(255,183,3,0.08) 100%); border: 1px solid rgba(0,240,255,0.4); border-radius: 16px; padding: 20px; box-shadow: 0 0 25px rgba(0,0,0,0.5);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
+          <div style="font-size: 1.1rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px;">
+            <span>💱</span> TRASFORMA DUINO-COIN IN EURO (€) E CRYPTO
+          </div>
+          <span style="font-size: 0.75rem; color: #00ff66; font-weight: 700; background: rgba(0,255,102,0.15); padding: 4px 10px; border-radius: 20px; border: 1px solid #00ff66;">
+            DOPPIO ACCESSO DIRETTO
+          </span>
+        </div>
+
+        <p style="color: var(--text-muted); font-size: 0.84rem; margin-bottom: 16px; line-height: 1.4;">
+          Per incassare i tuoi <strong>DUCO</strong> in <strong>Euro (€)</strong> su Conto Bancario o Carta di Credito/Debito, segui i due passaggi diretti:
+        </p>
+
+        <!-- DOPPIO LINK RAPIDO -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-bottom: 18px;">
+          
+          <!-- LINK 1: SWAP DUCO -->
+          <a href="https://wallet.duinocoin.com" target="_blank" style="text-decoration: none; background: rgba(0,240,255,0.12); border: 2px solid var(--border-cyan); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s; box-shadow: 0 0 15px rgba(0,240,255,0.1);">
+            <div>
+              <div style="font-size: 0.72rem; color: var(--border-cyan); font-weight: 800; text-transform: uppercase;">1° PASSAGGIO</div>
+              <div style="font-size: 1rem; font-weight: 800; color: #fff; margin-top: 2px;">🔄 Swap DUCO in Nano / TRX</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Exchange Ufficiale Duino (Zero Fee)</div>
+            </div>
+            <span style="font-size: 1.3rem;">➔</span>
+          </a>
+
+          <!-- LINK 2: INCASSO EURO SU CONTO / CARTA -->
+          <a href="https://www.binance.com/it/convert" target="_blank" style="text-decoration: none; background: rgba(255,183,3,0.12); border: 2px solid var(--accent-gold); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s; box-shadow: 0 0 15px rgba(255,183,3,0.1);">
+            <div>
+              <div style="font-size: 0.72rem; color: var(--accent-gold); font-weight: 800; text-transform: uppercase;">2° PASSAGGIO</div>
+              <div style="font-size: 1rem; font-weight: 800; color: #fff; margin-top: 2px;">💶 Converti in Euro (€) & Preleva</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Incasso su IBAN, PostePay o PayPal</div>
+            </div>
+            <span style="font-size: 1.3rem;">➔</span>
+          </a>
+        </div>
+
+        <!-- CALCOLATORE ISTANTANEO DUCO -> EUR -->
+        <div style="background: rgba(0,0,0,0.6); border: 1px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <label for="ducoCalcInput" style="font-size: 0.8rem; color: #fff; font-weight: 700;">🔢 CALCOLA VALORE:</label>
+            <input type="number" id="ducoCalcInput" value="100" min="1" step="1" oninput="calcDucoToEur()" style="background: #121824; border: 1px solid var(--border-cyan); color: #00f0ff; padding: 5px 10px; border-radius: 6px; width: 90px; text-align: center; font-weight: 800; outline: none;">
+            <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 700;">DUCO =</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 15px; font-size: 0.85rem;">
+            <span>Valore Stimato: <strong style="color: #00ff66; font-size: 1.05rem;" id="calcEurResult">€ 0.0066 EUR</strong></span>
+            <span style="color: var(--text-muted);">|</span>
+            <span style="color: var(--border-cyan); font-weight: 700;" id="calcUsdResult">$0.0072 USD</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1478,6 +1532,21 @@
       } catch (e) {
         console.log('Duco API sync:', e);
       }
+    }
+
+    let currentDucoPriceUsd = 0.0000722;
+
+    function calcDucoToEur() {
+      const inputEl = document.getElementById('ducoCalcInput');
+      const amount = parseFloat(inputEl ? inputEl.value : 0) || 0;
+      const usdTotal = amount * currentDucoPriceUsd;
+      const eurTotal = usdTotal * 0.92;
+      
+      const eurFormatted = eurTotal < 0.01 ? eurTotal.toFixed(6) : eurTotal.toFixed(4);
+      const usdFormatted = usdTotal < 0.01 ? usdTotal.toFixed(6) : usdTotal.toFixed(4);
+      
+      if (document.getElementById('calcEurResult')) document.getElementById('calcEurResult').innerText = `€ ${eurFormatted} EUR`;
+      if (document.getElementById('calcUsdResult')) document.getElementById('calcUsdResult').innerText = `$${usdFormatted} USD`;
     }
 
     // Avvio immediato al caricamento pagina
