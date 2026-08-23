@@ -956,7 +956,10 @@
 
         <div class="form-group">
           <label for="adminPasswordInput">Password Personalizzata Accesso Admin:</label>
-          <input type="text" id="adminPasswordInput" value="1234" placeholder="Password (es. 1234)" onchange="updateAdminSettings()">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="password" id="adminPasswordInput" placeholder="••••••••" onchange="updateAdminSettings()" style="flex: 1;">
+            <button type="button" onclick="toggleAdminPassVisibility()" style="background: rgba(0,240,255,0.15); border: 1px solid var(--border-cyan); color: var(--cyan-primary); padding: 10px 14px; border-radius: 6px; cursor: pointer; font-size: 0.9rem;" title="Mostra/Nascondi Password">👁️</button>
+          </div>
         </div>
 
         <!-- Live Camera & Streaming Video Links for 2 Machines -->
@@ -1091,9 +1094,9 @@
 
         <!-- Admin Registered Clients & Approval Manager -->
         <div class="admin-section" style="margin-top: 25px; background: rgba(0, 255, 136, 0.05); padding: 18px; border-radius: var(--radius-sm); border: 1px solid rgba(0, 255, 136, 0.3);">
-          <h4 style="font-size: 1.1rem; color: var(--green-primary); margin-bottom: 6px;">👥 Gestione Account Clienti, Passwords & Vidimazioni</h4>
+          <h4 style="font-size: 1.1rem; color: var(--green-primary); margin-bottom: 6px;">👥 Gestione Account Clienti, Credenziali & Vidimazioni</h4>
           <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">
-            Visualizza tutti i clienti, le loro <strong>Password</strong> in chiaro, i codici ordine assegnati ed approva/vidima l'accesso ai loro progetti.
+            Visualizza i clienti registrati, i codici ordine assegnati e gestisci in sicurezza le credenziali e l'approvazione dell'accesso ai loro progetti.
           </p>
 
           <!-- Form Aggiungi Nuovo Cliente da Admin -->
@@ -1104,7 +1107,7 @@
               <input type="text" id="adminNewClientContact" placeholder="Email o Telefono">
             </div>
             <div class="form-row-2" style="margin-top: 8px;">
-              <input type="text" id="adminNewClientPass" placeholder="Password Accesso Cliente">
+              <input type="password" id="adminNewClientPass" placeholder="Password Accesso Cliente">
               <input type="text" id="adminNewClientCode" placeholder="Codice Ordine Assegnato (es. TITAN-9999)">
             </div>
             <button class="btn-primary-small" onclick="addClientFromAdmin()" style="margin-top: 10px; background: var(--green-primary); color: #000; font-weight: 700;">➕ Crea ed Approva Cliente</button>

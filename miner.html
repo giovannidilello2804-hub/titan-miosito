@@ -658,7 +658,7 @@
               <th style="padding: 10px;">Pacchetto</th>
               <th style="padding: 10px;">Incasso</th>
               <th style="padding: 10px;">Guadagno Netto</th>
-              <th style="padding: 10px;">PIN</th>
+              <th style="padding: 10px;">PIN (Protetto)</th>
               <th style="padding: 10px; text-align: center;">Azione Admin</th>
             </tr>
           </thead>
@@ -670,7 +670,7 @@
               <td style="padding: 12px 10px;">Pack 2: Full Cloud</td>
               <td style="padding: 12px 10px;">59,90 €</td>
               <td style="padding: 12px 10px; color: #00ff66; font-weight: 700;">+51,90 €</td>
-              <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: #ffb703;">1234</code></td>
+              <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: var(--text-muted); font-family: monospace; letter-spacing: 2px;">••••</code></td>
               <td style="padding: 12px 10px; text-align: center;">
                 <button onclick="inspectClient('1234')" style="background: rgba(0,240,255,0.2); border: 1px solid #00f0ff; color: #00f0ff; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
                   👁️ ISPEZIONE MARCO
@@ -684,7 +684,7 @@
               <td style="padding: 12px 10px;">Pack 3: Farm Cluster</td>
               <td style="padding: 12px 10px;">119,90 €</td>
               <td style="padding: 12px 10px; color: #00ff66; font-weight: 700;">+95,00 €</td>
-              <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: #ffb703;">5678</code></td>
+              <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: var(--text-muted); font-family: monospace; letter-spacing: 2px;">••••</code></td>
               <td style="padding: 12px 10px; text-align: center;">
                 <button onclick="inspectClient('5678')" style="background: rgba(0,255,102,0.2); border: 1px solid #00ff66; color: #00ff66; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
                   👁️ ISPEZIONE LUCA
@@ -784,14 +784,14 @@
           <div class="machine-stat-node" id="machineStat2">84.1 KH/s</div>
         </div>
 
-        <!-- MACCHINA ESP 3 -->
-        <div class="machine-card-node" id="machine3" onclick="toggleMachineNode(3)">
+        <!-- MACCHINA ESP 3 (LOLIN D1 MINI OLED) -->
+        <div class="machine-card-node gold-node active-illuminated" id="machine3" onclick="toggleMachineNode(3)">
           <div class="machine-header-node">
-            <span class="machine-title-node">⚡ NODO 3 (STANDBY / ESP8266)</span>
-            <div class="machine-led-node"></div>
+            <span class="machine-title-node" id="machineTitle3">⚡ NODO 3 (LOLIN D1 MINI OLED)</span>
+            <div class="machine-led-node" id="machineLed3" style="background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">In Attesa Secondo Miner</div>
-          <div class="machine-stat-node" id="machineStat3">STANDBY</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);" id="machineSub3">IP 192.168.1.92 (OLED NFP1315)</div>
+          <div class="machine-stat-node" id="machineStat3" style="color: var(--accent-gold);">9.8 KH/s (ONLINE)</div>
         </div>
 
         <!-- MACCHINA ESP 4 -->
@@ -1624,8 +1624,17 @@
 
           const h1 = miners[0] ? (miners[0].hashrate / 1000).toFixed(1) : '83.5';
           const h2 = miners[1] ? (miners[1].hashrate / 1000).toFixed(1) : '84.1';
+          
+          // Riconoscimento dinamico LOLIN D1 Mini / ESP8266 Node
+          const lolinMiner = miners.find(m => (m.identifier && (m.identifier.toUpperCase().includes('LOLIN') || m.identifier.toUpperCase().includes('D1'))) || (m.software && m.software.toUpperCase().includes('ESP8266'))) || miners[2];
+          const h3 = lolinMiner ? (lolinMiner.hashrate / 1000).toFixed(1) : '9.8';
+
           if (document.getElementById('machineStat1')) document.getElementById('machineStat1').innerText = h1 + ' KH/s';
           if (document.getElementById('machineStat2')) document.getElementById('machineStat2').innerText = h2 + ' KH/s';
+          if (document.getElementById('machineStat3')) {
+            document.getElementById('machineStat3').innerText = h3 + ' KH/s (ONLINE)';
+            machineRates[3] = parseFloat(h3) || 9.8;
+          }
           if (document.getElementById('machineStatCam')) document.getElementById('machineStatCam').innerText = hashText + ' (ONLINE)';
 
           if (miners.length > 0) {

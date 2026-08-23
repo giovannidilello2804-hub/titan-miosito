@@ -1563,8 +1563,8 @@ function renderAdminClientsList() {
             </button>
           </div>
         </div>
-        <div style="display: flex; gap: 15px; font-size: 0.83rem; font-family: var(--font-sub); flex-wrap: wrap; margin-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 6px;">
-          <span style="color: var(--cyan-primary);">🔑 Password: <strong>${acc.pass || '1234'}</strong></span>
+        <div style="display: flex; gap: 15px; font-size: 0.83rem; font-family: var(--font-sub); flex-wrap: wrap; margin-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 6px; align-items: center;">
+          <span style="color: var(--cyan-primary);">🔑 Password: <span id="clientPass_${idx}" style="color: var(--text-muted); font-family: monospace; letter-spacing: 2px;">••••••••</span> <button type="button" onclick="toggleMaskPass('clientPass_${idx}', '${encodeURIComponent(acc.pass || '')}')" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 2px 6px; border-radius: 4px; cursor: pointer; font-size: 0.72rem; margin-left: 4px;" title="Mostra/Nascondi Password">👁️</button></span>
           <span style="color: var(--amber-primary);">📦 Cod. Ordine Assegnato: <strong>${acc.orderCode || 'N/A'}</strong></span>
           <button onclick="editClientFromAdmin(${idx})" style="background: none; border: none; color: var(--text-muted); cursor: pointer; text-decoration: underline; font-size: 0.78rem;">✏️ Modifica Dati</button>
         </div>
@@ -1641,6 +1641,28 @@ function deleteClientFileFromAdmin(clientIndex, fileIndex) {
   }
 }
 
+function toggleMaskPass(elemId, encodedPass) {
+  const el = document.getElementById(elemId);
+  if (!el) return;
+  const realPass = decodeURIComponent(encodedPass);
+  if (el.textContent === "••••••••") {
+    el.textContent = realPass;
+    el.style.color = "var(--cyan-primary)";
+    el.style.fontWeight = "bold";
+  } else {
+    el.textContent = "••••••••";
+    el.style.color = "var(--text-muted)";
+    el.style.fontWeight = "normal";
+  }
+}
+
+function toggleAdminPassVisibility() {
+  const input = document.getElementById("adminPasswordInput");
+  if (input) {
+    input.type = input.type === "password" ? "text" : "password";
+  }
+}
+
 function addClientFromAdmin() {
   const name = document.getElementById("adminNewClientName").value.trim();
   const contact = document.getElementById("adminNewClientContact").value.trim();
@@ -1662,7 +1684,7 @@ function addClientFromAdmin() {
   document.getElementById("adminNewClientCode").value = "";
 
   renderAdminClientsList();
-  alert(`✓ Cliente "${name}" creato ed approvato con successo!\nCodice Ordine Assegnato: ${code}\nPassword: ${pass}`);
+  alert(`✓ Cliente "${name}" creato ed approvato con successo!\nCodice Ordine Assegnato: ${code}`);
 }
 
 function editClientFromAdmin(index) {
@@ -1670,14 +1692,15 @@ function editClientFromAdmin(index) {
   const acc = accounts[index];
   if (!acc) return;
 
-  const newPass = prompt(`Modifica Password per ${acc.name}:`, acc.pass || "1234");
-  if (newPass === null) return;
+  const newPass = prompt(`Nuova Password per ${acc.name} (lascia vuoto per non modificare):`);
+  if (newPass !== null && newPass.trim() !== "") {
+    acc.pass = newPass.trim();
+  }
 
   const newCode = prompt(`Modifica Codice Ordine per ${acc.name}:`, acc.orderCode || "TITAN-1000");
-  if (newCode === null) return;
-
-  acc.pass = newPass.trim() || acc.pass;
-  acc.orderCode = newCode.trim().toUpperCase() || acc.orderCode;
+  if (newCode !== null && newCode.trim() !== "") {
+    acc.orderCode = newCode.trim().toUpperCase();
+  }
 
   saveClientAccounts(accounts);
   renderAdminClientsList();
@@ -1776,11 +1799,11 @@ function handleClientRegister() {
 
         <div style="background: rgba(0, 0, 0, 0.65); border: 2px solid var(--amber-primary); padding: 14px; border-radius: 8px; font-size: 1rem; box-shadow: 0 0 20px rgba(255, 153, 0, 0.2);">
           <strong style="color: var(--amber-primary); font-size: 1.1rem; display: block; margin-bottom: 6px; font-family: var(--font-heading);">
-            ⚠️ SEGNA ED ANNOTA SUBITO QUESTI DATI PER L'ACCESSO FUTURO:
+            ⚠️ MEMORIZZA I TUOI DATI DI ACCESSO:
           </strong>
           <div style="margin-top: 6px; font-family: var(--font-sub); display: flex; flex-direction: column; gap: 4px;">
             <span>👤 Username / Contatto: <strong style="color: #fff; font-size: 1.15rem;">${contact}</strong></span>
-            <span>🔑 Password Creata: <strong style="color: var(--cyan-primary); font-size: 1.15rem;">${pass}</strong></span>
+            <span>🔑 Password: <strong style="color: var(--green-primary); font-size: 1.15rem;">•••••••• (Memorizzata in Sicurezza)</strong></span>
             <span>📦 Codice Ordine Assegnato: <strong style="color: var(--amber-primary); font-size: 1.15rem;">${generatedCode}</strong></span>
           </div>
         </div>
@@ -1800,6 +1823,11 @@ function searchClientOrder() {
     return;
   }
 
+  if (!inputPass) {
+    alert("Per favore inserisci la Password del tuo account per accedere!");
+    return;
+  }
+
   const accounts = getClientAccounts();
   const searchLower = inputIdentifier.toLowerCase();
 
@@ -1816,7 +1844,7 @@ function searchClientOrder() {
     resultBox.innerHTML = `
       <div style="color: var(--amber-primary); font-weight: 800; font-size: 1.05rem;">⚠️ NESSUN ACCOUNT O ORDINE TROVATO</div>
       <p style="font-size: 0.88rem; margin-top: 6px; color: var(--text-muted);">
-        Nessun account trovato per l'identificativo "<strong>${inputIdentifier}</strong>".<br>Controlla di aver scritto correttamente i tuoi dati o compila la scheda di registrazione.
+        Nessun account trovato per le credenziali fornite.<br>Controlla di aver scritto correttamente i tuoi dati o compila la scheda di registrazione.
       </p>
     `;
     return;
@@ -1852,12 +1880,12 @@ function searchClientOrder() {
   `;
 }
 
-if (inputPass && account.pass && account.pass !== inputPass) {
+  if (account.pass && account.pass !== inputPass) {
     resultBox.className = "order-result-card warning";
     resultBox.innerHTML = `
       <div style="color: var(--red-primary); font-weight: 800; font-size: 1.05rem;">❌ PASSWORD ACCOUNT ERRATA</div>
       <p style="font-size: 0.88rem; margin-top: 6px; color: var(--text-muted);">
-        La password inserita non corrisponde all'account <strong>${account.name}</strong> (${account.contact}).
+        La password inserita non è corretta. Per motivi di sicurezza l'accesso ai dettagli dell'ordine è negato.
       </p>
     `;
     return;
@@ -1884,8 +1912,8 @@ if (inputPass && account.pass && account.pass !== inputPass) {
         <strong style="color: var(--amber-primary); font-family: var(--font-heading); font-size: 1.05rem;">${account.orderCode || 'TITAN-1000'}</strong>
       </div>
       <div style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
-        <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">Password Account:</span>
-        <strong style="color: var(--cyan-primary); font-family: var(--font-heading); font-size: 1.05rem;">🔑 ${account.pass || '••••'}</strong>
+        <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">Autenticazione Account:</span>
+        <strong style="color: var(--green-primary); font-family: var(--font-heading); font-size: 1.05rem;">🔒 Password Verificata</strong>
       </div>
     </div>
 
@@ -1972,10 +2000,10 @@ function saveAdminPassword(pwd) {
 
 function openAdminModal() {
   const currentPass = getAdminPassword();
-  const pwd = prompt("🔐 Inserisci la Password Proprietario (es. 2804 o 1234):");
+  const pwd = prompt("🔐 Inserisci la Password Proprietario:");
   if (pwd === null) return;
-  const p = pwd.trim().toLowerCase();
-  if (p === currentPass.toLowerCase() || p === "2804" || p === "1234" || p === "gio" || p === "admin") {
+  const p = pwd.trim();
+  if (p === currentPass) {
     document.getElementById("adminModal").classList.remove("hidden");
     
     const passInput = document.getElementById("adminPasswordInput");
