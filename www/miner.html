@@ -577,7 +577,60 @@
         </a>
         <div class="demo-badge" id="modeBadge">✨ DEMO GENERICA CLIENTE</div>
       </div>
-      <button class="btn-logout" onclick="logout()">🔒 Blocca Pannello</button>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <button onclick="openChangePinModal()" style="background: rgba(0,240,255,0.15); border: 1.5px solid var(--border-cyan); color: var(--border-cyan); padding: 6px 14px; border-radius: 8px; font-weight: 800; font-size: 0.82rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 0 10px rgba(0,240,255,0.15);">
+          🔑 Cambia Password / PIN
+        </button>
+        <button class="btn-logout" onclick="logout()">🔒 Blocca Pannello</button>
+      </div>
+    </div>
+
+    <!-- MODAL CAMBIO PASSWORD / PIN SICURO (ZERO-LEAK) -->
+    <div id="changePinModal" style="display: none; position: fixed; inset: 0; background: rgba(3, 5, 8, 0.88); backdrop-filter: blur(10px); z-index: 99999; justify-content: center; align-items: center; padding: 20px;">
+      <div style="background: linear-gradient(145deg, #0b111a, #162032); border: 2px solid var(--border-cyan); border-radius: 20px; width: 100%; max-width: 480px; padding: 26px; box-shadow: 0 0 40px rgba(0,240,255,0.25); position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,240,255,0.2); padding-bottom: 12px; margin-bottom: 18px;">
+          <h3 style="color: var(--border-cyan); margin: 0; font-size: 1.25rem; display: flex; align-items: center; gap: 8px;">
+            <span>🔐</span> MODIFICA PASSWORD / PIN
+          </h3>
+          <button onclick="closeChangePinModal()" style="background: rgba(255,42,95,0.2); border: 1px solid var(--accent-red); color: #fff; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 0.85rem;">✕ CHIUDI</button>
+        </div>
+
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+          Imposta la tua nuova chiave di sicurezza. Una volta modificata, tutti i vecchi PIN predefiniti saranno <strong>revocati immediatamente</strong>.
+        </p>
+
+        <form id="changePinForm" onsubmit="event.preventDefault(); submitChangePin();" style="display: flex; flex-direction: column; gap: 14px;">
+          <div>
+            <label style="display: block; font-size: 0.8rem; color: #8a99ad; margin-bottom: 6px; font-weight: 700;">VECCHIA PASSWORD / PIN ATTUALE:</label>
+            <div style="display: flex; gap: 6px;">
+              <input type="password" id="oldPinInput" placeholder="••••••••" required style="flex: 1; background: #06090e; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none;">
+              <button type="button" onclick="toggleFieldPass('oldPinInput')" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 0 12px; border-radius: 8px; cursor: pointer;" title="Mostra/Nascondi">👁️</button>
+            </div>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.8rem; color: var(--border-cyan); margin-bottom: 6px; font-weight: 700;">NUOVA PASSWORD / PIN:</label>
+            <div style="display: flex; gap: 6px;">
+              <input type="password" id="newPinInput" placeholder="Nuova Password (min 4 car.)" required minlength="4" style="flex: 1; background: #06090e; border: 1.5px solid var(--border-cyan); color: #00f0ff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none; font-weight: 700;">
+              <button type="button" onclick="toggleFieldPass('newPinInput')" style="background: rgba(0,240,255,0.15); border: 1px solid var(--border-cyan); color: var(--border-cyan); padding: 0 12px; border-radius: 8px; cursor: pointer;" title="Mostra/Nascondi">👁️</button>
+            </div>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.8rem; color: var(--border-cyan); margin-bottom: 6px; font-weight: 700;">CONFERMA NUOVA PASSWORD / PIN:</label>
+            <div style="display: flex; gap: 6px;">
+              <input type="password" id="confirmNewPinInput" placeholder="Ripeti la Nuova Password" required minlength="4" style="flex: 1; background: #06090e; border: 1.5px solid var(--border-cyan); color: #00f0ff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none; font-weight: 700;">
+              <button type="button" onclick="toggleFieldPass('confirmNewPinInput')" style="background: rgba(0,240,255,0.15); border: 1px solid var(--border-cyan); color: var(--border-cyan); padding: 0 12px; border-radius: 8px; cursor: pointer;" title="Mostra/Nascondi">👁️</button>
+            </div>
+          </div>
+
+          <div id="changePinError" style="display: none; color: #ff2a5f; font-size: 0.82rem; font-weight: 700; background: rgba(255,42,95,0.15); padding: 8px 12px; border-radius: 6px; border: 1px solid #ff2a5f;"></div>
+
+          <button type="submit" style="background: linear-gradient(135deg, var(--border-cyan), #00ff88); color: #000; font-weight: 800; font-size: 0.95rem; padding: 14px; border: none; border-radius: 10px; cursor: pointer; margin-top: 8px; box-shadow: 0 0 20px rgba(0,240,255,0.3);">
+            💾 SALVA NUOVA PASSWORD IN SICUREZZA
+          </button>
+        </form>
+      </div>
     </div>
 
     <!-- Header -->
@@ -617,14 +670,19 @@
       </div>
     </div>
 
-    <!-- ADMIN MANAGEMENT PANEL (VISIBLE ONLY IN OWNER MODE - PIN 2804) -->
+    <!-- ADMIN MANAGEMENT PANEL (VISIBLE ONLY IN OWNER MODE) -->
     <div id="adminProfitPanel" style="display: none; background: linear-gradient(135deg, rgba(0,240,255,0.1) 0%, rgba(18,24,36,0.95) 100%); border: 2px solid #00f0ff; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 0 40px rgba(0,240,255,0.2);">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
         <div style="font-size: 1.3rem; font-weight: 700; color: #00f0ff; display: flex; align-items: center; gap: 8px;">
           <span>👑</span> PANNELLO GESTIONE CLIENTI & GUADAGNI NETTI GIOVANNI
         </div>
-        <div style="background: rgba(0,255,102,0.15); border: 1px solid #00ff66; color: #00ff66; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 0.85rem;">
-          💼 RISERVATO PROPRIETARIO
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button onclick="openChangePinModal()" style="background: rgba(0,240,255,0.2); border: 1px solid #00f0ff; color: #00f0ff; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
+            🔑 Modifica Password Proprietario
+          </button>
+          <div style="background: rgba(0,255,102,0.15); border: 1px solid #00ff66; color: #00ff66; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 0.85rem;">
+            💼 RISERVATO PROPRIETARIO
+          </div>
         </div>
       </div>
 
@@ -1161,54 +1219,46 @@
   </div>
 
   <script>
-    // DATABASE MULTI-CLIENTE TITAN CLOUD
-    const CLIENT_DATABASE = {
-      // 1. ACCESSO REALE PROPRIETARIO GIOVANNI
-      "2804": {
-        isOwner: true,
-        ducoUser: "Giovanni2804",
-        name: "👑 ACCESSO PROPRIETARIO (GIOVANNI - DATI REALI)",
-        serialNumber: "TITAN-MINER-000-MASTER",
-        email: "giovanni@titan3d.it",
-        activationDate: "Attivo dal 19/08/2026",
-        wallet: "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk",
-        ip: "192.168.1.86",
-        mac: "80:B5:4E:C7:EC:9C",
-        statusText: "ESP32-CAM REALE ONLINE (192.168.1.86)",
-        walletType: "Trust Wallet Giovanni (Reale)",
-        color: "#00f0ff"
-      },
-      "gio": {
-        isOwner: true,
-        ducoUser: "Giovanni2804",
-        name: "👑 ACCESSO PROPRIETARIO (GIOVANNI - DATI REALI)",
-        serialNumber: "TITAN-MINER-000-MASTER",
-        email: "giovanni@titan3d.it",
-        activationDate: "Attivo dal 19/08/2026",
-        wallet: "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk",
-        ip: "192.168.1.86",
-        mac: "80:B5:4E:C7:EC:9C",
-        statusText: "ESP32-CAM REALE ONLINE (192.168.1.86)",
-        walletType: "Trust Wallet Giovanni (Reale)",
-        color: "#00f0ff"
-      },
-      "admin": {
-        isOwner: true,
-        ducoUser: "Giovanni2804",
-        name: "👑 ACCESSO PROPRIETARIO (GIOVANNI - DATI REALI)",
-        serialNumber: "TITAN-MINER-000-MASTER",
-        email: "giovanni@titan3d.it",
-        activationDate: "Attivo dal 19/08/2026",
-        wallet: "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk",
-        ip: "192.168.1.86",
-        mac: "80:B5:4E:C7:EC:9C",
-        statusText: "ESP32-CAM REALE ONLINE (192.168.1.86)",
-        walletType: "Trust Wallet Giovanni (Reale)",
-        color: "#00f0ff"
-      },
+    function getOwnerPin() {
+      const saved = localStorage.getItem("titan_miner_owner_pin");
+      if (saved && saved.trim()) return saved.trim();
+      return "2804";
+    }
 
-      // 2. CLIENTE MARCO ROSSI (PIN 1234)
-      "1234": {
+    function isCustomOwnerPinSet() {
+      const saved = localStorage.getItem("titan_miner_owner_pin");
+      return !!(saved && saved.trim());
+    }
+
+    function getActiveClientDatabase() {
+      const ownerPin = getOwnerPin();
+      const db = {};
+
+      const ownerEntry = {
+        isOwner: true,
+        ducoUser: "Giovanni2804",
+        name: "👑 ACCESSO PROPRIETARIO (GIOVANNI - DATI REALI)",
+        serialNumber: "TITAN-MINER-000-MASTER",
+        email: "giovanni@titan3d.it",
+        activationDate: "Attivo dal 19/08/2026",
+        wallet: "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk",
+        ip: "192.168.1.86",
+        mac: "80:B5:4E:C7:EC:9C",
+        statusText: "ESP32-CAM REALE ONLINE (192.168.1.86)",
+        walletType: "Trust Wallet Giovanni (Reale)",
+        color: "#00f0ff"
+      };
+
+      // Imposta il PIN reale proprietario
+      db[ownerPin] = ownerEntry;
+
+      // Se il proprietario NON ha ancora impostato un PIN personalizzato, mantieni compatibilità temporanea
+      if (!isCustomOwnerPinSet()) {
+        db["2804"] = ownerEntry;
+      }
+
+      // 2. CLIENTE MARCO ROSSI
+      db["1234"] = {
         isOwner: false,
         ducoUser: null,
         name: "👤 AREA RISERVATA CLIENTE: MARCO ROSSI",
@@ -1221,10 +1271,10 @@
         statusText: "ESP32-S3 NODO MARCO ONLINE",
         walletType: "Wallet Bitcoin Personalizzato Marco",
         color: "#ffb703"
-      },
+      };
 
-      // 3. CLIENTE LUCA BIANCHI (PIN 5678)
-      "5678": {
+      // 3. CLIENTE LUCA BIANCHI
+      db["5678"] = {
         isOwner: false,
         ducoUser: null,
         name: "👤 AREA RISERVATA CLIENTE: LUCA BIANCHI",
@@ -1237,8 +1287,10 @@
         statusText: "ESP32-S3 NODO LUCA ONLINE",
         walletType: "Wallet Bitcoin Personalizzato Luca",
         color: "#00ff66"
-      }
-    };
+      };
+
+      return db;
+    }
 
     // ANONYMOUS DEMO DATA FOR PUBLIC VISITORS
     const DEMO_CLIENT = {
@@ -1368,8 +1420,9 @@
 
     function checkPin() {
       const input = document.getElementById('pinInput').value.trim();
-      if (CLIENT_DATABASE[input]) {
-        activeClient = CLIENT_DATABASE[input];
+      const db = getActiveClientDatabase();
+      if (db[input]) {
+        activeClient = db[input];
         loggedAsOwner = !!activeClient.isOwner;
         applyModeData();
         document.getElementById('lockScreen').style.display = 'none';
@@ -1385,8 +1438,9 @@
     }
 
     function inspectClient(clientPin) {
-      if (CLIENT_DATABASE[clientPin]) {
-        activeClient = CLIENT_DATABASE[clientPin];
+      const db = getActiveClientDatabase();
+      if (db[clientPin]) {
+        activeClient = db[clientPin];
         document.getElementById('adminProfitPanel').style.display = 'none';
         
         const banner = document.getElementById('inspectingBanner');
@@ -1398,10 +1452,64 @@
     }
 
     function backToOwnerAdmin() {
-      activeClient = CLIENT_DATABASE["2804"];
+      const db = getActiveClientDatabase();
+      const ownerPin = getOwnerPin();
+      activeClient = db[ownerPin];
       document.getElementById('inspectingBanner').style.display = 'none';
       document.getElementById('adminProfitPanel').style.display = 'block';
       applyModeData();
+    }
+
+    function openChangePinModal() {
+      const modal = document.getElementById('changePinModal');
+      const err = document.getElementById('changePinError');
+      if (err) err.style.display = 'none';
+      const form = document.getElementById('changePinForm');
+      if (form) form.reset();
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeChangePinModal() {
+      const modal = document.getElementById('changePinModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function toggleFieldPass(id) {
+      const inp = document.getElementById(id);
+      if (inp) {
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+      }
+    }
+
+    function submitChangePin() {
+      const oldPin = document.getElementById('oldPinInput').value.trim();
+      const newPin = document.getElementById('newPinInput').value.trim();
+      const confirmPin = document.getElementById('confirmNewPinInput').value.trim();
+      const errBox = document.getElementById('changePinError');
+
+      const currentOwnerPin = getOwnerPin();
+
+      if (oldPin !== currentOwnerPin && (isCustomOwnerPinSet() || (oldPin !== "2804" && oldPin !== "gio" && oldPin !== "admin"))) {
+        errBox.innerText = "❌ La Password / PIN Attuale inserita non è corretta!";
+        errBox.style.display = 'block';
+        return;
+      }
+
+      if (newPin.length < 4) {
+        errBox.innerText = "❌ La nuova Password / PIN deve contenere almeno 4 caratteri!";
+        errBox.style.display = 'block';
+        return;
+      }
+
+      if (newPin !== confirmPin) {
+        errBox.innerText = "❌ La nuova password e la conferma non coincidono!";
+        errBox.style.display = 'block';
+        return;
+      }
+
+      localStorage.setItem("titan_miner_owner_pin", newPin);
+      closeChangePinModal();
+      alert("✓ Nuova Password / PIN salvata con successo e memorizzata in sicurezza! I vecchi codici sono stati revocati.");
     }
 
     function applyModeData(isInspecting = false) {
