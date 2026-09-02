@@ -1197,21 +1197,21 @@
         <div style="display: flex; align-items: center; gap: 12px;">
           <div style="width: 14px; height: 14px; border-radius: 50%; background: #00ff66; box-shadow: 0 0 12px #00ff66;"></div>
           <div>
-            <h3 style="margin: 0; color: #f7931a; font-size: 1.25rem; font-weight: 800; letter-spacing: 0.5px;">⚡ STRATEGIA CLUSTER 2x BITAXE (BCH + DGB) + ESP32 (BTC SOLO)</h3>
+            <h3 style="margin: 0; color: #f7931a; font-size: 1.25rem; font-weight: 800; letter-spacing: 0.5px;">⚡ STRATEGIA CLUSTER 2x BITAXE (BCH + DGB) + MONITORAGGIO GUADAGNI</h3>
             <div style="font-size: 0.78rem; color: var(--text-muted);">Bitaxe #1 su Bitcoin Cash + Bitaxe #2 su DigiByte + Nodi ESP32 su Bitcoin Jackpot</div>
           </div>
         </div>
         <div style="display: flex; gap: 8px;">
           <a href="http://192.168.1.68" target="_blank" style="background: rgba(10, 193, 142, 0.2); border: 1px solid #0ac18e; color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; text-decoration: none;">
-            🥈 Bitaxe #1 (BCH @ .68) ➔
+            ⚙️ Bitaxe #1 (BCH @ .68) ➔
           </a>
           <a href="http://192.168.1.70" target="_blank" style="background: rgba(0, 102, 204, 0.25); border: 1px solid #3399ff; color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; text-decoration: none;">
-            ⚡ Bitaxe #2 (DGB @ .70) ➔
+            ⚙️ Bitaxe #2 (DGB @ .70) ➔
           </a>
         </div>
       </div>
 
-      <!-- GRID DUAL BITAXE CON RUOLI DISTINTI -->
+      <!-- GRID DUAL BITAXE CON GUADAGNI NETTI EVIDENZIATI -->
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
         
         <!-- BITAXE 1: BITCOIN CASH (BCH) -->
@@ -1232,6 +1232,18 @@
           
           <div style="background: rgba(10,193,142,0.1); border-left: 3px solid #0ac18e; padding: 8px; margin: 10px 0; border-radius: 4px; font-size: 0.78rem; color: #fff;">
             <strong>Obiettivo:</strong> Vincita Blocco da <strong>3.125 BCH (~1.100 €)</strong> • Probabilità ~100x superiore a BTC
+          </div>
+
+          <!-- RIQUADRO GUADAGNO BITCOIN CASH -->
+          <div style="background: rgba(0,0,0,0.65); border: 1px dashed rgba(10,193,142,0.6); border-radius: 8px; padding: 10px; margin: 12px 0; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 0.7rem; color: #aaa; text-transform: uppercase; font-weight: 700;">💰 Quanto Abbiamo Guadagnato (BCH):</div>
+              <div id="bchEarnedVal" style="font-size: 1.25rem; font-weight: 900; color: #0ac18e;">0.00000000 BCH <span style="font-size: 0.85rem; color: #fff;">(€ 0,00)</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span style="font-size: 0.72rem; color: #ffd166; font-weight: 700;">+1.100,00 €</span>
+              <div style="font-size: 0.65rem; color: var(--text-muted);">al blocco trovato</div>
+            </div>
           </div>
 
           <div style="font-size: 0.74rem; color: var(--text-muted);">
@@ -1257,6 +1269,18 @@
           
           <div style="background: rgba(0,102,204,0.12); border-left: 3px solid #3399ff; padding: 8px; margin: 10px 0; border-radius: 4px; font-size: 0.78rem; color: #fff;">
             <strong>Obiettivo:</strong> Payout costanti <strong>~550 DGB (~5–10 €/mese)</strong> • Ripaga al 100% i consumi elettrici
+          </div>
+
+          <!-- RIQUADRO GUADAGNO DIGIBYTE -->
+          <div style="background: rgba(0,0,0,0.65); border: 1px dashed rgba(51,153,255,0.6); border-radius: 8px; padding: 10px; margin: 12px 0; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 0.7rem; color: #aaa; text-transform: uppercase; font-weight: 700;">💶 Quanto Abbiamo Guadagnato (DGB):</div>
+              <div id="dgbEarnedVal" style="font-size: 1.25rem; font-weight: 900; color: #3399ff;">0.00 DGB <span style="font-size: 0.85rem; color: #fff;">(€ 0,00)</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span style="font-size: 0.72rem; color: #00ff66; font-weight: 700;">Stima: ~7,50 €/mese</span>
+              <div style="font-size: 0.65rem; color: #00ff66;">Bolletta 100% Coperta</div>
+            </div>
           </div>
 
           <div style="font-size: 0.74rem; color: var(--text-muted);">
