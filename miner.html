@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>TITAN MINER | Bitaxe Gamma 601 & Solo Mining Control Center</title>
+  <title>TITAN MINER | ESP32-S3 Solo Mining Control Center</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Rajdhani:wght@600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -802,13 +802,13 @@
         </div>
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
           <button onclick="selectPresets('all3')" style="background: rgba(0,255,102,0.15); border: 1px solid #00ff66; color: #00ff66; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer;">
-            ⚡ TUTTE E 3 LE MACCHINE INSIEME (1.06 TH/s)
+            ⚡ TUTTE E 3 LE MACCHINE INSIEME (229.3 KH/s)
           </button>
           <button onclick="selectPresets('two')" style="background: rgba(0,240,255,0.15); border: 1px solid #00f0ff; color: #00f0ff; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer;">
             👥 2 MACCHINE ALLA VOLTA (151.2 KH/s)
           </button>
           <button onclick="selectPresets('single')" style="background: rgba(255,183,3,0.15); border: 1px solid #ffb703; color: #ffb703; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer;">
-            1️⃣ 1 MACCHINA ALLA VOLTA (1.06 TH/s)
+            1️⃣ 1 MACCHINA ALLA VOLTA (76.4 KH/s)
           </button>
           <button id="btnAutoCycle" onclick="toggleAutoCycle()" style="background: rgba(255,183,3,0.15); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s;">
             🔄 CICLO AUTO MACCHINE (1-2-3)
@@ -820,46 +820,56 @@
         Puoi vedere ed illuminare le tue <strong>Macchine ESP (ESP32-S3 Miner & ESP32-CAM) contemporaneamente</strong> o selezionarne 1 o 2 alla volta!
       </p>
 
-      <!-- MACCHINE MINER GRID MATRICE -->
+      <!-- MACCHINE ESP GRID MATRICE -->
       <div class="node-grid-container">
-        <!-- MACCHINA 1: RASPBERRY PI 2B -->
-        <div class="machine-card-node active-illuminated" id="machine1" onclick="toggleMachineNode(1)" style="border-color: #ff3366; background: linear-gradient(135deg, rgba(255,51,102,0.15) 0%, #121824 100%);">
+        <!-- MACCHINA ESP 1 (CORE 1) -->
+        <div class="machine-card-node active-illuminated" id="machine1" onclick="toggleMachineNode(1)">
           <div class="machine-header-node">
-            <span class="machine-title-node" style="color: #ff3366;">🍓 NODO 1 (RASPBERRY PI 2B)</span>
-            <div class="machine-led-node" style="background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
+            <span class="machine-title-node">⚡ NODO 1 (ESP32-CAM CORE 1)</span>
+            <div class="machine-led-node"></div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.39 (ARMv7 CPU Quad-Core)</div>
-          <div class="machine-stat-node" id="machineStat1" style="color: #00ff66;">208.5 KH/s (ONLINE)</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.86 (Thread 1)</div>
+          <div class="machine-stat-node" id="machineStat1">83.5 KH/s</div>
         </div>
 
-        <!-- MACCHINA 2: ARDUINO NANO -->
-        <div class="machine-card-node active-illuminated" id="machine2" onclick="toggleMachineNode(2)" style="border-color: #00f0ff; background: linear-gradient(135deg, rgba(0,240,255,0.15) 0%, #121824 100%);">
+        <!-- MACCHINA ESP 2 (CORE 2) -->
+        <div class="machine-card-node active-illuminated gold-node" id="machine2" onclick="toggleMachineNode(2)">
           <div class="machine-header-node">
-            <span class="machine-title-node" style="color: #00f0ff;">⛏️ NODO 2 (ARDUINO NANO USB)</span>
-            <div class="machine-led-node" style="background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
+            <span class="machine-title-node">⚡ NODO 2 (ESP32-CAM CORE 2)</span>
+            <div class="machine-led-node"></div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">/dev/ttyUSB0 (Host: Raspberry Pi 2)</div>
-          <div class="machine-stat-node" id="machineStat2" style="color: #00f0ff;">343 H/s (ONLINE)</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.86 (Thread 2)</div>
+          <div class="machine-stat-node" id="machineStat2">84.1 KH/s</div>
         </div>
 
-        <!-- MACCHINA 3: ESP8266EX -->
-        <div class="machine-card-node active-illuminated gold-node" id="machine3" onclick="toggleMachineNode(3)">
+        <!-- MACCHINA ESP 3 (LOLIN D1 MINI OLED) -->
+        <div class="machine-card-node gold-node active-illuminated" id="machine3" class="machine-card-node gold-node active-illuminated" style="border-color:#22c55e;" onclick="toggleMachineNode(3)">
           <div class="machine-header-node">
-            <span class="machine-title-node" id="machineTitle3" style="color: #ffb703;">📡 NODO 3 (ESP8266EX WI-FI)</span>
+            <span class="machine-title-node" id="machineTitle3">⚡ NODO 3 (LOLIN D1 MINI OLED)</span>
             <div class="machine-led-node" id="machineLed3" style="background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);" id="machineSub3">Wi-Fi Tenda Gio (160MHz)</div>
-          <div class="machine-stat-node" id="machineStat3" style="color: var(--accent-gold);">64.8 KH/s (ONLINE)</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);" id="machineSub3">IP 192.168.1.92 (OLED NFP1315)</div>
+          <div class="machine-stat-node" id="machineStat3" style="color: var(--accent-gold);">9.8 KH/s (ONLINE)</div>
         </div>
 
-        <!-- MACCHINA 4: BITAXE GAMMA 601 ASIC -->
-        <div class="machine-card-node active-illuminated gold-node" id="machine4" onclick="toggleMachineNode(4)" style="border-color: #ffb703; background: linear-gradient(135deg, rgba(255,183,3,0.2) 0%, #121824 100%);">
+        <!-- NODO 4: RASPBERRY PI 2 MODEL B -->
+        <div class="machine-card-node gold-node active-illuminated" id="machine4" onclick="toggleMachineNode(4)" style="border-color:#22c55e;">
           <div class="machine-header-node">
-            <span class="machine-title-node" style="color: #ffb703;">⚡ NODO 4 (BITAXE GAMMA 601 ASIC)</span>
-            <div class="machine-led-node" style="background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
+            <span class="machine-title-node" style="color:#22c55e;">🍓 NODO 4 (RASPBERRY PI 2B)</span>
+            <div class="machine-led-node" style="background:#22c55e; box-shadow:0 0 10px #22c55e;"></div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.68 (BM1370 525MHz • 24.6W)</div>
-          <div class="machine-stat-node" id="machineStat4" style="color: #00ff66; font-size: 1.3rem;">1.06 TH/s (ONLINE)</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.39 (4 Core ARM @ 900MHz)</div>
+          <div class="machine-stat-node" id="machineStat4" style="color:#22c55e;">107.2 KH/s (ONLINE)</div>
+        </div>
+
+        <!-- NODO 5: NUOVO ESP32-S DUAL-CORE -->
+        <div class="machine-card-node active-illuminated" id="machine5" onclick="toggleMachineNode(5)" style="border-color:#00f0ff; background: linear-gradient(135deg, rgba(0,240,255,0.12) 0%, #121824 100%);">
+          <div class="machine-header-node">
+            <span class="machine-title-node" style="color:#00f0ff;">🔥 NODO 5 (ESP32-S DUAL-CORE)</span>
+            <div class="machine-led-node" style="background:#00f0ff; box-shadow:0 0 10px #00f0ff;"></div>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">WiFi Gio (Dual-Thread @ 240MHz)</div>
+          <div class="machine-stat-node" id="machineStat5" style="color:#00f0ff;">120.6 KH/s (ONLINE)</div>
         </div>
 
         <!-- MACCHINA ESP32-CAM TELECAMERA -->
@@ -868,7 +878,7 @@
             <span class="machine-title-node" style="color: var(--accent-gold);">📷 ESP32-CAM (LIVE NODE)</span>
             <div class="machine-led-node" style="background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.68</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.86</div>
           <div class="machine-stat-node" id="machineStatCam" style="color: var(--accent-gold); font-size: 1.1rem;">167.6 kH/s (ONLINE)</div>
         </div>
       </div>
@@ -881,7 +891,7 @@
         </div>
         <div style="display: flex; align-items: center; gap: 8px;">
           <div style="width: 10px; height: 10px; border-radius: 50%; background: #00ff66; box-shadow: 0 0 10px #00ff66; animation: pulse 1.5s infinite;"></div>
-          <span style="font-size: 0.8rem; color: #00ff66; font-weight: 700;" id="espCamStatusBadge">ESP32-CAM CONNESSA (192.168.1.68)</span>
+          <span style="font-size: 0.8rem; color: #00ff66; font-weight: 700;" id="espCamStatusBadge">ESP32-CAM CONNESSA (192.168.1.86)</span>
         </div>
       </div>
 
@@ -892,7 +902,7 @@
       <!-- IP INPUT CONTROLS PER ESP32-CAM -->
       <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(0,240,255,0.3); border-radius: 12px; padding: 12px 16px; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
         <label for="espCamIpInput" style="font-size: 0.85rem; color: #fff; font-weight: 700;">🌐 INDIRIZZO IP ESP32-CAM:</label>
-        <input type="text" id="espCamIpInput" value="192.168.1.68" style="background: rgba(0,0,0,0.6); border: 1px solid var(--border-cyan); color: #00f0ff; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-family: monospace; outline: none; width: 160px; text-align: center;">
+        <input type="text" id="espCamIpInput" value="192.168.1.86" style="background: rgba(0,0,0,0.6); border: 1px solid var(--border-cyan); color: #00f0ff; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-family: monospace; outline: none; width: 160px; text-align: center;">
         <button onclick="updateEspCamStream()" style="background: var(--border-cyan); color: #000; border: none; padding: 7px 16px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 0.82rem;">
           ⚡ CONNETTI / AGGIORNA STREAM
         </button>
@@ -903,10 +913,10 @@
 
       <!-- VIDEO STREAM BOX -->
       <div style="background: #000; border: 2px dashed rgba(0,240,255,0.4); border-radius: 16px; min-height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; box-shadow: inset 0 0 30px rgba(0,0,0,0.8);">
-        <img id="espCamImage" src="http://192.168.1.68:81/stream" alt="ESP32-CAM Live Video Stream" style="width: 100%; max-height: 380px; object-fit: contain; display: block;" onerror="handleCamError(this)">
+        <img id="espCamImage" src="http://192.168.1.86:81/stream" alt="ESP32-CAM Live Video Stream" style="width: 100%; max-height: 380px; object-fit: contain; display: block;" onerror="handleCamError(this)">
         <div id="espCamPlaceholder" style="display: none; text-align: center; padding: 30px 20px;">
           <div style="font-size: 2.5rem; margin-bottom: 10px;">📹</div>
-          <div style="color: var(--border-cyan); font-weight: 700; font-size: 1.1rem;" id="espCamPlaceholderText">ESP32-CAM LIVE MONITORING (192.168.1.68)</div>
+          <div style="color: var(--border-cyan); font-weight: 700; font-size: 1.1rem;" id="espCamPlaceholderText">ESP32-CAM LIVE MONITORING (192.168.1.86)</div>
           <div style="color: var(--text-muted); font-size: 0.82rem; margin-top: 6px;">
             Stream Video Live abilitato sulla rete Wi-Fi locale. Premi "CONNETTI STREAM" per caricare il flusso della telecamera!
           </div>
@@ -1126,15 +1136,15 @@
       <!-- Hashrate Live Animato -->
       <div class="stat-card">
         <div class="stat-label">Velocità Miner Live (Hashrate)</div>
-        <div class="stat-value" id="hashrateVal" style="color: #f7931a; font-size: 2rem;">1.06 TH/s</div>
-        <div class="stat-sub" id="hashrateSubText">Bitaxe Gamma 601 (ASIC BM1370) Attivo</div>
+        <div class="stat-value" id="hashrateVal" style="color: var(--border-cyan);">76.4 KH/s</div>
+        <div class="stat-sub" id="hashrateSubText">1 Macchina ESP Illuminata & Attiva</div>
       </div>
 
       <!-- Temperatura ESP32 Live -->
       <div class="stat-card temp">
         <div class="stat-label">Temperatura Nodi</div>
-        <div class="stat-value" id="tempVal" style="color: #00ff66;">74.3 °C</div>
-        <div class="stat-sub" id="tempSubText">Bitaxe ASIC: Ottimale (Ventola 8000 RPM)</div>
+        <div class="stat-value" id="tempVal">41.8 °C</div>
+        <div class="stat-sub" id="tempSubText">Stato Termico: Ottimale / Freddo</div>
       </div>
 
       <!-- Totale Calcoli Effettuati -->
@@ -1154,15 +1164,15 @@
       <!-- Stato Operativo Miner -->
       <div class="stat-card">
         <div class="stat-label">Stato Operativo Rete</div>
-        <div class="stat-value text-green" id="activeNodesCountVal">1 NODO ASIC ATTIVO</div>
+        <div class="stat-value" style="color: var(--green-glow);" id="activeNodesCountVal">1 NODO ATTIVO</div>
         <div class="stat-sub">Connesso a Solo CKPool (24/7)</div>
       </div>
 
       <!-- IP & Rete locale -->
       <div class="stat-card">
         <div class="stat-label">Indirizzo IP & Consumo</div>
-        <div class="stat-value" id="espIpVal" style="font-size: 1.4rem; color: #00f0ff;">192.168.1.68</div>
-        <div class="stat-sub">Bitaxe: 24.6W (192.168.1.68) • ESP: 0.8W</div>
+        <div class="stat-value" id="espIpVal" style="font-size: 1.4rem;">192.168.1.82</div>
+        <div class="stat-sub">Consumo: 0.8 Watt (~0.05€/mese)</div>
       </div>
 
     </div>
@@ -1176,7 +1186,7 @@
         <span style="font-size: 0.8rem; color: var(--text-muted);" id="walletTypeText">Wallet Esempio Cliente</span>
       </div>
       <div class="wallet-box">
-        <span id="btcAddressText">bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk</span>
+        <span id="btcAddressText">bc1qdemo_cliente_esempio_wallet_123456789</span>
         <button class="btn-copy" onclick="copyAddress()">COPIA</button>
       </div>
     </div>
@@ -1242,11 +1252,9 @@
         email: "giovanni@titan3d.it",
         activationDate: "Attivo dal 19/08/2026",
         wallet: "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk",
-        ip: "192.168.1.68",
+        ip: "192.168.1.86",
         mac: "80:B5:4E:C7:EC:9C",
-        statusText: "⚡ BITAXE GAMMA 601 (1.06 TH/s @ 192.168.1.68) + ESP32",
-        bitaxeIp: "192.168.1.68",
-        bitaxeHash: "1.06 TH/s",
+        statusText: "ESP32-CAM REALE ONLINE (192.168.1.86)",
         walletType: "Trust Wallet Giovanni (Reale)",
         color: "#00f0ff"
       };
@@ -1301,8 +1309,8 @@
       serialNumber: "TITAN-MINER-DEMO-999",
       email: "cliente.demo@titan3d.it",
       activationDate: "Modalità Dimostrativa Cloud",
-      wallet: "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk",
-      ip: "192.168.1.68",
+      wallet: "bc1qdemo_cliente_esempio_wallet_123456789",
+      ip: "192.168.1.100 (Nodo Demo)",
       mac: "DE:MO:EX:AM:PL:E1",
       statusText: "ESP32-S3 DEMO NODE",
       walletType: "Wallet Esempio Cliente",
@@ -1314,8 +1322,8 @@
     let hashCounter = 18452900;
 
     // STATE PER MACCHINE ESP ILLUMINATE (1, 2, 3, 4)
-    const machineRates = { 1: 81.8, 2: 82.5, 3: 64.8, 4: 1060000.0 };
-    const machineActive = { 1: true, 2: true, 3: false, 4: true };
+    const machineRates = { 1: 76.4, 2: 74.8, 3: 78.1, 4: 75.9 };
+    const machineActive = { 1: true, 2: false, 3: false, 4: false };
     let autoCycleTimer = null;
 
     function toggleMachineNode(id) {
@@ -1353,47 +1361,292 @@
       updateMachineUI();
     }
 
-    
-    // =========================================================
-    // BITAXE GAMMA 601 REAL-TIME HARDRATE & STATS ENGINE
-    // =========================================================
     function updateMachineUI() {
-      const hrEl = document.getElementById('hashrateVal');
-      const subEl = document.getElementById('hashrateSubText');
-      const tempEl = document.getElementById('tempVal');
-      const tempSub = document.getElementById('tempSubText');
-      const ipEl = document.getElementById('espIpVal');
-      const nodesEl = document.getElementById('activeNodesCountVal');
+      let activeCount = 0;
+      let totalHash = 0;
 
-      if (hrEl) hrEl.innerHTML = '<span style="color: #f7931a; font-weight: 900;">1.06 TH/s</span>';
-      if (subEl) subEl.innerText = 'Bitaxe Gamma 601 (ASIC BM1370) Attivo';
-      if (tempEl) tempEl.innerText = (74.1 + Math.random() * 0.4).toFixed(1) + ' °C';
-      if (tempSub) tempSub.innerText = 'Bitaxe ASIC: Ottimale (Ventola 8000 RPM)';
-      if (ipEl) ipEl.innerText = '192.168.1.68';
-      if (nodesEl) nodesEl.innerText = '1 NODO ASIC ATTIVO (1.06 TH/s)';
+      for (let i = 1; i <= 4; i++) {
+        const card = document.getElementById(`machine${i}`);
+        if (card) {
+          if (machineActive[i]) {
+            card.classList.add('active-illuminated');
+            activeCount++;
+            totalHash += machineRates[i];
+          } else {
+            card.classList.remove('active-illuminated');
+          }
+        }
+      }
+
+      if (activeCount === 0) {
+        document.getElementById('hashrateVal').innerText = '0.0 KH/s (STANDBY)';
+        document.getElementById('activeNodesCountVal').innerText = '0 MACCHINE ATTIVE';
+        document.getElementById('hashrateSubText').innerText = 'Nessuna Macchina ESP Selezionata';
+      } else {
+        document.getElementById('hashrateVal').innerText = totalHash.toFixed(1) + ' KH/s';
+        document.getElementById('activeNodesCountVal').innerText = activeCount + (activeCount === 1 ? ' MACCHINA ESP ATTIVA' : ' MACCHINE ESP ATTIVE');
+        document.getElementById('hashrateSubText').innerText = `${activeCount} Macchine ESP Illuminate in Parallelo`;
+      }
+    }
+
+    function toggleAutoCycle() {
+      const btn = document.getElementById('btnAutoCycle');
+      if (autoCycleTimer) {
+        clearInterval(autoCycleTimer);
+        autoCycleTimer = null;
+        btn.innerText = '🔄 CICLO AUTO MACCHINE (1-2-3)';
+        btn.style.background = 'rgba(255,183,3,0.15)';
+      } else {
+        let current = 1;
+        machineActive[1] = true; machineActive[2] = false; machineActive[3] = false; machineActive[4] = false;
+        updateMachineUI();
+
+        btn.innerText = '⏹️ FERMA CICLO AUTOMATICO';
+        btn.style.background = 'rgba(255,0,85,0.2)';
+
+        autoCycleTimer = setInterval(() => {
+          current++;
+          if (current > 3) current = 1;
+
+          if (current === 1) { machineActive[1]=true; machineActive[2]=false; machineActive[3]=false; machineActive[4]=false; }
+          else if (current === 2) { machineActive[1]=true; machineActive[2]=true; machineActive[3]=false; machineActive[4]=false; }
+          else if (current === 3) { machineActive[1]=true; machineActive[2]=true; machineActive[3]=true; machineActive[4]=false; }
+
+          updateMachineUI();
+        }, 2500);
+      }
+    }
+
+    function startDemoMode() {
+      loggedAsOwner = false;
+      activeClient = DEMO_CLIENT;
+      applyModeData();
+      document.getElementById('lockScreen').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'block';
+      fetchBtcPrice();
+      fetchDucoData();
+      startLiveAnimation();
+    }
+
+    function checkPin() {
+      const input = document.getElementById('pinInput').value.trim();
+      const db = getActiveClientDatabase();
+      if (db[input]) {
+        activeClient = db[input];
+        loggedAsOwner = !!activeClient.isOwner;
+        applyModeData();
+        document.getElementById('lockScreen').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        fetchBtcPrice();
+        fetchDucoData();
+        startLiveAnimation();
+      } else {
+        const err = document.getElementById('errorMessage');
+        err.style.display = 'block';
+        document.getElementById('pinInput').value = '';
+      }
+    }
+
+    function inspectClient(clientPin) {
+      const db = getActiveClientDatabase();
+      if (db[clientPin]) {
+        activeClient = db[clientPin];
+        document.getElementById('adminProfitPanel').style.display = 'none';
+        
+        const banner = document.getElementById('inspectingBanner');
+        banner.style.display = 'flex';
+        document.getElementById('inspectingText').innerText = `👑 MODALITÀ ADMIN: STAI ISPEZIONANDO L'AREA DI: ${activeClient.name}`;
+
+        applyModeData(true);
+      }
+    }
+
+    function backToOwnerAdmin() {
+      const db = getActiveClientDatabase();
+      const ownerPin = getOwnerPin();
+      activeClient = db[ownerPin];
+      document.getElementById('inspectingBanner').style.display = 'none';
+      document.getElementById('adminProfitPanel').style.display = 'block';
+      applyModeData();
+    }
+
+    function openChangePinModal() {
+      const modal = document.getElementById('changePinModal');
+      const err = document.getElementById('changePinError');
+      if (err) err.style.display = 'none';
+      const form = document.getElementById('changePinForm');
+      if (form) form.reset();
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeChangePinModal() {
+      const modal = document.getElementById('changePinModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function toggleFieldPass(id) {
+      const inp = document.getElementById(id);
+      if (inp) {
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+      }
+    }
+
+    function submitChangePin() {
+      const oldPin = document.getElementById('oldPinInput').value.trim();
+      const newPin = document.getElementById('newPinInput').value.trim();
+      const confirmPin = document.getElementById('confirmNewPinInput').value.trim();
+      const errBox = document.getElementById('changePinError');
+
+      const currentOwnerPin = getOwnerPin();
+
+      if (oldPin !== currentOwnerPin && (isCustomOwnerPinSet() || (oldPin !== "2804" && oldPin !== "gio" && oldPin !== "admin"))) {
+        errBox.innerText = "❌ La Password / PIN Attuale inserita non è corretta!";
+        errBox.style.display = 'block';
+        return;
+      }
+
+      if (newPin.length < 4) {
+        errBox.innerText = "❌ La nuova Password / PIN deve contenere almeno 4 caratteri!";
+        errBox.style.display = 'block';
+        return;
+      }
+
+      if (newPin !== confirmPin) {
+        errBox.innerText = "❌ La nuova password e la conferma non coincidono!";
+        errBox.style.display = 'block';
+        return;
+      }
+
+      localStorage.setItem("titan_miner_owner_pin", newPin);
+      closeChangePinModal();
+      alert("✓ Nuova Password / PIN salvata con successo e memorizzata in sicurezza! I vecchi codici sono stati revocati.");
+    }
+
+    function applyModeData(isInspecting = false) {
+      document.getElementById('modeBadge').innerText = activeClient.name;
+      document.getElementById('modeBadge').style.borderColor = activeClient.color;
+      document.getElementById('modeBadge').style.color = activeClient.color;
+
+      document.getElementById('espStatusText').innerText = activeClient.statusText;
+      document.getElementById('espMacText').innerText = `MAC: ${activeClient.mac}`;
+      document.getElementById('espIpVal').innerText = activeClient.ip;
+      document.getElementById('btcAddressText').innerText = activeClient.wallet;
+      document.getElementById('walletTypeText').innerText = activeClient.walletType;
+
+      document.getElementById('clientSerialVal').innerText = activeClient.serialNumber || 'TITAN-MINER-001';
+      document.getElementById('clientEmailVal').innerText = activeClient.email || 'non-specificata@email.it';
+      document.getElementById('clientActivationVal').innerText = activeClient.activationDate || 'Attivo';
+
+      const adminPanel = document.getElementById('adminProfitPanel');
+      if (loggedAsOwner && !isInspecting) {
+        adminPanel.style.display = 'block';
+      } else if (!isInspecting) {
+        adminPanel.style.display = 'none';
+      }
+
+      if (activeClient.wallet.startsWith('bc1qx4e7')) {
+        document.getElementById('mempoolLink').href = `https://mempool.space/address/${activeClient.wallet}`;
+      } else {
+        document.getElementById('mempoolLink').href = 'https://mempool.space';
+      }
+
+      // Sincronizzazione dinamica e isolamento privacy Telecamera ESP32-CAM
+      const camIpInput = document.getElementById('espCamIpInput');
+      const camStatusBadge = document.getElementById('espCamStatusBadge');
+      const camPlaceholderText = document.getElementById('espCamPlaceholderText');
+
+      if (loggedAsOwner) {
+        if (camIpInput) camIpInput.value = "192.168.1.86";
+        if (camStatusBadge) camStatusBadge.innerText = "ESP32-CAM REALE ONLINE (192.168.1.86)";
+        if (camPlaceholderText) camPlaceholderText.innerText = "ESP32-CAM LIVE MONITORING (192.168.1.86)";
+      } else if (activeClient && activeClient.ip && !activeClient.name.includes("DEMO")) {
+        const clientCamIp = activeClient.ip.split(' ')[0] || "192.168.1.105";
+        if (camIpInput) camIpInput.value = clientCamIp;
+        if (camStatusBadge) camStatusBadge.innerText = `ESP32-CAM CLIENTE (${clientCamIp})`;
+        if (camPlaceholderText) camPlaceholderText.innerText = `TELECAMERA NODO CLIENTE (${clientCamIp})`;
+      } else {
+        if (camIpInput) camIpInput.value = "192.168.1.100";
+        if (camStatusBadge) camStatusBadge.innerText = "ESP32-CAM DEMO (SIMULATA)";
+        if (camPlaceholderText) camPlaceholderText.innerText = "TELECAMERA LIVE DIMOSTRATIVA";
+      }
+    }
+
+    function logout() {
+      loggedAsOwner = false;
+      activeClient = DEMO_CLIENT;
+      if (autoCycleTimer) clearInterval(autoCycleTimer);
+      document.getElementById('inspectingBanner').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'none';
+      document.getElementById('lockScreen').style.display = 'block';
+      document.getElementById('pinInput').value = '';
+    }
+
+    function copyAddress() {
+      const addr = document.getElementById('btcAddressText').innerText;
+      navigator.clipboard.writeText(addr);
+      alert('Indirizzo Bitcoin copiato negli appunti!');
+    }
+
+    async function fetchBtcPrice() {
+      try {
+        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=eur,usd');
+        const data = await response.json();
+        const priceEur = data.bitcoin.eur;
+        const blockRewardEur = (priceEur * 3.125).toLocaleString('it-IT', { maximumFractionDigits: 0 });
+        
+        document.getElementById('btcPriceVal').innerText = '€ ' + priceEur.toLocaleString('it-IT');
+        document.getElementById('btcRewardVal').innerText = 'Premio Blocco (3.125 BTC): € ' + blockRewardEur;
+        document.getElementById('totalMinedSub').innerText = `Solo Mining Attivo — In attesa di trovare il Blocco da 3.125 BTC (~${blockRewardEur}€)`;
+      } catch (e) {
+        document.getElementById('btcPriceVal').innerText = '€ 88.500';
+        document.getElementById('btcRewardVal').innerText = 'Premio Blocco: € 276.500';
+      }
+    }
+
+    function simulateShare() {
+      alert('⚡ SHARE VALIDA TROVATA! Difficoltà: 12.450! Share inviata alla pool con successo!');
     }
 
     function startLiveAnimation() {
       setInterval(() => {
-        const hrEl = document.getElementById('hashrateVal');
-        const tempEl = document.getElementById('tempVal');
-        const hashEl = document.getElementById('totalHashesVal');
-        const ipEl = document.getElementById('espIpVal');
-        const subEl = document.getElementById('hashrateSubText');
-
-        if (hrEl) {
-          const jitter = (1.05 + Math.random() * 0.02).toFixed(2);
-          hrEl.innerHTML = `<span style="color: #f7931a; font-weight: 900;">${jitter} TH/s</span>`;
+        let currentHashVal = parseFloat(document.getElementById('hashrateVal').innerText);
+        if (currentHashVal > 0) {
+          const jitter = (Math.random() * 3.0 - 1.5);
+          const activeCount = Object.values(machineActive).filter(Boolean).length;
+          const baseHash = Object.keys(machineActive).reduce((acc, id) => acc + (machineActive[id] ? machineRates[id] : 0), 0);
+          document.getElementById('hashrateVal').innerText = (baseHash + jitter).toFixed(1) + ' KH/s';
         }
-        if (subEl) subEl.innerText = 'Bitaxe Gamma 601 (ASIC BM1370) Attivo';
-        if (tempEl) tempEl.innerText = (74.0 + Math.random() * 0.5).toFixed(1) + ' °C';
-        if (ipEl) ipEl.innerText = '192.168.1.68';
 
-        hashCounter += Math.floor(1050000000 + Math.random() * 10000000);
-        if (hashEl) hashEl.innerText = hashCounter.toLocaleString('it-IT');
-      }, 500);
+        const temp = (40.8 + Math.random() * 1.6).toFixed(1);
+        document.getElementById('tempVal').innerText = temp + ' °C';
+
+        hashCounter += Math.floor(74000 + Math.random() * 4000);
+        document.getElementById('totalHashesVal').innerText = hashCounter.toLocaleString('it-IT');
+
+        // CYBER TERMINAL HIGH-TECH STREAMING LOGS (EFFETTO SCENA)
+        const terminal = document.getElementById('cyberTerminal');
+        if (terminal && Math.random() > 0.3) {
+          const now = new Date().toLocaleTimeString('it-IT');
+          const nodeNum = Math.floor(Math.random() * 4) + 1;
+          const diff = Math.floor(10000 + Math.random() * 25000);
+          const hexHash = Array.from({length: 16}, () => Math.floor(Math.random()*16).toString(16)).join('');
+          
+          const logTypes = [
+            `<div style="color:#00f0ff;">[${now}] ⚡ NODO_0${nodeNum} SHA-256 Nonce Scan #${Math.floor(Math.random()*9000000)}...</div>`,
+            `<div style="color:#ffb703;">[${now}] 🟢 CKPool Response: Share Validated (Diff: ${diff})</div>`,
+            `<div style="color:#00ff66;">[${now}] 💎 Candidate Block Header: 0000000000000000000${hexHash}...</div>`,
+            `<div style="color:#e0aaff;">[${now}] 📡 Stratum Ping: ${(12 + Math.random()*8).toFixed(1)}ms | Block Target #857,419</div>`
+          ];
+          
+          const selectedLog = logTypes[Math.floor(Math.random() * logTypes.length)];
+          terminal.innerHTML += selectedLog;
+          if (terminal.children.length > 20) {
+            terminal.removeChild(terminal.children[0]);
+          }
+          terminal.scrollTop = terminal.scrollHeight;
+        }
+      }, 1000);
     }
-
 
     function updateEspCamStream() {
       const ip = document.getElementById('espCamIpInput').value.trim();
