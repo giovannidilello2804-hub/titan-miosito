@@ -1191,45 +1191,49 @@
 
     </div>
 
-        <!-- SEZIONE DEDICATA BITAXE GAMMA 601 (QUADRO A PARTE) -->
+        <!-- SEZIONE DEDICATA CLUSTER BITAXE GAMMA 601 (QUADRO A PARTE) -->
     <div style="background: linear-gradient(135deg, rgba(247, 147, 26, 0.09) 0%, rgba(13, 18, 28, 0.95) 100%); border: 1px solid rgba(247, 147, 26, 0.45); border-radius: 16px; padding: 22px; margin: 25px 0; box-shadow: 0 0 25px rgba(247, 147, 26, 0.15);">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; border-bottom: 1px solid rgba(247, 147, 26, 0.25); padding-bottom: 12px;">
         <div style="display: flex; align-items: center; gap: 12px;">
           <div style="width: 14px; height: 14px; border-radius: 50%; background: #00ff66; box-shadow: 0 0 12px #00ff66;"></div>
           <div>
-            <h3 style="margin: 0; color: #f7931a; font-size: 1.25rem; font-weight: 800; letter-spacing: 0.5px;">⚡ QUADRO DEDICATO BITAXE GAMMA 601 (ASIC BM1370)</h3>
-            <div style="font-size: 0.78rem; color: var(--text-muted);">Nodo Hardware Indipendente • IP: 192.168.1.68 • MAC: 3C:DC:75:FC:DF:40</div>
+            <h3 style="margin: 0; color: #f7931a; font-size: 1.25rem; font-weight: 800; letter-spacing: 0.5px;">⚡ CLUSTER 2x BITAXE GAMMA 601 (ASIC BM1370) LIVE</h3>
+            <div style="font-size: 0.78rem; color: var(--text-muted);">2 Nodi ASIC Operativi in Parallelo • Potenza Totale Combinata: ~2.12 TH/s</div>
           </div>
         </div>
-        <a href="http://192.168.1.68" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(247, 147, 26, 0.2); border: 1px solid #f7931a; color: #fff; padding: 6px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 700; text-decoration: none; transition: 0.2s;">
-          ⚙️ Apri Pannello Bitaxe Live ➔
-        </a>
+        <div style="display: flex; gap: 8px;">
+          <a href="http://192.168.1.68" target="_blank" style="background: rgba(247, 147, 26, 0.2); border: 1px solid #f7931a; color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; text-decoration: none;">
+            ⚙️ Bitaxe #1 (.68) ➔
+          </a>
+          <a href="http://192.168.1.70" target="_blank" style="background: rgba(0, 240, 255, 0.2); border: 1px solid #00f0ff; color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; text-decoration: none;">
+            ⚙️ Bitaxe #2 (.70) ➔
+          </a>
+        </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px;">
-        <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px;">
-          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Velocità Bitaxe Live</div>
-          <div id="bitaxeLiveHash" style="font-size: 1.65rem; font-weight: 900; color: #f7931a; margin-top: 4px;">1.06 TH/s</div>
-          <div style="font-size: 0.72rem; color: #00ff66;">🟢 In Mining Attivo (SHA-256)</div>
+      <!-- GRID DUAL BITAXE -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+        
+        <!-- BITAXE 1 CARD -->
+        <div style="background: rgba(0,0,0,0.45); border: 1px solid rgba(247, 147, 26, 0.3); border-radius: 12px; padding: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-weight: 800; color: #f7931a; font-size: 0.95rem;">⚡ NODO BITAXE #1</span>
+            <span style="color: #00ff66; font-size: 0.75rem; font-weight: 700;">🟢 ONLINE (192.168.1.68)</span>
+          </div>
+          <div style="font-size: 1.6rem; font-weight: 900; color: #f7931a;" id="bitaxeLiveHash">1.06 TH/s</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Temp: <span style="color: #00f0ff;" id="bitaxeLiveTemp">55.2 °C</span> • Consumo: 17.6W • Worker: gamma601</div>
         </div>
 
-        <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px;">
-          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Temperatura Chip</div>
-          <div id="bitaxeLiveTemp" style="font-size: 1.65rem; font-weight: 900; color: #00f0ff; margin-top: 4px;">54.6 °C</div>
-          <div style="font-size: 0.72rem; color: var(--text-muted);">Ventola 8000 RPM (Ottimale)</div>
+        <!-- BITAXE 2 CARD -->
+        <div style="background: rgba(0,0,0,0.45); border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 12px; padding: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-weight: 800; color: #00f0ff; font-size: 0.95rem;">⚡ NODO BITAXE #2</span>
+            <span style="color: #00ff66; font-size: 0.75rem; font-weight: 700;">🟢 ONLINE (192.168.1.70)</span>
+          </div>
+          <div style="font-size: 1.6rem; font-weight: 900; color: #00f0ff;" id="bitaxe2LiveHash">1.06 TH/s</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Temp: <span style="color: #00f0ff;" id="bitaxe2LiveTemp">57.0 °C</span> • Consumo: 19.8W • Worker: gamma602</div>
         </div>
 
-        <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px;">
-          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Consumo Energetico</div>
-          <div style="font-size: 1.65rem; font-weight: 900; color: #ffd166; margin-top: 4px;">17.5 Watt</div>
-          <div style="font-size: 0.72rem; color: var(--text-muted);">1.04 V @ 425 MHz</div>
-        </div>
-
-        <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px;">
-          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Shares Inviate</div>
-          <div id="bitaxeLiveShares" style="font-size: 1.65rem; font-weight: 900; color: #00ff66; margin-top: 4px;">164+ Valide</div>
-          <div style="font-size: 0.72rem; color: #00ff66;">0 Rigettate (100% OK)</div>
-        </div>
       </div>
     </div>
 
@@ -1691,8 +1695,18 @@
         }
         const bTemp = document.getElementById('bitaxeLiveTemp');
         if (bTemp) {
-          const jTp = (54.4 + Math.random() * 0.4).toFixed(1);
+          const jTp = (55.0 + Math.random() * 0.5).toFixed(1);
           bTemp.innerText = jTp + ' °C';
+        }
+        const b2Hash = document.getElementById('bitaxe2LiveHash');
+        if (b2Hash) {
+          const j2Th = (1.04 + Math.random() * 0.04).toFixed(2);
+          b2Hash.innerText = j2Th + ' TH/s';
+        }
+        const b2Temp = document.getElementById('bitaxe2LiveTemp');
+        if (b2Temp) {
+          const j2Tp = (56.8 + Math.random() * 0.5).toFixed(1);
+          b2Temp.innerText = j2Tp + ' °C';
         }
 
         // CYBER TERMINAL HIGH-TECH STREAMING LOGS (EFFETTO SCENA)
