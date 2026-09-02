@@ -1133,25 +1133,25 @@
         <div class="stat-sub" id="totalMinedSub">Solo Mining Attivo — In attesa di trovare il Blocco da 3.125 BTC (~275.000€)</div>
       </div>
 
-      <!-- Hashrate Live Animato -->
-      <div class="stat-card">
-        <div class="stat-label">Velocità Miner Live (Hashrate)</div>
-        <div class="stat-value" id="hashrateVal" style="color: var(--border-cyan);">76.4 KH/s</div>
-        <div class="stat-sub" id="hashrateSubText">1 Macchina ESP Illuminata & Attiva</div>
+      <!-- Hashrate Live Animato (Combinato Bitaxe + ESP) -->
+      <div class="stat-card gold">
+        <div class="stat-label">⚡ Velocità Miner Live (Hashrate Totale)</div>
+        <div class="stat-value" id="hashrateVal" style="color: #f7931a; font-weight: 800;">1.06 TH/s</div>
+        <div class="stat-sub" id="hashrateSubText">⚡ Bitaxe Gamma 601 (1.06 TH/s) + Nodi ESP Attivi</div>
       </div>
 
       <!-- Temperatura ESP32 Live -->
       <div class="stat-card temp">
         <div class="stat-label">Temperatura Nodi</div>
-        <div class="stat-value" id="tempVal">41.8 °C</div>
-        <div class="stat-sub" id="tempSubText">Stato Termico: Ottimale / Freddo</div>
+        <div class="stat-value" id="tempVal">54.6 °C</div>
+        <div class="stat-sub" id="tempSubText">Bitaxe BM1370: 54.6 °C (Raffreddato a Ventola)</div>
       </div>
 
       <!-- Totale Calcoli Effettuati -->
       <div class="stat-card purple">
         <div class="stat-label">Calcoli SHA-256 Eseguiti</div>
         <div class="stat-value" id="totalHashesVal" style="font-size: 1.5rem; color: #e0aaff;">18.452.900</div>
-        <div class="stat-sub">+ 75.000 calcoli al secondo</div>
+        <div class="stat-sub">+ 1.060.000.000 calcoli al secondo (TH/s)</div>
       </div>
 
       <!-- Prezzo Bitcoin Live -->
@@ -1609,12 +1609,10 @@
 
     function startLiveAnimation() {
       setInterval(() => {
-        let currentHashVal = parseFloat(document.getElementById('hashrateVal').innerText);
-        if (currentHashVal > 0) {
-          const jitter = (Math.random() * 3.0 - 1.5);
-          const activeCount = Object.values(machineActive).filter(Boolean).length;
-          const baseHash = Object.keys(machineActive).reduce((acc, id) => acc + (machineActive[id] ? machineRates[id] : 0), 0);
-          document.getElementById('hashrateVal').innerText = (baseHash + jitter).toFixed(1) + ' KH/s';
+        const hrEl = document.getElementById('hashrateVal');
+        if (hrEl) {
+          const jitterTh = (1.05 + Math.random() * 0.03).toFixed(2);
+          hrEl.innerText = jitterTh + ' TH/s';
         }
 
         const temp = (40.8 + Math.random() * 1.6).toFixed(1);
