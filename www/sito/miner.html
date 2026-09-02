@@ -643,7 +643,8 @@
       <div class="status-badge-container">
         <div class="status-pill">
           <div class="dot-live"></div>
-          <span id="espStatusText">ESP32-S3 DEMO NODE</span>
+          <span>⚡ BITAXE GAMMA 601 (1.06 TH/s @ 192.168.1.68)</span></div>
+        <div class="status-pill"><span id="espStatusText">ESP32-S3 DEMO NODE</span>
         </div>
         <div class="status-pill">
           <span id="espMacText">MAC: DE:MO:EX:AM:PL:E1</span>
@@ -820,46 +821,46 @@
         Puoi vedere ed illuminare le tue <strong>Macchine ESP (ESP32-S3 Miner & ESP32-CAM) contemporaneamente</strong> o selezionarne 1 o 2 alla volta!
       </p>
 
-      <!-- MACCHINE ESP GRID MATRICE -->
+      <!-- MACCHINE MINER GRID MATRICE -->
       <div class="node-grid-container">
-        <!-- MACCHINA ESP 1 (CORE 1) -->
-        <div class="machine-card-node active-illuminated" id="machine1" onclick="toggleMachineNode(1)">
+        <!-- MACCHINA 1: RASPBERRY PI 2B -->
+        <div class="machine-card-node active-illuminated" id="machine1" onclick="toggleMachineNode(1)" style="border-color: #ff3366; background: linear-gradient(135deg, rgba(255,51,102,0.15) 0%, #121824 100%);">
           <div class="machine-header-node">
-            <span class="machine-title-node">⚡ NODO 1 (ESP32-CAM CORE 1)</span>
-            <div class="machine-led-node"></div>
+            <span class="machine-title-node" style="color: #ff3366;">🍓 NODO 1 (RASPBERRY PI 2B)</span>
+            <div class="machine-led-node" style="background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.86 (Thread 1)</div>
-          <div class="machine-stat-node" id="machineStat1">83.5 KH/s</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.39 (ARMv7 CPU Quad-Core)</div>
+          <div class="machine-stat-node" id="machineStat1" style="color: #00ff66;">208.5 KH/s (ONLINE)</div>
         </div>
 
-        <!-- MACCHINA ESP 2 (CORE 2) -->
-        <div class="machine-card-node active-illuminated gold-node" id="machine2" onclick="toggleMachineNode(2)">
+        <!-- MACCHINA 2: ARDUINO NANO -->
+        <div class="machine-card-node active-illuminated" id="machine2" onclick="toggleMachineNode(2)" style="border-color: #00f0ff; background: linear-gradient(135deg, rgba(0,240,255,0.15) 0%, #121824 100%);">
           <div class="machine-header-node">
-            <span class="machine-title-node">⚡ NODO 2 (ESP32-CAM CORE 2)</span>
-            <div class="machine-led-node"></div>
+            <span class="machine-title-node" style="color: #00f0ff;">⛏️ NODO 2 (ARDUINO NANO USB)</span>
+            <div class="machine-led-node" style="background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.86 (Thread 2)</div>
-          <div class="machine-stat-node" id="machineStat2">84.1 KH/s</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">/dev/ttyUSB0 (Host: Raspberry Pi 2)</div>
+          <div class="machine-stat-node" id="machineStat2" style="color: #00f0ff;">343 H/s (ONLINE)</div>
         </div>
 
-        <!-- MACCHINA ESP 3 (LOLIN D1 MINI OLED) -->
-        <div class="machine-card-node gold-node active-illuminated" id="machine3" onclick="toggleMachineNode(3)">
+        <!-- MACCHINA 3: ESP8266EX -->
+        <div class="machine-card-node active-illuminated gold-node" id="machine3" onclick="toggleMachineNode(3)">
           <div class="machine-header-node">
-            <span class="machine-title-node" id="machineTitle3">⚡ NODO 3 (LOLIN D1 MINI OLED)</span>
+            <span class="machine-title-node" id="machineTitle3" style="color: #ffb703;">📡 NODO 3 (ESP8266EX WI-FI)</span>
             <div class="machine-led-node" id="machineLed3" style="background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);" id="machineSub3">IP 192.168.1.92 (OLED NFP1315)</div>
-          <div class="machine-stat-node" id="machineStat3" style="color: var(--accent-gold);">9.8 KH/s (ONLINE)</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);" id="machineSub3">Wi-Fi Tenda Gio (160MHz)</div>
+          <div class="machine-stat-node" id="machineStat3" style="color: var(--accent-gold);">64.8 KH/s (ONLINE)</div>
         </div>
 
-        <!-- MACCHINA ESP 4 -->
-        <div class="machine-card-node gold-node" id="machine4" onclick="toggleMachineNode(4)">
+        <!-- MACCHINA 4: ESP32-CAM -->
+        <div class="machine-card-node active-illuminated gold-node" id="machine4" onclick="toggleMachineNode(4)">
           <div class="machine-header-node">
-            <span class="machine-title-node">⚡ NODO 4 (CLUSTER EXPANSION)</span>
-            <div class="machine-led-node"></div>
+            <span class="machine-title-node">📷 NODO 4 (ESP32-CAM)</span>
+            <div class="machine-led-node" style="background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">Predisposto 4 Nodi</div>
-          <div class="machine-stat-node" id="machineStat4">STANDBY</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.86 (Camera + Solo Miner)</div>
+          <div class="machine-stat-node" id="machineStat4" style="color: #00ff66;">84.1 KH/s (ONLINE)</div>
         </div>
 
         <!-- MACCHINA ESP32-CAM TELECAMERA -->
@@ -1622,20 +1623,22 @@
           const hexHash = Array.from({length: 16}, () => Math.floor(Math.random()*16).toString(16)).join('');
           
           const logTypes = [
-            `<div style="color:#00f0ff;">[${now}] ⚡ NODO_0${nodeNum} SHA-256 Nonce Scan #${Math.floor(Math.random()*9000000)}...</div>`,
-            `<div style="color:#ffb703;">[${now}] 🟢 CKPool Response: Share Validated (Diff: ${diff})</div>`,
-            `<div style="color:#00ff66;">[${now}] 💎 Candidate Block Header: 0000000000000000000${hexHash}...</div>`,
-            `<div style="color:#e0aaff;">[${now}] 📡 Stratum Ping: ${(12 + Math.random()*8).toFixed(1)}ms | Block Target #857,419</div>`
+            `<div style="color:#ff3366;">[${now}] 🍓 <strong>RASPBERRY PI 2B (ARMv7 CPU Quad-Core)</strong>: FastHash Multi-Thread (${(206 + Math.random()*5).toFixed(1)} kH/s) ➔ <strong>GOOD SHARE ACCETTATA!</strong> (diff. 20k, ping 37ms, mcjohn-node-2)</div>`,
+            `<div style="color:#00ff66;">[${now}] ⛏️ <strong>ARDUINO NANO (Host: Raspberry Pi 2)</strong>: DUCO-S1A Nonce Scan (${(340 + Math.random()*6).toFixed(0)} H/s) ➔ <strong>GOOD SHARE ACCETTATA!</strong> (diff. 10, ping 51ms, mcjohn-node-2)</div>`,
+            `<div style="color:#00f0ff;">[${now}] 📡 <strong>ESP8266EX (Wi-Fi Tenda Gio)</strong>: Core [0] GOOD share hashrate: ${(64.5 + Math.random()*1.2).toFixed(2)} kH/s ➔ Job accepted per <strong>Giovanni2804</strong></div>`,
+            `<div style="color:#ffb703;">[${now}] 💎 <strong>TITAN FULL CLUSTER (Pi2 + Nano + ESP)</strong>: Sincronizzazione Pool OK ➔ Accredito inviato al Wallet Giovanni2804</div>`,
+            `<div style="color:#e0aaff;">[${now}] ⚡ <strong>NODO_0${nodeNum}</strong> SHA-256 Nonce Scan #${Math.floor(Math.random()*9000000)}... ➔ Stratum Ping: ${(12 + Math.random()*8).toFixed(1)}ms</div>`,
+            `<div style="color:#00ff66;">[${now}] 🟢 <strong>POOL MASTER</strong>: Share Validated (Diff: ${diff}) ∙ Block Target Sincronizzato</div>`
           ];
           
           const selectedLog = logTypes[Math.floor(Math.random() * logTypes.length)];
           terminal.innerHTML += selectedLog;
-          if (terminal.children.length > 20) {
+          if (terminal.children.length > 25) {
             terminal.removeChild(terminal.children[0]);
           }
           terminal.scrollTop = terminal.scrollHeight;
         }
-      }, 1000);
+      }, 900);
     }
 
     function updateEspCamStream() {
