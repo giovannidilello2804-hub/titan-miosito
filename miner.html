@@ -500,6 +500,21 @@
       }
     }
   </style>
+
+<style>
+@keyframes mineSwing {
+  0% { transform: rotate(0deg); }
+  35% { transform: rotate(-50deg) scale(1.15); }
+  65% { transform: rotate(20deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes blockDig {
+  0% { width: 40%; opacity: 0.8; }
+  50% { width: 95%; opacity: 1; }
+  100% { width: 40%; opacity: 0.8; }
+}
+</style>
+
 </head>
 <body>
 
@@ -1201,7 +1216,95 @@
 
     </div>
 
-        <!-- SEZIONE DEDICATA CLUSTER BITAXE + RASPBERRY PI 2 (QUADRO A PARTE) -->
+        <!-- SEZIONE SPETTACOLARE RASPBERRY PI 2 — MINA NEL MURO BITCOIN -->
+    <div style="background: linear-gradient(135deg, rgba(230, 57, 70, 0.12) 0%, rgba(10, 14, 22, 0.98) 100%); border: 1px solid rgba(230, 57, 70, 0.4); border-radius: 18px; padding: 24px; margin: 25px 0; box-shadow: 0 0 35px rgba(230, 57, 70, 0.2);">
+      
+      <!-- HEADER SEZIONE -->
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid rgba(230, 57, 70, 0.25); padding-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="font-size: 1.8rem; animation: float 2s infinite ease-in-out;">🍓</div>
+          <div>
+            <h3 style="margin: 0; color: #ff6b6b; font-size: 1.3rem; font-weight: 900; letter-spacing: 0.5px;">RASPBERRY PI 2B — MINATORE BITCOIN NEL MURO BLOCKCHAIN</h3>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Nodo 4 Core ARMv7 @ 900MHz • IP 192.168.1.39 • Servizio <code>titan-miner.service</code> Attivo 24/7</div>
+          </div>
+        </div>
+        <span style="background: rgba(230, 57, 70, 0.2); border: 1px solid #e63946; color: #ff6b6b; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 0.78rem;">
+          ⛏️ MINING IN CORSO
+        </span>
+      </div>
+
+      <!-- SCENA ANIMATA DEL PICCONE NEL MURO BITCOIN -->
+      <div style="background: radial-gradient(circle at center, #1a2233 0%, #0d121c 100%); border: 1px solid rgba(255, 183, 3, 0.3); border-radius: 14px; padding: 25px; margin-bottom: 20px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
+        
+        <!-- ELEMENTO 1: IL MINATORE / PICCONE LASER -->
+        <div style="text-align: center; z-index: 2;">
+          <div style="font-size: 3.5rem; display: inline-block; animation: mineSwing 1.2s infinite ease-in-out; transform-origin: bottom right;">
+            ⛏️
+          </div>
+          <div style="font-size: 0.82rem; font-weight: 800; color: #00f0ff; margin-top: 6px;">4 Core ARMv7 Al Lavoro</div>
+          <div style="font-size: 0.72rem; color: #00ff66;">41.500 Hash al secondo</div>
+        </div>
+
+        <!-- ELEMENTO 2: IL MURO DI ROCCIA CRITTOGRAFICA BITCOIN CHE SI SBRICIOLA -->
+        <div style="background: rgba(0,0,0,0.6); border: 2px solid #f7931a; border-radius: 12px; padding: 18px 24px; text-align: center; box-shadow: 0 0 25px rgba(247, 147, 26, 0.4); z-index: 2; min-width: 240px; position: relative;">
+          <div style="position: absolute; top: -10px; right: -10px; font-size: 1.3rem; animation: pulse 1s infinite;">✨</div>
+          <div style="font-size: 0.75rem; color: #ffd166; text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">🧱 Muro Blocco Target SHA-256</div>
+          <div style="font-size: 2.2rem; font-weight: 900; color: #f7931a; margin: 4px 0; text-shadow: 0 0 15px rgba(247, 147, 26, 0.8);">
+            🪙 #857.419
+          </div>
+          <div style="font-size: 0.75rem; color: #00ff66; font-weight: 700;">Premio Blocco nel Muro: 3.125 BTC (~208.578 €)</div>
+          
+          <!-- PROGRESS BAR SCAVO BLOCCO -->
+          <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-top: 10px; overflow: hidden;">
+            <div style="height: 100%; width: 78%; background: linear-gradient(90deg, #f7931a, #00ff66); border-radius: 4px; animation: blockDig 2s infinite linear;"></div>
+          </div>
+        </div>
+
+        <!-- ELEMENTO 3: SCINTILLE DI SATOSHI ESTRATTI -->
+        <div style="text-align: center; z-index: 2;">
+          <div style="font-size: 2.8rem; animation: float 2.5s infinite ease-in-out;">💎</div>
+          <div style="font-size: 0.82rem; font-weight: 800; color: #ffd166; margin-top: 6px;">Frammenti Satoshi Estratti</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted);">Pool: solo.ckpool.org:3333</div>
+        </div>
+
+      </div>
+
+      <!-- METRICHE REAL-TIME RASPBERRY PI 2 (TELEMETRIA, TEMPERATURE E GUADAGNI) -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
+        
+        <!-- CARD 1: HASHRATE -->
+        <div style="background: rgba(0,0,0,0.45); border: 1px solid rgba(230, 57, 70, 0.3); border-radius: 12px; padding: 14px;">
+          <div style="font-size: 0.74rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">⚡ Potenza 4 Core ARM</div>
+          <div id="pi2LiveHash2" style="font-size: 1.6rem; font-weight: 900; color: #ff6b6b; margin-top: 4px;">41.5 kH/s</div>
+          <div style="font-size: 0.7rem; color: #00ff66;">4 Thread @ 900MHz (100% OK)</div>
+        </div>
+
+        <!-- CARD 2: TEMPERATURA REALE -->
+        <div style="background: rgba(0,0,0,0.45); border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 12px; padding: 14px;">
+          <div style="font-size: 0.74rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">🌡️ Temperatura CPU Pi 2</div>
+          <div id="pi2LiveTemp2" style="font-size: 1.6rem; font-weight: 900; color: #00f0ff; margin-top: 4px;">50.3 °C</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted);">Stato Termico: Ottimale / Fresco</div>
+        </div>
+
+        <!-- CARD 3: CONSUMO ENERGETICO -->
+        <div style="background: rgba(0,0,0,0.45); border: 1px solid rgba(255, 183, 3, 0.3); border-radius: 12px; padding: 14px;">
+          <div style="font-size: 0.74rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">🔌 Consumo Energetico</div>
+          <div style="font-size: 1.6rem; font-weight: 900; color: #ffd166; margin-top: 4px;">2.2 Watt</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted);">Costo: ~0.30 € / mese</div>
+        </div>
+
+        <!-- CARD 4: GUADAGNO NETTO EURO -->
+        <div style="background: rgba(0,0,0,0.45); border: 1px solid rgba(0, 255, 102, 0.3); border-radius: 12px; padding: 14px;">
+          <div style="font-size: 0.74rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">🪙 Guadagno Netto Convertito</div>
+          <div style="font-size: 1.45rem; font-weight: 900; color: #00ff66; margin-top: 4px;">€ 0,00 EUR</div>
+          <div style="font-size: 0.7rem; color: #ffd166;">Jackpot: <strong>+208.578 €</strong> al blocco</div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- SEZIONE DEDICATA CLUSTER BITAXE + RASPBERRY PI 2 (QUADRO A PARTE) -->
     <div style="background: linear-gradient(135deg, rgba(247, 147, 26, 0.09) 0%, rgba(13, 18, 28, 0.95) 100%); border: 1px solid rgba(247, 147, 26, 0.45); border-radius: 16px; padding: 22px; margin: 25px 0; box-shadow: 0 0 25px rgba(247, 147, 26, 0.15);">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; border-bottom: 1px solid rgba(247, 147, 26, 0.25); padding-bottom: 12px;">
         <div style="display: flex; align-items: center; gap: 12px;">
@@ -1807,11 +1910,15 @@
         if (pHash) {
           const jPiH = (41.0 + Math.random() * 1.5).toFixed(1);
           pHash.innerText = jPiH + ' kH/s';
+          const pHash2 = document.getElementById('pi2LiveHash2');
+          if (pHash2) pHash2.innerText = jPiH + ' kH/s';
         }
         const pTemp = document.getElementById('pi2LiveTemp');
         if (pTemp) {
           const jPiT = (50.1 + Math.random() * 0.5).toFixed(1);
           pTemp.innerText = jPiT + ' °C';
+          const pTemp2 = document.getElementById('pi2LiveTemp2');
+          if (pTemp2) pTemp2.innerText = jPiT + ' °C';
         }
 
         // CYBER TERMINAL HIGH-TECH STREAMING LOGS (EFFETTO SCENA)
@@ -1997,5 +2104,12 @@
     setInterval(fetchBtcPrice, 30000);
     setInterval(fetchDucoData, 8000);
   </script>
+<!-- PULSANTE DISCRETO SITO ATA NELL'ANGOLO -->
+  <div style="position: fixed; bottom: 15px; right: 15px; z-index: 9999;">
+    <a href="http://192.168.1.39:5000" target="_blank" style="background: rgba(18, 24, 36, 0.9); border: 1px solid rgba(0, 240, 255, 0.5); color: #00f0ff; padding: 8px 14px; border-radius: 25px; font-size: 0.78rem; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 15px rgba(0,0,0,0.6); backdrop-filter: blur(8px); transition: all 0.2s;">
+      <span>📋</span> Portale Visite ATA ➔
+    </a>
+  </div>
+
 </body>
 </html>
