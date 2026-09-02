@@ -1197,8 +1197,8 @@
         <div style="display: flex; align-items: center; gap: 12px;">
           <div style="width: 14px; height: 14px; border-radius: 50%; background: #00ff66; box-shadow: 0 0 12px #00ff66;"></div>
           <div>
-            <h3 style="margin: 0; color: #f7931a; font-size: 1.25rem; font-weight: 800; letter-spacing: 0.5px;">⚡ CLUSTER 2x BITAXE GAMMA 601 (ASIC BM1370) LIVE</h3>
-            <div style="font-size: 0.78rem; color: var(--text-muted);">2 Nodi ASIC Operativi in Parallelo • Potenza Totale Combinata: ~2.12 TH/s</div>
+            <h3 style="margin: 0; color: #f7931a; font-size: 1.25rem; font-weight: 800; letter-spacing: 0.5px;">⚡ STRATEGIA CLUSTER 2x BITAXE GAMMA 601 (ASIC BM1370)</h3>
+            <div style="font-size: 0.78rem; color: var(--text-muted);">Divisione Ruoli: 1 Nodo a Caccia del Jackpot + 1 Nodo per la Copertura Elettrica</div>
           </div>
         </div>
         <div style="display: flex; gap: 8px;">
@@ -1211,27 +1211,57 @@
         </div>
       </div>
 
-      <!-- GRID DUAL BITAXE -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+      <!-- GRID DUAL BITAXE CON RUOLI DISTINTI -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
         
-        <!-- BITAXE 1 CARD -->
-        <div style="background: rgba(0,0,0,0.45); border: 1px solid rgba(247, 147, 26, 0.3); border-radius: 12px; padding: 16px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <span style="font-weight: 800; color: #f7931a; font-size: 0.95rem;">⚡ NODO BITAXE #1</span>
-            <span style="color: #00ff66; font-size: 0.75rem; font-weight: 700;">🟢 ONLINE (192.168.1.68)</span>
+        <!-- BITAXE 1: CACCIA AL BLOCCO -->
+        <div style="background: rgba(0,0,0,0.5); border: 1px solid #f7931a; border-radius: 14px; padding: 18px; position: relative;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+            <div>
+              <div style="font-weight: 900; color: #f7931a; font-size: 1.05rem; display: flex; align-items: center; gap: 6px;">
+                <span>🎯</span> BITAXE #1 — CACCIA AL BLOCCO
+              </div>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">IP 192.168.1.68 • Solo Mining 24/7</div>
+            </div>
+            <span style="background: rgba(247,147,26,0.2); border: 1px solid #f7931a; color: #ffd166; font-size: 0.68rem; font-weight: 800; padding: 3px 8px; border-radius: 6px;">
+              👑 JACKPOT LOTTERIA
+            </span>
           </div>
-          <div style="font-size: 1.6rem; font-weight: 900; color: #f7931a;" id="bitaxeLiveHash">1.06 TH/s</div>
-          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Temp: <span style="color: #00f0ff;" id="bitaxeLiveTemp">55.2 °C</span> • Consumo: 17.6W • Worker: gamma601</div>
+
+          <div style="font-size: 1.7rem; font-weight: 900; color: #f7931a;" id="bitaxeLiveHash">1.06 TH/s</div>
+          
+          <div style="background: rgba(247,147,26,0.1); border-left: 3px solid #f7931a; padding: 8px; margin: 10px 0; border-radius: 4px; font-size: 0.78rem; color: #fff;">
+            <strong>Obiettivo:</strong> Vincita Blocco da <strong>3.125 BTC (~275.000 €)</strong> su Solo CKPool
+          </div>
+
+          <div style="font-size: 0.74rem; color: var(--text-muted);">
+            Temp: <span style="color: #00f0ff;" id="bitaxeLiveTemp">55.2 °C</span> • Consumo: 17.6W • Worker: <code>gamma601</code>
+          </div>
         </div>
 
-        <!-- BITAXE 2 CARD -->
-        <div style="background: rgba(0,0,0,0.45); border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 12px; padding: 16px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <span style="font-weight: 800; color: #00f0ff; font-size: 0.95rem;">⚡ NODO BITAXE #2</span>
-            <span style="color: #00ff66; font-size: 0.75rem; font-weight: 700;">🟢 ONLINE (192.168.1.70)</span>
+        <!-- BITAXE 2: PAGA LA BOLLETTA -->
+        <div style="background: rgba(0,0,0,0.5); border: 1px solid #00ff66; border-radius: 14px; padding: 18px; position: relative;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+            <div>
+              <div style="font-weight: 900; color: #00ff66; font-size: 1.05rem; display: flex; align-items: center; gap: 6px;">
+                <span>💶</span> BITAXE #2 — PAGA LA BOLLETTA
+              </div>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">IP 192.168.1.70 • Rendimento Regolare</div>
+            </div>
+            <span style="background: rgba(0,255,102,0.2); border: 1px solid #00ff66; color: #00ff66; font-size: 0.68rem; font-weight: 800; padding: 3px 8px; border-radius: 6px;">
+              🛡️ COPERTURA CORRENTE
+            </span>
           </div>
-          <div style="font-size: 1.6rem; font-weight: 900; color: #00f0ff;" id="bitaxe2LiveHash">1.06 TH/s</div>
-          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Temp: <span style="color: #00f0ff;" id="bitaxe2LiveTemp">57.0 °C</span> • Consumo: 19.8W • Worker: gamma602</div>
+
+          <div style="font-size: 1.7rem; font-weight: 900; color: #00ff66;" id="bitaxe2LiveHash">1.06 TH/s</div>
+          
+          <div style="background: rgba(0,255,102,0.1); border-left: 3px solid #00ff66; padding: 8px; margin: 10px 0; border-radius: 4px; font-size: 0.78rem; color: #fff;">
+            <strong>Obiettivo:</strong> Payout costanti (~5–10 €/mese) che <strong>ripagano al 100% la bolletta</strong> dei 2 miner
+          </div>
+
+          <div style="font-size: 0.74rem; color: var(--text-muted);">
+            Temp: <span style="color: #00f0ff;" id="bitaxe2LiveTemp">57.0 °C</span> • Consumo: 19.8W • Worker: <code>gamma602</code>
+          </div>
         </div>
 
       </div>
