@@ -2265,20 +2265,20 @@
             const tr = document.createElement('tr');
             tr.className = 'custom-user-row';
             tr.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
-            tr.innerHTML = \`
-              <td style="padding: 12px 10px;"><code style="color: #00f0ff; font-weight: 700;">\${progressivo}</code></td>
-              <td style="padding: 12px 10px; font-weight: 700; color: #fff;">\${user.name}</td>
-              <td style="padding: 12px 10px; color: #8a99ad;">\${user.email}</td>
-              <td style="padding: 12px 10px;">\${user.machines} (\${user.crypto}) - \${user.ip}</td>
+            tr.innerHTML = `
+              <td style="padding: 12px 10px;"><code style="color: #00f0ff; font-weight: 700;">${progressivo}</code></td>
+              <td style="padding: 12px 10px; font-weight: 700; color: #fff;">${user.name}</td>
+              <td style="padding: 12px 10px; color: #8a99ad;">${user.email}</td>
+              <td style="padding: 12px 10px;">${user.machines} (${user.crypto}) - ${user.ip}</td>
               <td style="padding: 12px 10px;">-- €</td>
               <td style="padding: 12px 10px; color: #00ff66; font-weight: 700;">-- €</td>
-              <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: var(--text-muted); font-family: monospace; letter-spacing: 2px;">\${user.pin}</code></td>
+              <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: var(--text-muted); font-family: monospace; letter-spacing: 2px;">${user.pin}</code></td>
               <td style="padding: 12px 10px; text-align: center;">
-                <button onclick="inspectClient('\${user.pin}')" style="background: rgba(255,183,3,0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
+                <button onclick="inspectClient('${user.pin}')" style="background: rgba(255,183,3,0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
                   👁️ ISPEZIONE
                 </button>
               </td>
-            \`;
+            `;
             tbody.appendChild(tr);
           });
         }
