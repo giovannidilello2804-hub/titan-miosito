@@ -1462,9 +1462,12 @@
         </div>
         <span style="font-size: 0.8rem; color: #00ff66; border: 1px solid #00ff66; padding: 2px 6px; border-radius: 4px;">AREA PROPRIETARIO</span>
       </div>
-      <div class="wallet-box" style="border-color: rgba(0, 240, 255, 0.4);">
-        <span id="dgbAddressText">••••••••••••••••••••••••••••••••••</span>
-        <button class="btn-copy" onclick="copyDgbAddress()" style="background: #00f0ff; color: #000;">COPIA</button>
+      <div class="wallet-box" style="border-color: rgba(0, 240, 255, 0.4); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+        <span id="dgbAddressText" style="letter-spacing: 1px; font-weight: 700; color: #00f0ff;">Indirizzo Protetto</span>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-copy" id="btnToggleDgb" onclick="toggleDgbVisibility()" style="background: rgba(0,240,255,0.15); border: 1px solid #00f0ff; color: #00f0ff;">👁️ MOSTRA</button>
+          <button class="btn-copy" onclick="copyDgbAddress()" style="background: #00f0ff; color: #000;">COPIA</button>
+        </div>
       </div>
     </div>
 
@@ -1898,7 +1901,10 @@
         adminPanel.style.display = 'block';
         if (dgbAdminWallet) {
           dgbAdminWallet.style.display = 'block';
-          if (dgbAddrText) dgbAddrText.innerText = atob("RExnNTFVVnFNZWQ1VGYzeXF3emplOVVWbVZOYkNBaDVCag==");
+          if (dgbAddrText) dgbAddrText.innerText = "Indirizzo Protetto";
+          const btnTog = document.getElementById('btnToggleDgb');
+          if (btnTog) btnTog.innerText = "👁️ MOSTRA";
+          isDgbRevealed = false;
         }
         document.getElementById('globalDashboardSections').style.display = 'block';
         document.getElementById('dynamicClientDashboard').style.display = 'none';
@@ -1906,7 +1912,7 @@
         adminPanel.style.display = 'none';
         if (dgbAdminWallet) {
           dgbAdminWallet.style.display = 'none';
-          if (dgbAddrText) dgbAddrText.innerText = '••••••••••••••••••••••••••••••••••';
+          if (dgbAddrText) dgbAddrText.innerText = 'Indirizzo Protetto';
         }
         
         if (activeClient.isCustom) {
@@ -1962,6 +1968,21 @@
       const addr = document.getElementById('btcAddressText').innerText;
       navigator.clipboard.writeText(addr);
       alert('Indirizzo Bitcoin copiato negli appunti!');
+    }
+
+    let isDgbRevealed = false;
+    function toggleDgbVisibility() {
+      if (!loggedAsOwner) return;
+      isDgbRevealed = !isDgbRevealed;
+      const el = document.getElementById('dgbAddressText');
+      const btn = document.getElementById('btnToggleDgb');
+      if (isDgbRevealed) {
+        el.innerText = atob("RExnNTFVVnFNZWQ1VGYzeXF3emplOVVWbVZOYkNBaDVCag==");
+        if (btn) btn.innerText = "🔒 COPRI";
+      } else {
+        el.innerText = "Indirizzo Protetto";
+        if (btn) btn.innerText = "👁️ MOSTRA";
+      }
     }
 
     function copyDgbAddress() {
