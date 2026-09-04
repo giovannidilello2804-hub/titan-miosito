@@ -1463,7 +1463,7 @@
         <span style="font-size: 0.8rem; color: #00ff66; border: 1px solid #00ff66; padding: 2px 6px; border-radius: 4px;">AREA PROPRIETARIO</span>
       </div>
       <div class="wallet-box" style="border-color: rgba(0, 240, 255, 0.4);">
-        <span id="dgbAddressText">DLg51UVqMEd5Tf3yqwzja9UVmVNbCAh5Bj</span>
+        <span id="dgbAddressText">••••••••••••••••••••••••••••••••••</span>
         <button class="btn-copy" onclick="copyDgbAddress()" style="background: #00f0ff; color: #000;">COPIA</button>
       </div>
     </div>
@@ -1772,16 +1772,25 @@
       const input = document.getElementById('pinInput').value.trim();
       const db = getActiveClientDatabase();
       
-      const ownerKeywords = ["2804", "28aprile75", "gio", "giovanni", "admin", "owner", "master"];
+      const ownerKeywords = ["2804", "28aprile75"];
       const currentOwnerPin = getOwnerPin();
 
-      if (db[input]) {
-        activeClient = db[input];
-        loggedAsOwner = !!activeClient.isOwner;
-      } else if (input === currentOwnerPin || ownerKeywords.includes(input.toLowerCase()) || input === "" || input.length >= 1) {
-        // Accesso automatico Proprietario Giovanni
+      if (input === currentOwnerPin || ownerKeywords.includes(input.toLowerCase())) {
+        // Accesso autorizzato Proprietario Giovanni
         activeClient = db["2804"] || db[currentOwnerPin] || Object.values(db).find(c => c.isOwner) || DEMO_CLIENT;
         loggedAsOwner = true;
+      } else if (db[input]) {
+        // Accesso Cliente registrato
+        activeClient = db[input];
+        loggedAsOwner = !!activeClient.isOwner;
+      } else {
+        // PIN Errato o non riconosciuto -> blocca l'accesso e mostra avviso
+        const err = document.getElementById('errorMessage');
+        if (err) {
+          err.style.display = 'block';
+          setTimeout(() => { err.style.display = 'none'; }, 3000);
+        }
+        return;
       }
 
       applyModeData();
@@ -1884,14 +1893,21 @@
 
       const adminPanel = document.getElementById('adminProfitPanel');
       const dgbAdminWallet = document.getElementById('adminDgbWalletCard');
+      const dgbAddrText = document.getElementById('dgbAddressText');
       if (loggedAsOwner && !isInspecting) {
         adminPanel.style.display = 'block';
-        if (dgbAdminWallet) dgbAdminWallet.style.display = 'block';
+        if (dgbAdminWallet) {
+          dgbAdminWallet.style.display = 'block';
+          if (dgbAddrText) dgbAddrText.innerText = atob("RExnNTFVVnFNZWQ1VGYzeXF3emplOVVWbVZOYkNBaDVCag==");
+        }
         document.getElementById('globalDashboardSections').style.display = 'block';
         document.getElementById('dynamicClientDashboard').style.display = 'none';
       } else if (!isInspecting) {
         adminPanel.style.display = 'none';
-        if (dgbAdminWallet) dgbAdminWallet.style.display = 'none';
+        if (dgbAdminWallet) {
+          dgbAdminWallet.style.display = 'none';
+          if (dgbAddrText) dgbAddrText.innerText = '••••••••••••••••••••••••••••••••••';
+        }
         
         if (activeClient.isCustom) {
            document.getElementById('globalDashboardSections').style.display = 'none';
@@ -1949,7 +1965,8 @@
     }
 
     function copyDgbAddress() {
-      const addr = document.getElementById('dgbAddressText').innerText;
+      if (!loggedAsOwner) return;
+      const addr = atob("RExnNTFVVnFNZWQ1VGYzeXF3emplOVVWbVZOYkNBaDVCag==");
       navigator.clipboard.writeText(addr);
       alert('Indirizzo DigiByte copiato negli appunti!');
     }
@@ -2459,7 +2476,7 @@
 
     // --- INTEGRAZIONE API MINING (LIVE) ---
     const WALLET_BTC = "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk"; 
-    const WALLET_DGB = "DLg51UVqMEd5Tf3yqwzja9UVmVNbCAh5Bj";
+    const getPrivateDGB = () => (loggedAsOwner ? atob("RExnNTFVVnFNZWQ1VGYzeXF3emplOVVWbVZOYkNBaDVCag==") : "");
     
     async function fetchMiningStats() {
       // 1. Dati in tempo reale dal Bitaxe #2 (192.168.1.48) - Minerà DGB su Zpool
@@ -2502,17 +2519,24 @@
         }
       }
 
-      // 4. Dati pubblici da Zpool per Bitaxe #2 (DGB)
-      if (WALLET_DGB) {
+      // 4. Dati riservati da Zpool per Bitaxe #2 (DGB) - Eseguiti SOLO per il proprietario
+      const privateDgb = getPrivateDGB();
+      if (privateDgb) {
         try {
-          const response = await fetch(`https://zpool.ca/api/walletEx?address=${WALLET_DGB}`);
+          const response = await fetch(`https://zpool.ca/api/walletEx?address=${privateDgb}`);
           if (response.ok) {
             const data = await response.json();
             const balanceDGB = (data.balance || 0) + (data.unsold || 0);
-            document.getElementById('dgbEarnedVal').innerHTML = `${balanceDGB.toFixed(4)} DGB <span style="font-size: 0.8rem; color: #fff;">(Pagamenti Attivi)</span>`;
+            const dgbEl = document.getElementById('dgbEarnedVal');
+            if (dgbEl) dgbEl.innerHTML = `${balanceDGB.toFixed(4)} DGB <span style="font-size: 0.8rem; color: #fff;">(Pagamenti Attivi)</span>`;
           }
         } catch(e) {
           console.warn("API DGB Zpool non raggiungibile", e);
+        }
+      } else {
+        const dgbEl = document.getElementById('dgbEarnedVal');
+        if (dgbEl && !loggedAsOwner) {
+          dgbEl.innerHTML = `-- DGB <span style="font-size: 0.8rem; color: #8a99ad;">(Dato Riservato)</span>`;
         }
       }
     }
