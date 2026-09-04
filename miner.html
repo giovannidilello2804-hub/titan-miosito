@@ -692,6 +692,9 @@
           <span>👑</span> PANNELLO GESTIONE CLIENTI & GUADAGNI NETTI GIOVANNI
         </div>
         <div style="display: flex; align-items: center; gap: 10px;">
+          <button onclick="openAddUserModal()" style="background: rgba(255,183,3,0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
+            ➕ Aggiungi Utente e Macchine
+          </button>
           <button onclick="openChangePinModal()" style="background: rgba(0,240,255,0.2); border: 1px solid #00f0ff; color: #00f0ff; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
             🔑 Modifica Password Proprietario
           </button>
@@ -1314,18 +1317,16 @@
             <div style="font-size: 0.78rem; color: var(--text-muted);">Monitoraggio Hardware, Temperature e Guadagni Netti Convertiti in Euro (€)</div>
           </div>
         </div>
-          <a id="bitaxe1Link" href="http://192.168.1.47" target="_blank" style="background: rgba(10, 193, 142, 0.2); border: 1px solid #0ac18e; color: #fff; padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-decoration: none;">
-            🥈 Bitaxe #1 (<span id="bitaxe1IpLabel">.47</span>) ➔
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <a href="http://192.168.1.68" target="_blank" style="background: rgba(10, 193, 142, 0.2); border: 1px solid #0ac18e; color: #fff; padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-decoration: none;">
+            🥈 Bitaxe #1 (.68) ➔
           </a>
-          <a id="bitaxe2Link" href="http://192.168.1.48" target="_blank" style="background: rgba(0, 102, 204, 0.25); border: 1px solid #3399ff; color: #fff; padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-decoration: none;">
-            ⚡ Bitaxe #2 (<span id="bitaxe2IpLabel">.48</span>) ➔
+          <a href="http://192.168.1.70" target="_blank" style="background: rgba(0, 102, 204, 0.25); border: 1px solid #3399ff; color: #fff; padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-decoration: none;">
+            ⚡ Bitaxe #2 (.70) ➔
           </a>
-          <a id="raspi2Link" href="http://192.168.1.39" target="_blank" style="background: rgba(230, 57, 70, 0.25); border: 1px solid #e63946; color: #fff; padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-decoration: none;">
-            🍓 Raspi 2B (<span id="raspi2IpLabel">.39</span>) ➔
+          <a href="http://192.168.1.39" target="_blank" style="background: rgba(230, 57, 70, 0.25); border: 1px solid #e63946; color: #fff; padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-decoration: none;">
+            🍓 Raspi 2B (.39) ➔
           </a>
-          <button onclick="openMinerIpModal()" style="background: rgba(255, 183, 3, 0.2); border: 1px solid #ffb703; color: #ffb703; padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
-            ⚙️ Imposta / Cerca IP
-          </button>
         </div>
       </div>
 
@@ -1339,7 +1340,7 @@
               <div style="font-weight: 900; color: #0ac18e; font-size: 1.02rem; display: flex; align-items: center; gap: 6px;">
                 <span>🥈</span> BITAXE #1 — BITCOIN CASH
               </div>
-              <div style="font-size: 0.72rem; color: var(--text-muted);">IP 192.168.1.47 • Solo Mining SHA-256</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">IP 192.168.1.68 • Solo Mining SHA-256</div>
             </div>
             <span style="background: rgba(10,193,142,0.2); border: 1px solid #0ac18e; color: #0ac18e; font-size: 0.68rem; font-weight: 800; padding: 3px 7px; border-radius: 6px;">
               PREMIO: ~1.100 €
@@ -1373,7 +1374,7 @@
               <div style="font-weight: 900; color: #3399ff; font-size: 1.02rem; display: flex; align-items: center; gap: 6px;">
                 <span>⚡</span> BITAXE #2 — DIGIBYTE (DGB)
               </div>
-              <div style="font-size: 0.72rem; color: var(--text-muted);">IP 192.168.1.48 • Rendimento Continuo</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">IP 192.168.1.70 • Rendimento Continuo</div>
             </div>
             <span style="background: rgba(0,102,204,0.25); border: 1px solid #3399ff; color: #3399ff; font-size: 0.68rem; font-weight: 800; padding: 3px 7px; border-radius: 6px;">
               🛡️ BOLLETTA COPERTA
@@ -2100,169 +2101,12 @@
       if (document.getElementById('calcUsdResult')) document.getElementById('calcUsdResult').innerText = `$${usdFormatted} USD`;
     }
 
-    // Gestione Dinamica IP Miner
-    function getStoredMinerIp(key, defaultIp) {
-      return localStorage.getItem('titan_' + key + '_ip') || defaultIp;
-    }
-
-    function applyDynamicMinerIps() {
-      const ip1 = getStoredMinerIp('bitaxe1', '192.168.1.47');
-      const ip2 = getStoredMinerIp('bitaxe2', '192.168.1.48');
-      const ip3 = getStoredMinerIp('raspi2', '192.168.1.39');
-
-      const l1 = document.getElementById('bitaxe1Link');
-      const l2 = document.getElementById('bitaxe2Link');
-      const l3 = document.getElementById('raspi2Link');
-      if (l1) l1.href = `http://${ip1}`;
-      if (l2) l2.href = `http://${ip2}`;
-      if (l3) l3.href = `http://${ip3}`;
-
-      const lbl1 = document.getElementById('bitaxe1IpLabel');
-      const lbl2 = document.getElementById('bitaxe2IpLabel');
-      const lbl3 = document.getElementById('raspi2IpLabel');
-      if (lbl1) lbl1.innerText = '.' + ip1.split('.').pop();
-      if (lbl2) lbl2.innerText = '.' + ip2.split('.').pop();
-      if (lbl3) lbl3.innerText = '.' + ip3.split('.').pop();
-
-      const in1 = document.getElementById('cfgBitaxe1Ip');
-      const in2 = document.getElementById('cfgBitaxe2Ip');
-      const in3 = document.getElementById('cfgRaspi2Ip');
-      if (in1) in1.value = ip1;
-      if (in2) in2.value = ip2;
-      if (in3) in3.value = ip3;
-    }
-
-    function openMinerIpModal() {
-      applyDynamicMinerIps();
-      const m = document.getElementById('minerIpModal');
-      if (m) m.style.display = 'flex';
-    }
-
-    function closeMinerIpModal() {
-      const m = document.getElementById('minerIpModal');
-      if (m) m.style.display = 'none';
-    }
-
-    function saveAllMinerIps() {
-      const ip1 = document.getElementById('cfgBitaxe1Ip').value.trim();
-      const ip2 = document.getElementById('cfgBitaxe2Ip').value.trim();
-      const ip3 = document.getElementById('cfgRaspi2Ip').value.trim();
-
-      if (ip1) localStorage.setItem('titan_bitaxe1_ip', ip1);
-      if (ip2) localStorage.setItem('titan_bitaxe2_ip', ip2);
-      if (ip3) localStorage.setItem('titan_raspi2_ip', ip3);
-
-      applyDynamicMinerIps();
-      closeMinerIpModal();
-      alert('✓ Indirizzi IP aggiornati con successo!');
-    }
-
-    async function startAutoScanMiners() {
-      const statusBox = document.getElementById('autoScanStatus');
-      const btn = document.getElementById('btnAutoScan');
-      if (statusBox) {
-        statusBox.style.display = 'block';
-        statusBox.style.color = '#ffb703';
-        statusBox.innerText = '🔍 Scansione rete locale in corso (192.168.1.30-80)...';
-      }
-      if (btn) btn.disabled = true;
-
-      const foundBitaxes = [];
-      const promises = [];
-
-      for (let i = 35; i <= 75; i++) {
-        const testIp = `192.168.1.${i}`;
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 1200);
-
-        promises.push(
-          fetch(`http://${testIp}/api/system/info`, { signal: controller.signal, mode: 'cors' })
-            .then(res => res.json())
-            .then(data => {
-              clearTimeout(timeoutId);
-              if (data && (data.ASICModel || data.model === 'LT-001' || data.hashRate !== undefined)) {
-                foundBitaxes.push({ ip: testIp, data: data });
-              }
-            })
-            .catch(() => clearTimeout(timeoutId))
-        );
-      }
-
-      await Promise.all(promises);
-
-      if (btn) btn.disabled = false;
-      if (foundBitaxes.length > 0) {
-        if (foundBitaxes[0]) document.getElementById('cfgBitaxe1Ip').value = foundBitaxes[0].ip;
-        if (foundBitaxes[1]) document.getElementById('cfgBitaxe2Ip').value = foundBitaxes[1].ip;
-        if (statusBox) {
-          statusBox.style.color = '#00ff66';
-          statusBox.innerText = `✓ Trovati ${foundBitaxes.length} Bitaxe! IP rilevati: ${foundBitaxes.map(f => f.ip).join(', ')}`;
-        }
-      } else {
-        if (statusBox) {
-          statusBox.style.color = '#ff6b6b';
-          statusBox.innerText = '⚠️ Nessun nuovo miner trovato via browser. Puoi inserire gli IP manualmente.';
-        }
-      }
-    }
-
     // Avvio immediato al caricamento pagina
     fetchDucoData();
     fetchBtcPrice();
-    applyDynamicMinerIps();
     setInterval(fetchBtcPrice, 30000);
     setInterval(fetchDucoData, 8000);
   </script>
-
-  <!-- MODALE CONFIGURAZIONE IP DINAMICI MINER & AUTO-SCAN -->
-  <div id="minerIpModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(5px);">
-    <div style="background: #111827; border: 1px solid #ffb703; border-radius: 16px; width: 100%; max-width: 500px; padding: 24px; box-shadow: 0 0 30px rgba(255, 183, 3, 0.25); color: #fff;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
-        <h3 style="margin: 0; color: #ffb703; font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
-          <span>⚙️</span> Configura Indirizzi IP Miner
-        </h3>
-        <button onclick="closeMinerIpModal()" style="background: none; border: none; color: #aaa; font-size: 1.4rem; cursor: pointer;">&times;</button>
-      </div>
-      
-      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px;">
-        Se il router assegna nuovi IP, inseriscili qui o premi <strong>Auto-Scan</strong> per rilevarli in automatico. I dati vengono salvati nel tuo browser!
-      </p>
-
-      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px;">
-        <div>
-          <label style="font-size: 0.78rem; font-weight: 700; color: #0ac18e; display: block; margin-bottom: 4px;">🥈 IP Bitaxe #1 (Bitcoin Cash):</label>
-          <input type="text" id="cfgBitaxe1Ip" value="192.168.1.47" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(10,193,142,0.4); background: #1f2937; color: #fff; font-family: monospace;">
-        </div>
-
-        <div>
-          <label style="font-size: 0.78rem; font-weight: 700; color: #3399ff; display: block; margin-bottom: 4px;">⚡ IP Bitaxe #2 (DigiByte):</label>
-          <input type="text" id="cfgBitaxe2Ip" value="192.168.1.48" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(51,153,255,0.4); background: #1f2937; color: #fff; font-family: monospace;">
-        </div>
-
-        <div>
-          <label style="font-size: 0.78rem; font-weight: 700; color: #ff6b6b; display: block; margin-bottom: 4px;">🍓 IP Raspberry Pi 2B (Miner):</label>
-          <input type="text" id="cfgRaspi2Ip" value="192.168.1.39" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(230,57,70,0.4); background: #1f2937; color: #fff; font-family: monospace;">
-        </div>
-      </div>
-
-      <div id="autoScanStatus" style="font-size: 0.8rem; color: #00ff66; margin-bottom: 12px; display: none;"></div>
-
-      <div style="display: flex; gap: 10px; justify-content: space-between; flex-wrap: wrap;">
-        <button onclick="startAutoScanMiners()" id="btnAutoScan" style="background: rgba(0, 240, 255, 0.15); border: 1px solid #00f0ff; color: #00f0ff; padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer;">
-          🔍 Auto-Scan Rete
-        </button>
-        <div style="display: flex; gap: 8px;">
-          <button onclick="closeMinerIpModal()" style="background: #374151; border: none; color: #fff; padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer;">
-            Annulla
-          </button>
-          <button onclick="saveAllMinerIps()" style="background: #ffb703; border: none; color: #000; padding: 10px 18px; border-radius: 8px; font-weight: 800; cursor: pointer;">
-            💾 Salva IP
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
 <!-- PULSANTE DISCRETO SITO ATA NELL'ANGOLO -->
   <div style="position: fixed; bottom: 15px; right: 15px; z-index: 9999;">
     <a href="http://192.168.1.39:5000" target="_blank" style="background: rgba(18, 24, 36, 0.9); border: 1px solid rgba(0, 240, 255, 0.5); color: #00f0ff; padding: 8px 14px; border-radius: 25px; font-size: 0.78rem; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 15px rgba(0,0,0,0.6); backdrop-filter: blur(8px); transition: all 0.2s;">
@@ -2270,5 +2114,122 @@
     </a>
   </div>
 
+  <!-- MODAL AGGIUNGI UTENTE -->
+  <div id="addUserModal" style="display: none; position: fixed; inset: 0; background: rgba(3, 5, 8, 0.88); backdrop-filter: blur(10px); z-index: 99999; justify-content: center; align-items: center; padding: 20px;">
+    <div style="background: linear-gradient(145deg, #0b111a, #162032); border: 2px solid var(--accent-gold); border-radius: 20px; width: 100%; max-width: 480px; padding: 26px; box-shadow: 0 0 40px rgba(255,183,3,0.25); position: relative;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,183,3,0.2); padding-bottom: 12px; margin-bottom: 18px;">
+        <h3 style="color: var(--accent-gold); margin: 0; font-size: 1.25rem; display: flex; align-items: center; gap: 8px;">
+          <span>➕</span> NUOVO CLIENTE / MACCHINE
+        </h3>
+        <button onclick="closeAddUserModal()" style="background: rgba(255,42,95,0.2); border: 1px solid var(--red-alert); color: #fff; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 0.85rem;">✕ CHIUDI</button>
+      </div>
+
+      <form id="addUserForm" onsubmit="event.preventDefault(); submitNewUser();" style="display: flex; flex-direction: column; gap: 14px;">
+        <div>
+          <label style="display: block; font-size: 0.8rem; color: #8a99ad; margin-bottom: 6px; font-weight: 700;">NOME CLIENTE:</label>
+          <input type="text" id="newUserName" placeholder="Es: Mario Rossi" required style="width: 100%; background: #06090e; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none;">
+        </div>
+        <div>
+          <label style="display: block; font-size: 0.8rem; color: #8a99ad; margin-bottom: 6px; font-weight: 700;">EMAIL:</label>
+          <input type="email" id="newUserEmail" placeholder="mario.rossi@email.it" required style="width: 100%; background: #06090e; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none;">
+        </div>
+        <div>
+          <label style="display: block; font-size: 0.8rem; color: #8a99ad; margin-bottom: 6px; font-weight: 700;">MACCHINE DEDICATE (es. ESP32-S3):</label>
+          <input type="text" id="newUserMachines" placeholder="ESP32-CAM, Lolin D1" required style="width: 100%; background: #06090e; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none;">
+        </div>
+        <div>
+          <label style="display: block; font-size: 0.8rem; color: #8a99ad; margin-bottom: 6px; font-weight: 700;">PIN CLIENTE:</label>
+          <input type="text" id="newUserPin" placeholder="Es: 1234" required style="width: 100%; background: #06090e; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none;">
+        </div>
+
+        <button type="submit" style="background: linear-gradient(135deg, var(--accent-gold), #ff8800); color: #000; font-weight: 800; font-size: 0.95rem; padding: 14px; border: none; border-radius: 10px; cursor: pointer; margin-top: 8px; box-shadow: 0 0 20px rgba(255,183,3,0.3);">
+          💾 SALVA E AGGIUNGI
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openAddUserModal() {
+      document.getElementById('addUserModal').style.display = 'flex';
+    }
+    function closeAddUserModal() {
+      document.getElementById('addUserModal').style.display = 'none';
+    }
+    
+    function loadCustomUsers() {
+      const usersStr = localStorage.getItem('titanCustomUsers');
+      if (usersStr) {
+        const users = JSON.parse(usersStr);
+        const tbody = document.querySelector('#adminProfitPanel tbody');
+        if(tbody) {
+          users.forEach((user, index) => {
+            const progressivo = 'TITAN-MINER-' + (100 + index).toString();
+            const tr = document.createElement('tr');
+            tr.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+            tr.innerHTML = \`
+              <td style="padding: 12px 10px;"><code style="color: #00f0ff; font-weight: 700;">\${progressivo}</code></td>
+              <td style="padding: 12px 10px; font-weight: 700; color: #fff;">\${user.name}</td>
+              <td style="padding: 12px 10px; color: #8a99ad;">\${user.email}</td>
+              <td style="padding: 12px 10px;">\${user.machines}</td>
+              <td style="padding: 12px 10px;">-- €</td>
+              <td style="padding: 12px 10px; color: #00ff66; font-weight: 700;">-- €</td>
+              <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: var(--text-muted); font-family: monospace; letter-spacing: 2px;">••••</code></td>
+              <td style="padding: 12px 10px; text-align: center;">
+                <button onclick="alert('Ispezione cliente \${user.name} protetta');" style="background: rgba(255,183,3,0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
+                  👁️ ISPEZIONE
+                </button>
+              </td>
+            \`;
+            tbody.appendChild(tr);
+          });
+        }
+      }
+    }
+
+    function submitNewUser() {
+      const name = document.getElementById('newUserName').value;
+      const email = document.getElementById('newUserEmail').value;
+      const machines = document.getElementById('newUserMachines').value;
+      const pin = document.getElementById('newUserPin').value;
+      
+      let users = JSON.parse(localStorage.getItem('titanCustomUsers') || '[]');
+      const newIndex = users.length;
+      users.push({ name, email, machines, pin });
+      localStorage.setItem('titanCustomUsers', JSON.stringify(users));
+      
+      closeAddUserModal();
+      document.getElementById('addUserForm').reset();
+      
+      const tbody = document.querySelector('#adminProfitPanel tbody');
+      if(tbody) {
+        const progressivo = 'TITAN-MINER-' + (100 + newIndex).toString();
+        const tr = document.createElement('tr');
+        tr.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+        tr.innerHTML = \`
+          <td style="padding: 12px 10px;"><code style="color: #00f0ff; font-weight: 700;">\${progressivo}</code></td>
+          <td style="padding: 12px 10px; font-weight: 700; color: #fff;">\${name}</td>
+          <td style="padding: 12px 10px; color: #8a99ad;">\${email}</td>
+          <td style="padding: 12px 10px;">\${machines}</td>
+          <td style="padding: 12px 10px;">-- €</td>
+          <td style="padding: 12px 10px; color: #00ff66; font-weight: 700;">-- €</td>
+          <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: var(--text-muted); font-family: monospace; letter-spacing: 2px;">••••</code></td>
+          <td style="padding: 12px 10px; text-align: center;">
+            <button onclick="alert('Ispezione cliente \${name} protetta');" style="background: rgba(255,183,3,0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
+              👁️ ISPEZIONE
+            </button>
+          </td>
+        \`;
+        tbody.appendChild(tr);
+      }
+    }
+    
+    // Add load hook
+    const oldOnload = window.onload;
+    window.onload = function() {
+      if(oldOnload) oldOnload();
+      setTimeout(loadCustomUsers, 1000);
+    };
+  </script>
 </body>
 </html>
