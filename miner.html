@@ -783,6 +783,8 @@
     </div>
 
     <!-- TICKER EFFETTO SCENA WOW H24 -->
+    <!-- CONTENITORE DASHBOARD GLOBALE (Nascondibile per clienti custom) -->
+    <div id="globalDashboardSections">
     <div style="background: linear-gradient(90deg, rgba(255,183,3,0.2) 0%, rgba(0,240,255,0.2) 50%, rgba(0,255,102,0.2) 100%); border: 1px solid var(--accent-gold); border-radius: 12px; padding: 10px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px; overflow: hidden; box-shadow: 0 0 20px rgba(255,183,3,0.2);">
       <div style="font-weight: 800; color: #ffb703; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
         <span>🔥 TITAN CLOUD SCENE:</span>
@@ -1464,6 +1466,41 @@
         <span>📊</span> Public-Pool Stats
       </a>
     </div>
+    </div> <!-- FINE GLOBAL DASHBOARD SECTIONS -->
+
+    <!-- DYNAMIC CLIENT DASHBOARD (Solo per clienti custom) -->
+    <div id="dynamicClientDashboard" style="display: none; background: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, rgba(10, 14, 22, 0.98) 100%); border: 1px solid rgba(0, 240, 255, 0.4); border-radius: 18px; padding: 24px; margin: 25px 0; box-shadow: 0 0 35px rgba(0, 240, 255, 0.15);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid rgba(0, 240, 255, 0.25); padding-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 16px; height: 16px; border-radius: 50%; background: #00ff66; box-shadow: 0 0 12px #00ff66;"></div>
+          <div>
+            <h3 style="margin: 0; color: #00f0ff; font-size: 1.3rem; font-weight: 900; letter-spacing: 0.5px;" id="dynClientTitle">MACCHINA DEDICATA</h3>
+            <div style="font-size: 0.8rem; color: var(--text-muted);" id="dynClientSubtitle">IP: --- • Monitoraggio H24</div>
+          </div>
+        </div>
+        <span style="background: rgba(0, 255, 102, 0.2); border: 1px solid #00ff66; color: #00ff66; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 0.78rem;">
+          ⚙️ MINING ATTIVO
+        </span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+        <div style="background: rgba(0,0,0,0.5); border: 1px solid var(--border-cyan); border-radius: 14px; padding: 18px; position: relative;">
+          <div style="font-size: 1.65rem; font-weight: 900; color: var(--border-cyan);" id="dynClientHashrate">45.2 kH/s</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;" id="dynClientCrypto">Mining Criptovaluta Personale</div>
+          
+          <div style="background: rgba(0,0,0,0.65); border: 1px dashed rgba(0,240,255,0.6); border-radius: 8px; padding: 10px; margin: 10px 0; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 0.68rem; color: #aaa; text-transform: uppercase; font-weight: 700;">Guadagno Netto Stimato:</div>
+              <div style="font-size: 1.18rem; font-weight: 900; color: #00ff66;">In Calcolo...</div>
+            </div>
+          </div>
+
+          <div style="font-size: 0.73rem; color: var(--text-muted);">
+            Stato: <span style="color:#00ff66;">Online 24/7</span>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- SEZIONE NOTE LEGALI, TRASPARENZA FISCALE & DISCLAIMER EDUCATIVO -->
     <div style="background: rgba(10, 13, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 20px; margin: 30px 0 20px 0; font-size: 0.78rem; color: var(--text-muted); line-height: 1.6;">
@@ -1559,6 +1596,34 @@
         walletType: "Wallet Bitcoin Personalizzato Luca",
         color: "#00ff66"
       };
+
+      // 4. UTENTI PERSONALIZZATI CREATI DA ADMIN (Da localStorage)
+      try {
+        const customUsers = JSON.parse(localStorage.getItem('titanCustomUsers') || '[]');
+        customUsers.forEach((u, idx) => {
+          if (u.pin) {
+            db[u.pin] = {
+              isOwner: false,
+              isCustom: true,
+              ducoUser: null,
+              name: "👤 AREA RISERVATA CLIENTE: " + u.name.toUpperCase(),
+              serialNumber: "TITAN-MINER-" + (100 + idx),
+              email: u.email,
+              activationDate: "Attivo H24",
+              wallet: "Indirizzo Protetto",
+              ip: u.ip || "IP Privato",
+              mac: "XX:XX:XX:XX:XX:XX",
+              statusText: "NODO " + u.name.toUpperCase() + " ONLINE",
+              walletType: "Wallet Privato",
+              color: "#00f0ff",
+              machines: u.machines,
+              crypto: u.crypto || "Criptovaluta"
+            };
+          }
+        });
+      } catch (e) {
+        console.error("Errore caricamento custom users: ", e);
+      }
 
       return db;
     }
@@ -1806,8 +1871,21 @@
       const adminPanel = document.getElementById('adminProfitPanel');
       if (loggedAsOwner && !isInspecting) {
         adminPanel.style.display = 'block';
+        document.getElementById('globalDashboardSections').style.display = 'block';
+        document.getElementById('dynamicClientDashboard').style.display = 'none';
       } else if (!isInspecting) {
         adminPanel.style.display = 'none';
+        
+        if (activeClient.isCustom) {
+           document.getElementById('globalDashboardSections').style.display = 'none';
+           document.getElementById('dynamicClientDashboard').style.display = 'block';
+           document.getElementById('dynClientTitle').innerText = activeClient.machines.toUpperCase();
+           document.getElementById('dynClientSubtitle').innerText = "IP: " + activeClient.ip + " • Monitoraggio H24";
+           document.getElementById('dynClientCrypto').innerText = "Mining Attivo: " + activeClient.crypto;
+        } else {
+           document.getElementById('globalDashboardSections').style.display = 'block';
+           document.getElementById('dynamicClientDashboard').style.display = 'none';
+        }
       }
 
       if (activeClient.wallet.startsWith('bc1qx4e7')) {
@@ -1875,6 +1953,15 @@
 
     function startLiveAnimation() {
       setInterval(() => {
+        if (activeClient && activeClient.isCustom) {
+           const dHash = document.getElementById('dynClientHashrate');
+           if (dHash) {
+             const base = 45.0;
+             const jitter = (Math.random() * 2.0 - 1.0);
+             dHash.innerText = (base + jitter).toFixed(1) + ' kH/s';
+           }
+        }
+        
         let currentHashVal = parseFloat(document.getElementById('hashrateVal').innerText);
         if (currentHashVal > 0) {
           const jitter = (Math.random() * 3.0 - 1.5);
@@ -2134,8 +2221,16 @@
           <input type="email" id="newUserEmail" placeholder="mario.rossi@email.it" required style="width: 100%; background: #06090e; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none;">
         </div>
         <div>
-          <label style="display: block; font-size: 0.8rem; color: #8a99ad; margin-bottom: 6px; font-weight: 700;">MACCHINE DEDICATE (es. ESP32-S3):</label>
-          <input type="text" id="newUserMachines" placeholder="ESP32-CAM, Lolin D1" required style="width: 100%; background: #06090e; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none;">
+          <label style="display: block; font-size: 0.8rem; color: #8a99ad; margin-bottom: 6px; font-weight: 700;">NOME MACCHINA (es. ESP32-S3, ASIC, Bitaxe):</label>
+          <input type="text" id="newUserMachines" placeholder="Nome macchina miner" required style="width: 100%; background: #06090e; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none;">
+        </div>
+        <div>
+          <label style="display: block; font-size: 0.8rem; color: #8a99ad; margin-bottom: 6px; font-weight: 700;">INDIRIZZO IP MACCHINA:</label>
+          <input type="text" id="newUserIp" placeholder="Es: 192.168.1.100" required style="width: 100%; background: #06090e; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none;">
+        </div>
+        <div>
+          <label style="display: block; font-size: 0.8rem; color: #8a99ad; margin-bottom: 6px; font-weight: 700;">CRIPTOVALUTA MINATA:</label>
+          <input type="text" id="newUserCrypto" placeholder="Bitcoin, Poolbitcoin, Duino-Coin..." required style="width: 100%; background: #06090e; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none;">
         </div>
         <div>
           <label style="display: block; font-size: 0.8rem; color: #8a99ad; margin-bottom: 6px; font-weight: 700;">PIN CLIENTE:</label>
@@ -2163,20 +2258,23 @@
         const users = JSON.parse(usersStr);
         const tbody = document.querySelector('#adminProfitPanel tbody');
         if(tbody) {
+          // Remove old custom rows to avoid duplicates
+          document.querySelectorAll('.custom-user-row').forEach(e => e.remove());
           users.forEach((user, index) => {
             const progressivo = 'TITAN-MINER-' + (100 + index).toString();
             const tr = document.createElement('tr');
+            tr.className = 'custom-user-row';
             tr.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
             tr.innerHTML = \`
               <td style="padding: 12px 10px;"><code style="color: #00f0ff; font-weight: 700;">\${progressivo}</code></td>
               <td style="padding: 12px 10px; font-weight: 700; color: #fff;">\${user.name}</td>
               <td style="padding: 12px 10px; color: #8a99ad;">\${user.email}</td>
-              <td style="padding: 12px 10px;">\${user.machines}</td>
+              <td style="padding: 12px 10px;">\${user.machines} (\${user.crypto}) - \${user.ip}</td>
               <td style="padding: 12px 10px;">-- €</td>
               <td style="padding: 12px 10px; color: #00ff66; font-weight: 700;">-- €</td>
-              <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: var(--text-muted); font-family: monospace; letter-spacing: 2px;">••••</code></td>
+              <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: var(--text-muted); font-family: monospace; letter-spacing: 2px;">\${user.pin}</code></td>
               <td style="padding: 12px 10px; text-align: center;">
-                <button onclick="alert('Ispezione cliente \${user.name} protetta');" style="background: rgba(255,183,3,0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
+                <button onclick="inspectClient('\${user.pin}')" style="background: rgba(255,183,3,0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
                   👁️ ISPEZIONE
                 </button>
               </td>
@@ -2191,37 +2289,18 @@
       const name = document.getElementById('newUserName').value;
       const email = document.getElementById('newUserEmail').value;
       const machines = document.getElementById('newUserMachines').value;
+      const ip = document.getElementById('newUserIp').value;
+      const crypto = document.getElementById('newUserCrypto').value;
       const pin = document.getElementById('newUserPin').value;
       
       let users = JSON.parse(localStorage.getItem('titanCustomUsers') || '[]');
-      const newIndex = users.length;
-      users.push({ name, email, machines, pin });
+      users.push({ name, email, machines, ip, crypto, pin });
       localStorage.setItem('titanCustomUsers', JSON.stringify(users));
       
       closeAddUserModal();
       document.getElementById('addUserForm').reset();
       
-      const tbody = document.querySelector('#adminProfitPanel tbody');
-      if(tbody) {
-        const progressivo = 'TITAN-MINER-' + (100 + newIndex).toString();
-        const tr = document.createElement('tr');
-        tr.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
-        tr.innerHTML = \`
-          <td style="padding: 12px 10px;"><code style="color: #00f0ff; font-weight: 700;">\${progressivo}</code></td>
-          <td style="padding: 12px 10px; font-weight: 700; color: #fff;">\${name}</td>
-          <td style="padding: 12px 10px; color: #8a99ad;">\${email}</td>
-          <td style="padding: 12px 10px;">\${machines}</td>
-          <td style="padding: 12px 10px;">-- €</td>
-          <td style="padding: 12px 10px; color: #00ff66; font-weight: 700;">-- €</td>
-          <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: var(--text-muted); font-family: monospace; letter-spacing: 2px;">••••</code></td>
-          <td style="padding: 12px 10px; text-align: center;">
-            <button onclick="alert('Ispezione cliente \${name} protetta');" style="background: rgba(255,183,3,0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
-              👁️ ISPEZIONE
-            </button>
-          </td>
-        \`;
-        tbody.appendChild(tr);
-      }
+      loadCustomUsers();
     }
     
     // Add load hook
