@@ -1454,6 +1454,20 @@
       </div>
     </div>
 
+    <!-- DGB Wallet Address Card (PRIVATE FOR ADMIN ONLY) -->
+    <div class="wallet-card" id="adminDgbWalletCard" style="display: none; border-color: #00f0ff; background: linear-gradient(135deg, #0a1122 0%, #101930 100%); margin-top: 25px;">
+      <div class="wallet-header">
+        <div class="wallet-title" style="color: #00f0ff;">
+          <span style="font-size: 1.2rem;">💶</span> Indirizzo Wallet DigiByte (DGB) Privato
+        </div>
+        <span style="font-size: 0.8rem; color: #00ff66; border: 1px solid #00ff66; padding: 2px 6px; border-radius: 4px;">AREA PROPRIETARIO</span>
+      </div>
+      <div class="wallet-box" style="border-color: rgba(0, 240, 255, 0.4);">
+        <span id="dgbAddressText">DLg51UVqMEd5Tf3yqwzja9UVmVNbCAh5Bj</span>
+        <button class="btn-copy" onclick="copyDgbAddress()" style="background: #00f0ff; color: #000;">COPIA</button>
+      </div>
+    </div>
+
     <!-- Actions Buttons -->
     <div class="actions-row">
       <button class="btn-action" onclick="simulateShare()" style="background: rgba(0,240,255,0.15); border-color: var(--border-cyan);">
@@ -1869,12 +1883,15 @@
       document.getElementById('clientActivationVal').innerText = activeClient.activationDate || 'Attivo';
 
       const adminPanel = document.getElementById('adminProfitPanel');
+      const dgbAdminWallet = document.getElementById('adminDgbWalletCard');
       if (loggedAsOwner && !isInspecting) {
         adminPanel.style.display = 'block';
+        if (dgbAdminWallet) dgbAdminWallet.style.display = 'block';
         document.getElementById('globalDashboardSections').style.display = 'block';
         document.getElementById('dynamicClientDashboard').style.display = 'none';
       } else if (!isInspecting) {
         adminPanel.style.display = 'none';
+        if (dgbAdminWallet) dgbAdminWallet.style.display = 'none';
         
         if (activeClient.isCustom) {
            document.getElementById('globalDashboardSections').style.display = 'none';
@@ -1929,6 +1946,12 @@
       const addr = document.getElementById('btcAddressText').innerText;
       navigator.clipboard.writeText(addr);
       alert('Indirizzo Bitcoin copiato negli appunti!');
+    }
+
+    function copyDgbAddress() {
+      const addr = document.getElementById('dgbAddressText').innerText;
+      navigator.clipboard.writeText(addr);
+      alert('Indirizzo DigiByte copiato negli appunti!');
     }
 
     async function fetchBtcPrice() {
