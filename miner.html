@@ -2205,7 +2205,7 @@
   <div id="addUserModal" style="display: none; position: fixed; inset: 0; background: rgba(3, 5, 8, 0.88); backdrop-filter: blur(10px); z-index: 99999; justify-content: center; align-items: center; padding: 20px;">
     <div style="background: linear-gradient(145deg, #0b111a, #162032); border: 2px solid var(--accent-gold); border-radius: 20px; width: 100%; max-width: 480px; padding: 26px; box-shadow: 0 0 40px rgba(255,183,3,0.25); position: relative;">
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,183,3,0.2); padding-bottom: 12px; margin-bottom: 18px;">
-        <h3 style="color: var(--accent-gold); margin: 0; font-size: 1.25rem; display: flex; align-items: center; gap: 8px;">
+        <h3 id="modalTitle" style="color: var(--accent-gold); margin: 0; font-size: 1.25rem; display: flex; align-items: center; gap: 8px;">
           <span>➕</span> NUOVO CLIENTE / MACCHINE
         </h3>
         <button onclick="closeAddUserModal()" style="background: rgba(255,42,95,0.2); border: 1px solid var(--red-alert); color: #fff; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 0.85rem;">✕ CHIUDI</button>
@@ -2237,7 +2237,7 @@
           <input type="text" id="newUserPin" placeholder="Es: 1234" required style="width: 100%; background: #06090e; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none;">
         </div>
 
-        <button type="submit" style="background: linear-gradient(135deg, var(--accent-gold), #ff8800); color: #000; font-weight: 800; font-size: 0.95rem; padding: 14px; border: none; border-radius: 10px; cursor: pointer; margin-top: 8px; box-shadow: 0 0 20px rgba(255,183,3,0.3);">
+        <button type="submit" id="modalSubmitBtn" style="background: linear-gradient(135deg, var(--accent-gold), #ff8800); color: #000; font-weight: 800; font-size: 0.95rem; padding: 14px; border: none; border-radius: 10px; cursor: pointer; margin-top: 8px; box-shadow: 0 0 20px rgba(255,183,3,0.3);">
           💾 SALVA E AGGIUNGI
         </button>
       </form>
@@ -2276,7 +2276,13 @@
   </div>
 
   <script>
+    let editingPin = null;
+
     function openAddUserModal() {
+      editingPin = null;
+      document.getElementById('addUserForm').reset();
+      document.getElementById('modalTitle').innerHTML = "<span>➕</span> NUOVO CLIENTE / MACCHINE";
+      document.getElementById('modalSubmitBtn').innerText = "💾 SALVA E AGGIUNGI";
       document.getElementById('addUserModal').style.display = 'flex';
     }
     function closeAddUserModal() {
@@ -2347,9 +2353,15 @@
               <td style="padding: 12px 10px;">-- €</td>
               <td style="padding: 12px 10px; color: #00ff66; font-weight: 700;">-- €</td>
               <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: var(--text-muted); font-family: monospace; letter-spacing: 2px;">${user.pin}</code></td>
-              <td style="padding: 12px 10px; text-align: center;">
+              <td style="padding: 12px 10px; text-align: center; display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;">
                 <button onclick="inspectClient('${user.pin}')" style="background: rgba(255,183,3,0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
                   👁️ ISPEZIONE
+                </button>
+                <button onclick="editCustomUserAdmin('${user.pin}')" style="background: rgba(0,240,255,0.2); border: 1px solid #00f0ff; color: #00f0ff; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
+                  ✏️
+                </button>
+                <button onclick="deleteCustomUser('${user.pin}')" style="background: rgba(255,42,95,0.2); border: 1px solid var(--red-alert); color: var(--red-alert); padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
+                  🗑️
                 </button>
               </td>
             `;
@@ -2368,13 +2380,50 @@
       const pin = document.getElementById('newUserPin').value;
       
       let users = JSON.parse(localStorage.getItem('titanCustomUsers') || '[]');
-      users.push({ name, email, machines, ip, crypto, pin });
+      
+      if (editingPin) {
+          const index = users.findIndex(u => u.pin === editingPin);
+          if (index !== -1) {
+              users[index] = { name, email, machines, ip, crypto, pin };
+          }
+          editingPin = null;
+      } else {
+          users.push({ name, email, machines, ip, crypto, pin });
+      }
+      
       localStorage.setItem('titanCustomUsers', JSON.stringify(users));
       
       closeAddUserModal();
       document.getElementById('addUserForm').reset();
       
       loadCustomUsers();
+    }
+    
+    function deleteCustomUser(pin) {
+      if(confirm("Sei sicuro di voler eliminare questo cliente? L'operazione è irreversibile.")) {
+          let users = JSON.parse(localStorage.getItem('titanCustomUsers') || '[]');
+          users = users.filter(u => u.pin !== pin);
+          localStorage.setItem('titanCustomUsers', JSON.stringify(users));
+          loadCustomUsers();
+      }
+    }
+    
+    function editCustomUserAdmin(pin) {
+      const users = JSON.parse(localStorage.getItem('titanCustomUsers') || '[]');
+      const user = users.find(u => u.pin === pin);
+      if(user) {
+          editingPin = pin;
+          document.getElementById('newUserName').value = user.name;
+          document.getElementById('newUserEmail').value = user.email;
+          document.getElementById('newUserMachines').value = user.machines;
+          document.getElementById('newUserIp').value = user.ip;
+          document.getElementById('newUserCrypto').value = user.crypto;
+          document.getElementById('newUserPin').value = user.pin;
+          
+          document.getElementById('modalTitle').innerHTML = "<span>✏️</span> MODIFICA CLIENTE";
+          document.getElementById('modalSubmitBtn').innerText = "💾 SALVA MODIFICHE";
+          document.getElementById('addUserModal').style.display = 'flex';
+      }
     }
     
     // Add load hook
