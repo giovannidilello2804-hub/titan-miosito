@@ -2436,9 +2436,10 @@
 
     // --- INTEGRAZIONE API MINING (LIVE) ---
     const WALLET_BTC = "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk"; 
+    const WALLET_DGB = "DLg51UVqMEd5Tf3yqwzja9UVmVNbCAh5Bj";
     
     async function fetchMiningStats() {
-      // 1. Dati in tempo reale dal Bitaxe #2 (192.168.1.48)
+      // 1. Dati in tempo reale dal Bitaxe #2 (192.168.1.48) - Minerà DGB su Zpool
       try {
         const resBitaxe2 = await fetch('http://192.168.1.48/api/system/info');
         if (resBitaxe2.ok) {
@@ -2450,7 +2451,7 @@
         console.warn("Impossibile contattare Bitaxe 2 in locale", e);
       }
 
-      // 2. Dati in tempo reale dal Bitaxe #1 (192.168.1.47)
+      // 2. Dati in tempo reale dal Bitaxe #1 (192.168.1.47) - Rimane BTC Solo
       try {
         const resBitaxe1 = await fetch('http://192.168.1.47/api/system/info');
         if (resBitaxe1.ok) {
@@ -2462,7 +2463,7 @@
         console.warn("Impossibile contattare Bitaxe 1 in locale", e);
       }
 
-      // 3. Dati pubblici dal Wallet (Public-Pool)
+      // 3. Dati pubblici dal Wallet (Public-Pool) per Raspberry e Bitaxe #1
       if (WALLET_BTC) {
         try {
           const response = await fetch(`https://public-pool.io:40557/api/wallet/${WALLET_BTC}`);
@@ -2471,13 +2472,24 @@
             const balanceSats = data.balance || 0;
             const balanceBTC = (balanceSats / 100000000).toFixed(8);
             document.getElementById('pi2EarnedVal').innerHTML = `${balanceBTC} BTC <span style="font-size: 0.8rem; color: #fff;">(€ 0,00)</span>`;
-            
-            // Dato che Bitaxe 2 è su public pool, aggiorniamo anche lui per consistenza,
-            // oppure lo lasciamo DGB se preferisci mantenere la finta grafica.
-            // document.getElementById('dgbEarnedVal').innerHTML = `${balanceBTC} BTC <span style="font-size: 0.8rem; color: #fff;">(Solo Mining)</span>`;
+            document.getElementById('bchEarnedVal').innerHTML = `${balanceBTC} BTC <span style="font-size: 0.8rem; color: #fff;">(€ 0,00)</span>`;
           }
         } catch(e) {
           console.warn("API BTC PublicPool non raggiungibile", e);
+        }
+      }
+
+      // 4. Dati pubblici da Zpool per Bitaxe #2 (DGB)
+      if (WALLET_DGB) {
+        try {
+          const response = await fetch(`https://zpool.ca/api/walletEx?address=${WALLET_DGB}`);
+          if (response.ok) {
+            const data = await response.json();
+            const balanceDGB = (data.balance || 0) + (data.unsold || 0);
+            document.getElementById('dgbEarnedVal').innerHTML = `${balanceDGB.toFixed(4)} DGB <span style="font-size: 0.8rem; color: #fff;">(Pagamenti Attivi)</span>`;
+          }
+        } catch(e) {
+          console.warn("API DGB Zpool non raggiungibile", e);
         }
       }
     }
