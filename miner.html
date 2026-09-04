@@ -2244,12 +2244,86 @@
     </div>
   </div>
 
+  <!-- MODAL MODIFICA UTENTE -->
+  <div id="editClientModal" style="display: none; position: fixed; inset: 0; background: rgba(3, 5, 8, 0.88); backdrop-filter: blur(10px); z-index: 99999; justify-content: center; align-items: center; padding: 20px;">
+    <div style="background: linear-gradient(145deg, #0b111a, #162032); border: 2px solid #00f0ff; border-radius: 20px; width: 100%; max-width: 480px; padding: 26px; box-shadow: 0 0 40px rgba(0,240,255,0.25); position: relative;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,240,255,0.2); padding-bottom: 12px; margin-bottom: 18px;">
+        <h3 style="color: #00f0ff; margin: 0; font-size: 1.25rem; display: flex; align-items: center; gap: 8px;">
+          <span>✏️</span> MODIFICA I TUOI DATI
+        </h3>
+        <button onclick="closeEditClientModal()" style="background: rgba(255,42,95,0.2); border: 1px solid var(--red-alert); color: #fff; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 0.85rem;">✕ CHIUDI</button>
+      </div>
+
+      <form id="editClientForm" onsubmit="event.preventDefault(); submitEditClient();" style="display: flex; flex-direction: column; gap: 14px;">
+        <div>
+          <label style="display: block; font-size: 0.8rem; color: #8a99ad; margin-bottom: 6px; font-weight: 700;">IL TUO NOME:</label>
+          <input type="text" id="editUserName" required style="width: 100%; background: #06090e; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none;">
+        </div>
+        <div>
+          <label style="display: block; font-size: 0.8rem; color: #8a99ad; margin-bottom: 6px; font-weight: 700;">LA TUA EMAIL:</label>
+          <input type="email" id="editUserEmail" required style="width: 100%; background: #06090e; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none;">
+        </div>
+        <div>
+          <label style="display: block; font-size: 0.8rem; color: #8a99ad; margin-bottom: 6px; font-weight: 700;">NUOVO PIN DI ACCESSO:</label>
+          <input type="text" id="editUserPin" required style="width: 100%; background: #06090e; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none;">
+        </div>
+
+        <button type="submit" style="background: linear-gradient(135deg, #00f0ff, #00ff66); color: #000; font-weight: 800; font-size: 0.95rem; padding: 14px; border: none; border-radius: 10px; cursor: pointer; margin-top: 8px; box-shadow: 0 0 20px rgba(0,240,255,0.3);">
+          💾 SALVA MODIFICHE
+        </button>
+      </form>
+    </div>
+  </div>
+
   <script>
     function openAddUserModal() {
       document.getElementById('addUserModal').style.display = 'flex';
     }
     function closeAddUserModal() {
       document.getElementById('addUserModal').style.display = 'none';
+    }
+
+    function openEditClientModal() {
+      const currentPin = document.getElementById('pinInput').value;
+      const users = JSON.parse(localStorage.getItem('titanCustomUsers') || '[]');
+      const user = users.find(u => u.pin === currentPin);
+      
+      if(user) {
+        document.getElementById('editUserName').value = user.name;
+        document.getElementById('editUserEmail').value = user.email;
+        document.getElementById('editUserPin').value = user.pin;
+        document.getElementById('editClientModal').style.display = 'flex';
+      }
+    }
+    
+    function closeEditClientModal() {
+      document.getElementById('editClientModal').style.display = 'none';
+    }
+    
+    function submitEditClient() {
+      const currentPin = document.getElementById('pinInput').value;
+      const users = JSON.parse(localStorage.getItem('titanCustomUsers') || '[]');
+      const userIndex = users.findIndex(u => u.pin === currentPin);
+      
+      if(userIndex !== -1) {
+        users[userIndex].name = document.getElementById('editUserName').value;
+        users[userIndex].email = document.getElementById('editUserEmail').value;
+        
+        const newPin = document.getElementById('editUserPin').value;
+        const oldPin = users[userIndex].pin;
+        users[userIndex].pin = newPin;
+        
+        localStorage.setItem('titanCustomUsers', JSON.stringify(users));
+        closeEditClientModal();
+        
+        if(newPin !== oldPin) {
+           alert("PIN modificato con successo! Effettua nuovamente l'accesso con il nuovo PIN.");
+           location.reload();
+        } else {
+           alert("Dati aggiornati con successo!");
+           checkPin();
+        }
+      }
     }
     
     function loadCustomUsers() {
