@@ -2382,7 +2382,54 @@
     window.onload = function() {
       if(oldOnload) oldOnload();
       setTimeout(loadCustomUsers, 1000);
+      setTimeout(fetchMiningStats, 2000);
     };
+
+    // --- INTEGRAZIONE API MINING (STRUTTURA) ---
+    // Sostituisci queste stringhe con i tuoi VERI indirizzi wallet
+    const WALLET_BTC = "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk"; 
+    const WALLET_BCH = "INSERISCI_QUI_IL_TUO_WALLET_BCH";
+    const WALLET_DGB = "INSERISCI_QUI_IL_TUO_WALLET_DGB";
+
+    async function fetchMiningStats() {
+      // 1. RASPBERRY PI (CKPOOL / PUBLIC-POOL BTC)
+      if (WALLET_BTC && WALLET_BTC !== "INSERISCI_QUI_IL_TUO_WALLET_BTC") {
+        try {
+          // NOTA: Se usi public-pool.io l'API è: https://public-pool.io:40557/api/wallet/...
+          // Se usi ckpool.org, potrebbe servire un proxy CORS.
+          // document.getElementById('pi2EarnedVal').innerHTML = `<span style="font-size: 0.8rem; color: #ff6b6b; animation: pulse 1.5s infinite;">Connessione in corso...</span>`;
+          const response = await fetch(`https://public-pool.io:40557/api/wallet/${WALLET_BTC}`);
+          if (response.ok) {
+            const data = await response.json();
+            // Esempio di parsing (dipende dall'API esatta)
+            const balanceSats = data.balance || 0;
+            const balanceBTC = (balanceSats / 100000000).toFixed(8);
+            document.getElementById('pi2EarnedVal').innerHTML = `${balanceBTC} BTC <span style="font-size: 0.8rem; color: #fff;">(€ 0,00)</span>`;
+          }
+        } catch(e) {
+          console.warn("API BTC (CKPool/PublicPool) non raggiungibile per CORS o errore di rete.", e);
+        }
+      }
+
+      // 2. BITAXE 1 (BCH SOLO)
+      if (WALLET_BCH && WALLET_BCH !== "INSERISCI_QUI_IL_TUO_WALLET_BCH") {
+        try {
+           // Sostituisci con l'URL API della tua pool BCH
+           // const res = await fetch(`API_POOL_BCH/${WALLET_BCH}`);
+        } catch(e) {}
+      }
+
+      // 3. BITAXE 2 (DGB POOL)
+      if (WALLET_DGB && WALLET_DGB !== "INSERISCI_QUI_IL_TUO_WALLET_DGB") {
+        try {
+           // Sostituisci con l'URL API della tua pool DGB
+           // const res = await fetch(`API_POOL_DGB/${WALLET_DGB}`);
+        } catch(e) {}
+      }
+    }
+
+    // Aggiornamento automatico ogni 60 secondi
+    setInterval(fetchMiningStats, 60000);
   </script>
 </body>
 </html>
