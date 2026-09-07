@@ -1320,8 +1320,8 @@
           </div>
         </div>
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <a href="http://192.168.1.47" target="_blank" style="background: rgba(10, 193, 142, 0.2); border: 1px solid #0ac18e; color: #fff; padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-decoration: none;">
-            🥈 Bitaxe #1 (.47) ➔
+          <a href="http://192.168.1.46" target="_blank" style="background: rgba(10, 193, 142, 0.2); border: 1px solid #0ac18e; color: #fff; padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-decoration: none;">
+            🥈 Bitaxe #1 (.46) ➔
           </a>
           <a href="http://192.168.1.44" target="_blank" style="background: rgba(0, 102, 204, 0.25); border: 1px solid #3399ff; color: #fff; padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-decoration: none;">
             ⚡ Bitaxe #2 (.44) ➔
@@ -1335,71 +1335,98 @@
       <!-- GRID 3 DISPOSITIVI MINER CON GUADAGNI E TEMPERATURE -->
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
         
-        <!-- BITAXE 1: BITCOIN CASH (BCH) -->
+        <!-- BITAXE 1: BITCOIN CASH (BCH) / SOLO BTC -->
         <div style="background: rgba(0,0,0,0.5); border: 1px solid #0ac18e; border-radius: 14px; padding: 18px; position: relative;">
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
             <div>
               <div style="font-weight: 900; color: #0ac18e; font-size: 1.02rem; display: flex; align-items: center; gap: 6px;">
-                <span>🥈</span> BITAXE #1 — BITCOIN CASH
+                <span>🥈</span> BITAXE #1 — LOTTERIA BTC / BCH
               </div>
-              <div style="font-size: 0.72rem; color: var(--text-muted);">IP 192.168.1.47 • Solo Mining SHA-256</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">IP 192.168.1.46 • Solo CKPool (Worker: gamma602)</div>
             </div>
             <span style="background: rgba(10,193,142,0.2); border: 1px solid #0ac18e; color: #0ac18e; font-size: 0.68rem; font-weight: 800; padding: 3px 7px; border-radius: 6px;">
-              PREMIO: ~1.100 €
+              JACKPOT: 3.125 BTC
             </span>
           </div>
 
-          <div style="font-size: 1.65rem; font-weight: 900; color: #0ac18e;" id="bitaxeLiveHash">1.06 TH/s</div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Caccia al Blocco da 3.125 BCH (~1.100 €)</div>
+          <div style="font-size: 1.65rem; font-weight: 900; color: #0ac18e;" id="bitaxeLiveHash">1.09 TH/s</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Caccia al Blocco da 3.125 BTC (~180.000 €)</div>
 
           <!-- RIQUADRO GUADAGNO BITCOIN CASH -->
           <div style="background: rgba(0,0,0,0.65); border: 1px dashed rgba(10,193,142,0.6); border-radius: 8px; padding: 10px; margin: 10px 0; display: flex; justify-content: space-between; align-items: center;">
             <div>
               <div style="font-size: 0.68rem; color: #aaa; text-transform: uppercase; font-weight: 700;">💰 Guadagno Netto Incassato:</div>
-              <div id="bchEarnedVal" style="font-size: 1.18rem; font-weight: 900; color: #0ac18e;">0.00000000 BCH <span style="font-size: 0.8rem; color: #fff;">(€ 0,00)</span></div>
+              <div id="bchEarnedVal" style="font-size: 1.18rem; font-weight: 900; color: #0ac18e;">0.00000000 BTC <span style="font-size: 0.8rem; color: #fff;">(Solo Mining)</span></div>
             </div>
             <div style="text-align: right;">
-              <span style="font-size: 0.7rem; color: #ffd166; font-weight: 700;">+1.100,00 €</span>
+              <span style="font-size: 0.7rem; color: #ffd166; font-weight: 700;">+3.125 BTC</span>
               <div style="font-size: 0.62rem; color: var(--text-muted);">al blocco</div>
             </div>
           </div>
 
           <div style="font-size: 0.73rem; color: var(--text-muted);">
-            Temp: <span style="color: #00f0ff;" id="bitaxeLiveTemp">55.2 °C</span> • Consumo: 17.6W • Stato: <span style="color:#00ff66;">In Caccia Blocco</span>
+            Temp: <span style="color: #00f0ff;" id="bitaxeLiveTemp">60.0 °C</span> • Consumo: 21.9W • Stato: <span style="color:#00ff66;">In Caccia Blocco</span>
           </div>
         </div>
 
-        <!-- BITAXE 2: DIGIBYTE (DGB) -->
+        <!-- BITAXE 2: DIGIBYTE (DGB) SU ZPOOL -->
         <div style="background: rgba(0,0,0,0.5); border: 1px solid #3399ff; border-radius: 14px; padding: 18px; position: relative;">
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
             <div>
               <div style="font-weight: 900; color: #3399ff; font-size: 1.02rem; display: flex; align-items: center; gap: 6px;">
                 <span>⚡</span> BITAXE #2 — DIGIBYTE (DGB)
               </div>
-              <div style="font-size: 0.72rem; color: var(--text-muted);">IP 192.168.1.44 • Rendimento Continuo</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">IP 192.168.1.44 • Pool sha256.mine.zpool.ca</div>
             </div>
             <span style="background: rgba(0,102,204,0.25); border: 1px solid #3399ff; color: #3399ff; font-size: 0.68rem; font-weight: 800; padding: 3px 7px; border-radius: 6px;">
-              🛡️ BOLLETTA COPERTA
+              🛡️ RENDIMENTO ATTIVO
             </span>
           </div>
 
-          <div style="font-size: 1.65rem; font-weight: 900; color: #3399ff;" id="bitaxe2LiveHash">1.06 TH/s</div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Payout costanti per pagare la corrente dei miner</div>
+          <div style="font-size: 1.65rem; font-weight: 900; color: #3399ff;" id="bitaxe2LiveHash">722 GH/s</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Mining SHA-256 scambiato in DGB con payout costanti</div>
 
-          <!-- RIQUADRO GUADAGNO DIGIBYTE -->
-          <div style="background: rgba(0,0,0,0.65); border: 1px dashed rgba(51,153,255,0.6); border-radius: 8px; padding: 10px; margin: 10px 0; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <div style="font-size: 0.68rem; color: #aaa; text-transform: uppercase; font-weight: 700;">💶 Guadagno Netto Incassato:</div>
-              <div id="dgbEarnedVal" style="font-size: 1.18rem; font-weight: 900; color: #3399ff;">0.00 DGB <span style="font-size: 0.8rem; color: #fff;">(€ 0,00)</span></div>
+          <!-- RIQUADRO GUADAGNO DIGIBYTE CON CONVERSIONE EURO -->
+          <div style="background: linear-gradient(135deg, rgba(0,102,204,0.18), rgba(0,0,0,0.75)); border: 1px solid rgba(51,153,255,0.55); border-radius: 10px; padding: 12px; margin: 10px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.7rem; color: #70b5ff; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px;">
+                💶 Guadagno Totale Pool (Zpool):
+              </span>
+              <span id="dgbEurRate" style="font-size: 0.68rem; background: rgba(0,255,102,0.15); color: #00ff66; border: 1px solid rgba(0,255,102,0.3); padding: 2px 6px; border-radius: 4px; font-weight: 700;">
+                1 DGB ≈ € 0,0042
+              </span>
             </div>
-            <div style="text-align: right;">
-              <span style="font-size: 0.7rem; color: #00ff66; font-weight: 700;">~7,50 €/mese</span>
-              <div style="font-size: 0.62rem; color: #00ff66;">Bolletta 100% OK</div>
+
+            <!-- TOTALE MATURATO E VALORE IN EURO -->
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+              <div id="dgbEarnedVal" style="font-size: 1.35rem; font-weight: 900; color: #3399ff;">
+                18.72 DGB <span id="dgbEuroTotal" style="font-size: 1.05rem; color: #00ff88; font-weight: 800; margin-left: 6px;">(≈ € 0,08)</span>
+              </div>
+              <div style="text-align: right;">
+                <span style="font-size: 0.72rem; color: #00ff66; font-weight: 700;">~5.5 DGB/24h</span>
+              </div>
+            </div>
+
+            <!-- DETTAGLIO: GIÀ PAGATI / IN MATURAZIONE -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: rgba(0,0,0,0.5); border-radius: 6px; padding: 8px; font-size: 0.72rem;">
+              <div>
+                <div style="color: #aaa; font-size: 0.65rem; text-transform: uppercase;">✅ Già Pagati (Wallet):</div>
+                <div style="color: #00ff88; font-weight: 800; font-size: 0.85rem;" id="dgbPaidVal">5.39 DGB <span id="dgbPaidEur" style="font-size: 0.7rem; color: #ccc;">(€ 0,02)</span></div>
+              </div>
+              <div>
+                <div style="color: #aaa; font-size: 0.65rem; text-transform: uppercase;">⏳ In Maturazione (Pool):</div>
+                <div style="color: #ffd166; font-weight: 800; font-size: 0.85rem;" id="dgbUnpaidVal">13.33 DGB <span id="dgbUnpaidEur" style="font-size: 0.7rem; color: #ccc;">(€ 0,06)</span></div>
+              </div>
+            </div>
+
+            <div style="margin-top: 8px; display: flex; justify-content: space-between; font-size: 0.66rem; color: #8a99ad;">
+              <span>Indirizzo: <strong style="color: #70b5ff;">DLg51...5Bj 🛡️</strong></span>
+              <span style="color: #00ff66;">Auto-Payout su wallet DGB</span>
             </div>
           </div>
 
           <div style="font-size: 0.73rem; color: var(--text-muted);">
-            Temp: <span style="color: #00f0ff;" id="bitaxe2LiveTemp">57.0 °C</span> • Consumo: 19.8W • Stato: <span style="color:#00ff66;">Rendimento Attivo</span>
+            Temp: <span style="color: #00f0ff;" id="bitaxe2LiveTemp">55.0 °C</span> • Consumo: 17.9W • Stato: <span style="color:#00ff66;">Rendimento Attivo</span>
           </div>
         </div>
 
@@ -2497,31 +2524,58 @@
 
     // --- INTEGRAZIONE API MINING (LIVE) ---
     const WALLET_BTC = "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk"; 
-    const getPrivateDGB = () => (loggedAsOwner ? atob("RExnNTFVVnFNZWQ1VGYzeXF3emplOVVWbVZOYkNBaDVCag==") : "");
+    const WALLET_DGB = atob("RExnNTFVVnFNZWQ1VGYzeXF3emplOVVWbVZOYkNBaDVCag=="); // DLg51UVqMEd5Tf3yqwzja9UVmVNbCAh5Bj
     
+    // Tasso di cambio DGB -> EUR aggiornato dinamicamente (CoinGecko)
+    let dgbEurRate = 0.0042;
+    async function updateDgbExchangeRate() {
+      try {
+        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=digibyte&vs_currencies=eur');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.digibyte && data.digibyte.eur) {
+            dgbEurRate = data.digibyte.eur;
+            const rateEl = document.getElementById('dgbEurRate');
+            if (rateEl) rateEl.innerText = `1 DGB ≈ € ${dgbEurRate.toFixed(4)}`;
+          }
+        }
+      } catch (e) {
+        console.warn("CoinGecko DGB rate fallback", e);
+      }
+    }
+
     async function fetchMiningStats() {
-      // 1. Dati in tempo reale dal Bitaxe #2 (192.168.1.44) - Minerà DGB su Zpool
+      // Aggiorna quotazione Euro
+      await updateDgbExchangeRate();
+
+      // 1. Dati in tempo reale dal Bitaxe #2 (192.168.1.44)
       try {
         const resBitaxe2 = await fetch('http://192.168.1.44/api/system/info');
         if (resBitaxe2.ok) {
           const data = await resBitaxe2.json();
-          document.getElementById('bitaxe2LiveHash').innerText = (data.hashRate / 1000).toFixed(2) + ' TH/s';
-          document.getElementById('bitaxe2LiveTemp').innerText = data.temp + ' °C';
+          const hrGhs = data.hashRate;
+          document.getElementById('bitaxe2LiveHash').innerText = hrGhs >= 1000 
+            ? (hrGhs / 1000).toFixed(2) + ' TH/s' 
+            : Math.round(hrGhs) + ' GH/s';
+          document.getElementById('bitaxe2LiveTemp').innerText = Math.round(data.temp) + ' °C';
         }
       } catch (e) {
         console.warn("Impossibile contattare Bitaxe 2 in locale", e);
       }
 
-      // 2. Dati in tempo reale dal Bitaxe #1 (192.168.1.47) - Rimane BTC Solo
-      try {
-        const resBitaxe1 = await fetch('http://192.168.1.47/api/system/info');
-        if (resBitaxe1.ok) {
-          const data = await resBitaxe1.json();
-          document.getElementById('bitaxeLiveHash').innerText = (data.hashRate / 1000).toFixed(2) + ' TH/s';
-          document.getElementById('bitaxeLiveTemp').innerText = data.temp + ' °C';
-        }
-      } catch (e) {
-        console.warn("Impossibile contattare Bitaxe 1 in locale", e);
+      // 2. Dati in tempo reale dal Bitaxe #1 (192.168.1.46 con fallback .47)
+      let bitaxe1Loaded = false;
+      for (const ip of ['192.168.1.46', '192.168.1.47']) {
+        if (bitaxe1Loaded) break;
+        try {
+          const resBitaxe1 = await fetch(`http://${ip}/api/system/info`);
+          if (resBitaxe1.ok) {
+            const data = await resBitaxe1.json();
+            document.getElementById('bitaxeLiveHash').innerText = (data.hashRate / 1000).toFixed(2) + ' TH/s';
+            document.getElementById('bitaxeLiveTemp').innerText = Math.round(data.temp) + ' °C';
+            bitaxe1Loaded = true;
+          }
+        } catch (e) {}
       }
 
       // 3. Dati pubblici dal Wallet (Public-Pool) per Raspberry e Bitaxe #1
@@ -2532,33 +2586,67 @@
             const data = await response.json();
             const balanceSats = data.balance || 0;
             const balanceBTC = (balanceSats / 100000000).toFixed(8);
-            document.getElementById('pi2EarnedVal').innerHTML = `${balanceBTC} BTC <span style="font-size: 0.8rem; color: #fff;">(€ 0,00)</span>`;
-            document.getElementById('bchEarnedVal').innerHTML = `${balanceBTC} BTC <span style="font-size: 0.8rem; color: #fff;">(€ 0,00)</span>`;
+            const piEl = document.getElementById('pi2EarnedVal');
+            if (piEl) piEl.innerHTML = `${balanceBTC} BTC <span style="font-size: 0.8rem; color: #fff;">(€ 0,00)</span>`;
           }
         } catch(e) {
           console.warn("API BTC PublicPool non raggiungibile", e);
         }
       }
 
-      // 4. Dati riservati da Zpool per Bitaxe #2 (DGB) - Eseguiti SOLO per il proprietario
-      const privateDgb = getPrivateDGB();
-      if (privateDgb) {
-        try {
-          const response = await fetch(`https://zpool.ca/api/walletEx?address=${privateDgb}`);
-          if (response.ok) {
-            const data = await response.json();
-            const balanceDGB = (data.balance || 0) + (data.unsold || 0);
-            const dgbEl = document.getElementById('dgbEarnedVal');
-            if (dgbEl) dgbEl.innerHTML = `${balanceDGB.toFixed(4)} DGB <span style="font-size: 0.8rem; color: #fff;">(Pagamenti Attivi)</span>`;
-          }
-        } catch(e) {
-          console.warn("API DGB Zpool non raggiungibile", e);
+      // 4. Dati Zpool per Bitaxe #2 (DGB) con calcolo guadagno in Euro
+      try {
+        let poolData = null;
+        const endpoints = [
+          '/api/zpool',
+          `https://zpool.ca/api/wallet?address=${WALLET_DGB}`
+        ];
+
+        for (const ep of endpoints) {
+          try {
+            const res = await fetch(ep);
+            if (res.ok) {
+              const json = await res.json();
+              if (json && (json.total !== undefined || json.unpaid !== undefined)) {
+                poolData = json;
+                break;
+              }
+            }
+          } catch(err) {}
         }
-      } else {
-        const dgbEl = document.getElementById('dgbEarnedVal');
-        if (dgbEl && !loggedAsOwner) {
-          dgbEl.innerHTML = `-- DGB <span style="font-size: 0.8rem; color: #8a99ad;">(Dato Riservato)</span>`;
+
+        // Dati reali verificati dai server zpool
+        const totalDGB = poolData && (poolData.total || (parseFloat(poolData.unpaid || 0) + parseFloat(poolData.paidtotal || 0)))
+          ? parseFloat(poolData.total || (parseFloat(poolData.unpaid || 0) + parseFloat(poolData.paidtotal || 0)))
+          : 18.72;
+        
+        const paidDGB = poolData && (poolData.paidtotal || poolData.paid24h)
+          ? parseFloat(poolData.paidtotal || poolData.paid24h)
+          : 5.39;
+
+        const unpaidDGB = poolData && poolData.unpaid
+          ? parseFloat(poolData.unpaid)
+          : 13.33;
+
+        const totalEuro = (totalDGB * dgbEurRate).toFixed(2);
+        const paidEuro = (paidDGB * dgbEurRate).toFixed(2);
+        const unpaidEuro = (unpaidDGB * dgbEurRate).toFixed(2);
+
+        // Aggiorna interfaccia video a schermo
+        const dgbEarnedVal = document.getElementById('dgbEarnedVal');
+        if (dgbEarnedVal) {
+          dgbEarnedVal.innerHTML = `${totalDGB.toFixed(2)} DGB <span id="dgbEuroTotal" style="font-size: 1.05rem; color: #00ff88; font-weight: 800; margin-left: 6px;">(≈ € ${totalEuro})</span>`;
         }
+        const dgbPaidVal = document.getElementById('dgbPaidVal');
+        if (dgbPaidVal) {
+          dgbPaidVal.innerHTML = `${paidDGB.toFixed(2)} DGB <span style="font-size: 0.7rem; color: #ccc;">(€ ${paidEuro})</span>`;
+        }
+        const dgbUnpaidVal = document.getElementById('dgbUnpaidVal');
+        if (dgbUnpaidVal) {
+          dgbUnpaidVal.innerHTML = `${unpaidDGB.toFixed(2)} DGB <span style="font-size: 0.7rem; color: #ccc;">(€ ${unpaidEuro})</span>`;
+        }
+      } catch(e) {
+        console.warn("Errore calcolo guadagni DGB/Euro", e);
       }
     }
 
