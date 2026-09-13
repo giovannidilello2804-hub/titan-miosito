@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Servizi Tecnici & Stampa 3D su Misura | TITAN 3D Studio (titan3d.it)</title>
+  <meta name="description" content="Laboratorio tecnico di manifattura additiva: riproduzione ricambi introvabili per elettrodomestici e auto, modding Sim Racing, case Raspberry Pi e prototipazione industriale.">
+  <link rel="canonical" href="https://titan3d.it/servizi.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Rajdhani:wght@600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Stili specifici per la pagina Servizi & Preventivatore Dinamico */
+    .services-hero {
+      padding: 140px 20px 60px;
+      text-align: center;
+      position: relative;
+      background: radial-gradient(circle at 50% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 70%);
+    }
+    .badge-glow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid var(--cyan-primary);
+      color: var(--cyan-primary);
+      padding: 6px 18px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      box-shadow: 0 0 15px var(--cyan-glow);
+      margin-bottom: 20px;
+    }
+    .hero-title-large {
+      font-family: var(--font-heading);
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      color: var(--text-main);
+    }
+    .hero-sub-text {
+      font-family: var(--font-sub);
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 750px;
+      margin: 0 auto 35px;
+      line-height: 1.6;
+    }
+    .service-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      max-width: 1200px;
+      margin: 40px auto 70px;
+      padding: 0 20px;
+    }
+    .service-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 30px 25px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .service-box:hover {
+      transform: translateY(-6px);
+      border-color: var(--cyan-primary);
+      box-shadow: 0 10px 30px rgba(0, 240, 255, 0.15);
+      background: var(--bg-card-hover);
+    }
+    .service-box .icon-wrap {
+      font-size: 2.2rem;
+      margin-bottom: 18px;
+      display: inline-block;
+      width: 55px;
+      height: 55px;
+      line-height: 55px;
+      text-align: center;
+      border-radius: 12px;
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+    }
+    .service-box h3 {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+    .service-box p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+    .service-box .highlight-tag {
+      font-size: 0.8rem;
+      color: var(--amber-primary);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    /* Calcolatore WhatsApp Interattivo */
+    .calc-container {
+      max-width: 1050px;
+      margin: 0 auto 80px;
+      padding: 0 20px;
+    }
+    .calc-wrapper {
+      background: linear-gradient(145deg, #0e1422 0%, #080b12 100%);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.1);
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 40px;
+    }
+    @media (max-width: 850px) {
+      .calc-wrapper { grid-template-columns: 1fr; padding: 25px; }
+    }
+    .calc-input-group {
+      margin-bottom: 20px;
+    }
+    .calc-input-group label {
+      display: block;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+    .calc-select, .calc-range {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(15, 20, 31, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .calc-select:focus {
+      border-color: var(--cyan-primary);
+    }
+    .range-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--cyan-primary);
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-top: 6px;
+    }
+    .calc-summary-card {
+      background: rgba(22, 30, 46, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 30px 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+    }
+    .price-display {
+      font-family: var(--font-heading);
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--cyan-primary);
+      text-shadow: 0 0 20px var(--cyan-glow);
+      line-height: 1;
+      margin: 15px 0;
+    }
+    .btn-whatsapp-quote {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #25D366;
+      color: #052e16;
+      font-weight: 800;
+      font-size: 1.1rem;
+      padding: 16px 24px;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 25px rgba(37, 211, 102, 0.35);
+      border: none;
+      cursor: pointer;
+    }
+    .btn-whatsapp-quote:hover {
+      background: #20bd5a;
+      transform: scale(1.02);
+      box-shadow: 0 0 35px rgba(37, 211, 102, 0.55);
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Glow -->
+  <div class="bg-mesh-overlay"></div>
+
+  <!-- Header Section -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="brand">
+        <a href="index.html" style="display:flex; align-items:center; gap:12px; text-decoration:none;">
+          <div class="logo-icon-3d"><div class="cube-inner"></div></div>
+          <div class="logo-text">
+            <span class="brand-title">TITAN <span class="accent-cyan">3D</span> <span style="font-size:0.75em; color:var(--text-muted); font-weight:400; text-transform:none;">.it</span></span>
+            <span class="brand-subtitle">ENGINEERING & PROTOTYPING LAB</span>
+          </div>
+        </a>
+      </div>
+
+      <nav class="nav-links">
+        <a href="index.html">← Torna alla Home</a>
+        <a href="#catalogo-servizi">Catalogo Soluzioni</a>
+        <a href="#calcolatore-quote" class="btn-nav-highlight">Calcola Preventivo</a>
+        <a href="miner.html" style="color: #ffb703;">Titan Miner</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="services-hero">
+    <div class="badge-glow">🛠️ MANIFATTURA DIGITALE & PROBLEM SOLVING</div>
+    <h1 class="hero-title-large">
+      RIPRODUZIONE RICAMBI INTROVABILI &amp;<br>
+      <span class="gradient-text">STAMPA 3D AD ALTA RESISTENZA</span>
+    </h1>
+    <p class="hero-sub-text">
+      Non buttare elettrodomestici, attrezzi o componenti d'auto per una parte in plastica rotta.
+      Rileviamo le misure col calibro, riprogettiamo in CAD e stampiamo in materiali tecnici certificati con tolleranza centesimale.
+    </p>
+    <a href="#calcolatore-quote" class="btn-primary" style="padding: 14px 36px; font-size: 1.1rem;">
+      ⚡ Calcola Preventivo Istantaneo
+    </a>
+  </section>
+
+  <!-- Catalogo Soluzioni Tecniche -->
+  <section id="catalogo-servizi" class="section-container">
+    <div class="section-header" style="text-align: center; margin-bottom: 20px;">
+      <div class="section-badge">APPLICAZIONI AD ALTO VALORE</div>
+      <h2>COSA POSSIAMO <span class="gradient-text">REALIZZARE PER TE</span></h2>
+      <p>Materiali di grado ingegneristico selezionati in base a temperatura, attrito ed esposizione chimica.</p>
+    </div>
+
+    <div class="service-cards-grid">
+      <!-- Card 1 -->
+      <div class="service-box">
+        <div class="icon-wrap">⚙️</div>
+        <h3>Ricambi Elettrodomestici & Cucina</h3>
+        <p>Ingranaggi mixer e robot da cucina, giunti per frullatori, clip cestelli lavastoviglie, manopole forno e supporti frigorifero non più forniti dalla casa madre.</p>
+        <span class="highlight-tag">Materiale: PETG Idro-Resistente & Atossico</span>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="service-box">
+        <div class="icon-wrap">🚗</div>
+        <h3>Ricambi Auto & Moto (anche Epoca)</h3>
+        <p>Bocchette areazione, clip modanature portiera, supporti sensori parcheggio, ghiere comandi, leveraggi e condotti aria resistenti a calore estivo e vibrazioni.</p>
+        <span class="highlight-tag">Materiale: ABS / ASA Resistente a 100°C & UV</span>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="service-box">
+        <div class="icon-wrap">🏎️</div>
+        <h3>Modding Sim Racing & Gaming</h3>
+        <p>Supporti telemetria smartphone/tablet per volanti Fanatec, Moza, Logitech G29/G923, mod palette magnetiche cambio al volante, supporti pedali e pulsantiere custom.</p>
+        <span class="highlight-tag">Finitura: Nero Satinato Carbon-Look</span>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="service-box">
+        <div class="icon-wrap">🍓</div>
+        <h3>Case Raspberry Pi & Smart Home</h3>
+        <p>Alloggiamenti ventilati per Raspberry Pi 2/3/4/5 con display touch TFT 3.5", docking station da incasso a parete per tablet Home Assistant, box guide DIN.</p>
+        <span class="highlight-tag">Precisione: Tolleranza Porte ±0.1 mm</span>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="service-box">
+        <div class="icon-wrap">📐</div>
+        <h3>Reverse Engineering da Pezzo Rotto</h3>
+        <p>Non hai il disegno 3D? Ci spedisci il pezzo rotto o le foto con righello: rileviamo le quote critiche e creiamo il modello digitale CAD collaudato.</p>
+        <span class="highlight-tag">Software: Autodesk Fusion & FreeCAD</span>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="service-box">
+        <div class="icon-wrap">🛡️</div>
+        <h3>Guarnizioni & Piedini in Gomma TPU</h3>
+        <p>Stampa di elementi flessibili ammortizzanti, paracolpi, giunti elastici e guarnizioni sagomate su misura resistenti a olii e grassi.</p>
+        <span class="highlight-tag">Materiale: TPU Shore 95A / 85A</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Calcolatore Preventivi Istantaneo -->
+  <section id="calcolatore-quote" class="calc-container">
+    <div class="section-header" style="text-align: center; margin-bottom: 30px;">
+      <div class="section-badge">PREVENTIVATORE RAPIDO</div>
+      <h2>CONFIGURA IL TUO <span class="gradient-text">PREVENTIVO IN TEMPO REALE</span></h2>
+      <p>Ottieni una stima trasparente e inviala direttamente a Giovanni su WhatsApp per conferma immediata.</p>
+    </div>
+
+    <div class="calc-wrapper">
+      <!-- Colonna Controlli -->
+      <div class="calc-controls">
+        <div class="calc-input-group">
+          <label for="calcCategory">Tipologia Progetto / Pezzo:</label>
+          <select id="calcCategory" class="calc-select" onchange="aggiornaPreventivo()">
+            <option value="ricambio">Ricambio Tecnico / Elettrodomestico / Auto</option>
+            <option value="simracing">Modding Sim Racing / Gaming</option>
+            <option value="raspberry">Case Raspberry Pi / IoT / Domotica</option>
+            <option value="custom">Stampa 3D da file STL già pronto</option>
+            <option value="prototipo">Prototipo Meccanico Industriale</option>
+          </select>
+        </div>
+
+        <div class="calc-input-group">
+          <label for="calcMaterial">Materiale Consigliato:</label>
+          <select id="calcMaterial" class="calc-select" onchange="aggiornaPreventivo()">
+            <option value="petg">PETG Tecnico Resistente (Anti-urto, 75°C) [Consigliato]</option>
+            <option value="pla">PLA+ Alta Rigidità (Estetico / Prototipi interni)</option>
+            <option value="abs">ABS / ASA (Calore 100°C, Vano motore, Raggi UV)</option>
+            <option value="tpu">TPU Gomma Flessibile (Guarnizioni, Ammortizzatori)</option>
+            <option value="pacf">Nylon Carbon Fiber (Rigidità massima industriale)</option>
+          </select>
+        </div>
+
+        <div class="calc-input-group">
+          <label for="calcCadLevel">Necessiti di Modellazione CAD / Reverse Engineering?</label>
+          <select id="calcCadLevel" class="calc-select" onchange="aggiornaPreventivo()">
+            <option value="0">No, ho già il file 3D (.STL / .STEP / .3MF)</option>
+            <option value="15" selected>Sì, ho il pezzo rotto / disegno quotato (+ € 15)</option>
+            <option value="30">Sì, reverse engineering complesso (ingranaggi/incastri) (+ € 30)</option>
+          </select>
+        </div>
+
+        <div class="calc-input-group">
+          <label for="calcWeight">Peso Stimato Componente:</label>
+          <input type="range" id="calcWeight" class="calc-range" min="15" max="350" step="5" value="45" oninput="aggiornaPreventivo()">
+          <div class="range-meta">
+            <span>Piccolo (15g)</span>
+            <span id="weightDisplay">45 grammi</span>
+            <span>Grande (350g)</span>
+          </div>
+        </div>
+
+        <div class="calc-input-group">
+          <label for="calcQuantity">Quantità Pezzi:</label>
+          <select id="calcQuantity" class="calc-select" onchange="aggiornaPreventivo()">
+            <option value="1">1 Pezzo (Singolo / Ricambio)</option>
+            <option value="2">2 Pezzi (-15% sul secondo pezzo)</option>
+            <option value="5">5 Pezzi (-25% tiratura)</option>
+            <option value="10">10 Pezzi (-35% mini-lotto)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Colonna Riepilogo & WhatsApp -->
+      <div class="calc-summary-card">
+        <div>
+          <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">
+            Stima Indicativa Lavorazione
+          </span>
+          <div class="price-display" id="priceDisplay">€ 28.00</div>
+          <p id="calcNote" style="font-size: 0.9rem; color: #a1b0cb; line-height: 1.4; margin-bottom: 20px;">
+            Include materiale tecnico, tempo macchina e progettazione CAD del pezzo rotto.
+          </p>
+          <div style="text-align: left; background: rgba(0,0,0,0.3); padding: 12px 15px; border-radius: 10px; font-size: 0.85rem; margin-bottom: 25px;">
+            <div style="color: var(--green-primary); margin-bottom: 4px;">✔ Tolleranza garantita ±0.1 mm</div>
+            <div style="color: var(--cyan-primary); margin-bottom: 4px;">✔ Avvio produzione in 12h</div>
+            <div style="color: #ffb703;">✔ Spedizione TuttoSubito 24/48h o ritiro a mano</div>
+          </div>
+        </div>
+
+        <a id="btnWhatsAppLink" href="#" target="_blank" class="btn-whatsapp-quote">
+          <span>💬</span> Richiedi su WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Come Funziona Section -->
+  <section class="section-container" style="max-width: 1000px; margin: 0 auto 80px; padding: 0 20px;">
+    <div class="section-header" style="text-align: center; margin-bottom: 35px;">
+      <div class="section-badge">PROCEDURA SEMPLICE</div>
+      <h2>COME ORDINARE <span class="gradient-text">IN 3 SEMPLICI PASSI</span></h2>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+      <div style="background: var(--bg-card); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); text-align: center;">
+        <div style="font-size: 2rem; color: var(--cyan-primary); font-weight: 900; margin-bottom: 10px;">01</div>
+        <h4 style="font-family: var(--font-heading); margin-bottom: 8px;">Invia Foto o File</h4>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Fotografa il pezzo rotto con un righello accanto, oppure inviaci direttamente il file STL/STEP via WhatsApp.</p>
+      </div>
+
+      <div style="background: var(--bg-card); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); text-align: center;">
+        <div style="font-size: 2rem; color: var(--amber-primary); font-weight: 900; margin-bottom: 10px;">02</div>
+        <h4 style="font-family: var(--font-heading); margin-bottom: 8px;">Conferma Preventivo</h4>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Ti inviamo la quotazione esatta con i tempi di consegna. Nessuna sorpresa o costo nascosto.</p>
+      </div>
+
+      <div style="background: var(--bg-card); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); text-align: center;">
+        <div style="font-size: 2rem; color: var(--green-primary); font-weight: 900; margin-bottom: 10px;">03</div>
+        <h4 style="font-family: var(--font-heading); margin-bottom: 8px;">Fabbricazione & Consegna</h4>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Stampiamo il pezzo con le nostre macchine ad alta precisione. Ritiro a mano in sede o spedizione rapida tracciata.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h3>TITAN <span class="accent-cyan">3D</span> .it</h3>
+        <p>Studio Tecnico di Stampa 3D e Progettazione CAD di Giovanni Di Lello.</p>
+        <p class="footer-copy">&copy; 2026 Giovanni Di Lello - Tutti i diritti riservati.</p>
+      </div>
+      <div class="footer-channels">
+        <h4>Link Rapidi</h4>
+        <div class="footer-social-links">
+          <a href="index.html" class="social-link">Home Page</a>
+          <a href="miner.html" class="social-link">Titan Miner Cloud</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function aggiornaPreventivo() {
+      const catEl = document.getElementById('calcCategory');
+      const matEl = document.getElementById('calcMaterial');
+      const cadEl = document.getElementById('calcCadLevel');
+      const weightEl = document.getElementById('calcWeight');
+      const qtaEl = document.getElementById('calcQuantity');
+
+      const peso = parseInt(weightEl.value, 10);
+      document.getElementById('weightDisplay').innerText = peso + ' grammi';
+
+      const cadCost = parseFloat(cadEl.value);
+      const qta = parseInt(qtaEl.value, 10);
+
+      // Calcolo costo base plastica & tempo macchina
+      let matMultiplier = 1.0;
+      if (matEl.value === 'abs') matMultiplier = 1.25;
+      if (matEl.value === 'tpu') matMultiplier = 1.4;
+      if (matEl.value === 'pacf') matMultiplier = 2.2;
+
+      let baseStampa = (peso * 0.08 * matMultiplier) + 8.0;
+      if (baseStampa < 12.0) baseStampa = 12.0;
+
+      // Sconto quantità
+      let sconto = 1.0;
+      if (qta === 2) sconto = 0.85;
+      if (qta === 5) sconto = 0.75;
+      if (qta === 10) sconto = 0.65;
+
+      let totale = (baseStampa * qta * sconto) + cadCost;
+      totale = Math.round(totale);
+
+      document.getElementById('priceDisplay').innerText = '€ ' + totale + '.00';
+
+      // Prepara messaggio WhatsApp precompilato
+      const categoriaTesto = catEl.options[catEl.selectedIndex].text;
+      const materialeTesto = matEl.options[matEl.selectedIndex].text;
+      const cadTesto = cadEl.options[cadEl.selectedIndex].text;
+
+      const messaggio = `Ciao Giovanni! Ho calcolato un preventivo sul sito Titan3d.it:
+- *Progetto:* ${categoriaTesto}
+- *Materiale:* ${materialeTesto}
+- *Peso stimato:* ~${peso}g
+- *Quantità:* ${qta} pz
+- *Modellazione CAD:* ${cadTesto}
+- *Stima calcolata:* € ${totale}.00
+
+Vorrei inviarti le foto/file per confermare la fattibilità e i tempi di consegna. Grazie!`;
+
+      // Link WhatsApp (apre chat con messaggio pronto)
+      const encodedMsg = encodeURIComponent(messaggio);
+      document.getElementById('btnWhatsAppLink').href = 'https://api.whatsapp.com/send?text=' + encodedMsg;
+    }
+
+    // Inizializza al caricamento
+    document.addEventListener('DOMContentLoaded', aggiornaPreventivo);
+  </script>
+</body>
+</html>
