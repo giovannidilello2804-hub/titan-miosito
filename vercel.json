@@ -4,21 +4,65 @@
     {
       "source": "/api/(.*)",
       "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET, OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type"
+        }
       ]
     }
   ],
   "rewrites": [
-    { "source": "/miner", "destination": "/miner.html" },
-    { "source": "/miner.html", "destination": "/miner.html" },
-    { "source": "/area-clienti", "destination": "/miner.html" },
-    { "source": "/area-clienti.html", "destination": "/miner.html" },
-    { "source": "/sito", "destination": "/index.html" },
-    { "source": "/sito/miner", "destination": "/miner.html" },
-    { "source": "/sito/miner.html", "destination": "/miner.html" },
-    { "source": "/BingSiteAuth.xml", "destination": "/BingSiteAuth.xml" },
-    { "source": "/bingsiteauth.xml", "destination": "/BingSiteAuth.xml" }
+    {
+      "source": "/servizi",
+      "destination": "/servizi.html"
+    },
+    {
+      "source": "/servizi.html",
+      "destination": "/servizi.html"
+    },
+    {
+      "source": "/miner",
+      "destination": "/miner.html"
+    },
+    {
+      "source": "/miner.html",
+      "destination": "/miner.html"
+    },
+    {
+      "source": "/area-clienti",
+      "destination": "/miner.html"
+    },
+    {
+      "source": "/area-clienti.html",
+      "destination": "/miner.html"
+    },
+    {
+      "source": "/sito",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/sito/miner",
+      "destination": "/miner.html"
+    },
+    {
+      "source": "/sito/miner.html",
+      "destination": "/miner.html"
+    },
+    {
+      "source": "/BingSiteAuth.xml",
+      "destination": "/BingSiteAuth.xml"
+    },
+    {
+      "source": "/bingsiteauth.xml",
+      "destination": "/BingSiteAuth.xml"
+    }
   ]
 }
