@@ -513,8 +513,28 @@
   50% { width: 95%; opacity: 1; }
   100% { width: 40%; opacity: 0.8; }
 }
-</style>
-
+  <!-- TITAN 3D - ANALYTICS & MONITORAGGIO VISITE REALI (Vercel & Live Counter) -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+  <script>
+    (function() {
+      try {
+        var p = window.location.pathname.toLowerCase();
+        var key = p.indexOf('servizi') !== -1 ? 'titan3d_it_servizi' :
+                  (p.indexOf('miner') !== -1 ? 'titan3d_it_miner' : 'titan3d_it_home');
+        var sKey = 't3d_seen_' + key;
+        if (!sessionStorage.getItem(sKey)) {
+          sessionStorage.setItem(sKey, '1');
+          fetch('https://countapi.mileshilliard.com/api/v1/hit/' + key, { mode: 'cors' }).catch(function(){});
+          fetch('https://countapi.mileshilliard.com/api/v1/hit/titan3d_it_total', { mode: 'cors' }).catch(function(){});
+        }
+      } catch(e) {}
+    })();
+  </script>
 </head>
 <body>
 
