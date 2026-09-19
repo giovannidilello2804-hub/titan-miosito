@@ -13,7 +13,7 @@ let artifactsStore = [
     name: "Chiave Fisica Titan Hardware Vault",
     material: "Guscio 3D PLA Carbon + Chip D1 Mini (COM8)",
     coin: "USDT",
-    balance: 10.0, // 10 USDT di valore reale precaricato
+    balance: 10.0,
     claimed: false,
     claimedAt: null,
     claimedToWallet: null,
@@ -53,7 +53,47 @@ let artifactsStore = [
     name: "Titan Bitcoin Core Relic",
     material: "PETG Nero / Dettagli Oro",
     coin: "DGB",
-    balance: 150.0, // DigiByte minati dalla farm Titan
+    balance: 150.0,
+    claimed: false,
+    claimedAt: null,
+    claimedToWallet: null,
+    createdAt: "2026-09-19",
+    macAddress: "Pending Onboarding",
+    lastSeen: null,
+    lastIp: null,
+    localIp: null,
+    status: "active",
+    totalSwapsCount: 0,
+    totalVolumeEur: 0,
+    earnedFeesEur: 0
+  },
+  {
+    token: "TITAN-003",
+    serial: "TITAN-ED-003",
+    name: "Titan Trophy 3D Gold",
+    material: "PLA Seta Oro / Resina",
+    coin: "USDT",
+    balance: 10.0,
+    claimed: false,
+    claimedAt: null,
+    claimedToWallet: null,
+    createdAt: "2026-09-19",
+    macAddress: "Pending Onboarding",
+    lastSeen: null,
+    lastIp: null,
+    localIp: null,
+    status: "active",
+    totalSwapsCount: 0,
+    totalVolumeEur: 0,
+    earnedFeesEur: 0
+  },
+  {
+    token: "TITAN-TEST-001",
+    serial: "TITAN-ED-004",
+    name: "Chiave Collaudo Titan",
+    material: "PLA Nero",
+    coin: "USDT",
+    balance: 10.0,
     claimed: false,
     claimedAt: null,
     claimedToWallet: null,
@@ -74,14 +114,19 @@ async function fetchCryptoPrices() {
   const prices = {
     USDT: 0.92,
     BTC: 58500.0,
-    DGB: 0.0078
+    DGB: 0.0078,
+    SATS: 0.000585,
+    DUCO: 0.0001
   };
 
   try {
     const resBtc = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCEUR");
     if (resBtc.ok) {
       const dataBtc = await resBtc.json();
-      if (dataBtc.price) prices.BTC = parseFloat(dataBtc.price);
+      if (dataBtc.price) {
+        prices.BTC = parseFloat(dataBtc.price);
+        prices.SATS = Number((prices.BTC / 100000000).toFixed(8));
+      }
     }
   } catch (e) {}
 
@@ -148,15 +193,13 @@ export default async function handler(req, res) {
       });
     }
 
-    // 2. VISTA CLIENTE / HARDWARE KEY
+    // 2. VISTA CLIENTE / HARDWARE KEY (Validazione dinamica di qualsiasi token)
     if (token) {
-      const item = artifactsStore.find(a => 
-        a.token.toUpperCase() === token.toUpperCase() ||
-        (token.toUpperCase() === "TITAN-AUTH-TOKEN-GOLD-001" && a.token === "TITAN-AUTH-TOKEN-GOLD-001")
-      );
+      const cleanToken = token.trim().toUpperCase();
+      const item = artifactsStore.find(a => a.token.toUpperCase() === cleanToken);
 
       if (!item) {
-        return res.status(404).json({ success: false, error: "Manufatto non trovato" });
+        return res.status(404).json({ success: false, error: "Chiave non trovata nel registro Titan" });
       }
 
       const unitPrice = prices[item.coin] || 1.0;
@@ -171,6 +214,7 @@ export default async function handler(req, res) {
       return res.status(200).json({
         success: true,
         serial: item.serial,
+        token: item.token,
         name: item.name,
         material: item.material,
         coin: item.coin,
@@ -188,7 +232,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // Default
+    // Default: conteggio
     return res.status(200).json({
       success: true,
       service: "Titan Crypto-Artifacts Engine",
@@ -206,9 +250,9 @@ export default async function handler(req, res) {
       const body = req.body || {};
       const { action, token, pin } = body;
 
-      // 1. PING dal chip fisico D1 Mini
+      // 1. PING dal chip fisico
       if (action === "ping" && token) {
-        const item = artifactsStore.find(a => a.token.toUpperCase() === token.toUpperCase());
+        const item = artifactsStore.find(a => a.token.toUpperCase() === token.trim().toUpperCase());
         const clientIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress || "Unknown";
 
         if (item) {
@@ -225,9 +269,9 @@ export default async function handler(req, res) {
         }
       }
 
-      // 2. SCAMBIO / RICARICA CON FEE PER GIO
+      // 2. SCAMBIO / RICARICA CON COMMISSIONE PER GIO
       if (action === "record_swap" && token) {
-        const item = artifactsStore.find(a => a.token.toUpperCase() === token.toUpperCase());
+        const item = artifactsStore.find(a => a.token.toUpperCase() === token.trim().toUpperCase());
         if (!item) {
           return res.status(404).json({ success: false, error: "Manufatto non trovato" });
         }
@@ -239,7 +283,6 @@ export default async function handler(req, res) {
         item.totalVolumeEur = (item.totalVolumeEur || 0) + swapAmountEur;
         item.earnedFeesEur = (item.earnedFeesEur || 0) + gioFeeEur;
 
-        // Se è una ricarica effettiva con accredito al saldo
         if (body.credit_balance) {
           const unitPrice = prices[item.coin] || 1.0;
           const netCryptoAdded = Number(((swapAmountEur - gioFeeEur) / unitPrice).toFixed(2));
@@ -258,9 +301,9 @@ export default async function handler(req, res) {
         });
       }
 
-      // 3. RISCATTO Criptovaluta da parte del possessore
+      // 3. RISCATTO
       if (action === "claim" && token) {
-        const item = artifactsStore.find(a => a.token.toUpperCase() === token.toUpperCase());
+        const item = artifactsStore.find(a => a.token.toUpperCase() === token.trim().toUpperCase());
         if (!item) {
           return res.status(404).json({ success: false, error: "Manufatto inesistente" });
         }
@@ -285,13 +328,19 @@ export default async function handler(req, res) {
         });
       }
 
-      // 4. ADMIN: Crea o ricarica manufatto
+      // 4. ADMIN: CONIA / AGGIORNA MANUFATTO
       if (action === "admin_update") {
         if (pin !== ADMIN_PIN) {
-          return res.status(401).json({ success: false, error: "PIN non autorizzato" });
+          return res.status(401).json({ success: false, error: "PIN non autorizzato (Richiesto: 2804)" });
         }
         const { targetToken, newBalance, newCoin, newName, resetClaim } = body;
-        let item = artifactsStore.find(a => a.token.toUpperCase() === (targetToken || "").toUpperCase());
+        if (!targetToken) {
+          return res.status(400).json({ success: false, error: "Token ID mancante" });
+        }
+
+        const cleanToken = targetToken.trim().toUpperCase();
+        let item = artifactsStore.find(a => a.token.toUpperCase() === cleanToken);
+
         if (item) {
           if (newBalance !== undefined) item.balance = Number(newBalance);
           if (newCoin) item.coin = newCoin;
@@ -301,13 +350,13 @@ export default async function handler(req, res) {
             item.claimedAt = null;
             item.claimedToWallet = null;
           }
-          return res.status(200).json({ success: true, message: "Manufatto aggiornato", item });
+          return res.status(200).json({ success: true, message: `Manufatto ${item.token} aggiornato!`, item });
         } else {
           const newItem = {
-            token: targetToken.toUpperCase(),
-            serial: `TITAN-ED-${String(artifactsStore.length + 1).padStart(3, "0")}`,
-            name: newName || "Titan Collector Artifact",
-            material: "PLA Carbon / Resina 8K",
+            token: cleanToken,
+            serial: `TITAN-KEY-${String(artifactsStore.length + 1).padStart(3, "0")}`,
+            name: newName || "Titan Hardware VIP Key",
+            material: "Guscio 3D PLA Carbon + Chip",
             coin: newCoin || "USDT",
             balance: Number(newBalance) || 10.0,
             claimed: false,
@@ -324,7 +373,7 @@ export default async function handler(req, res) {
             earnedFeesEur: 0
           };
           artifactsStore.push(newItem);
-          return res.status(200).json({ success: true, message: "Nuovo manufatto coniato con successo!", item: newItem });
+          return res.status(200).json({ success: true, message: `Nuova chiave ${newItem.token} coniata con successo!`, item: newItem });
         }
       }
 

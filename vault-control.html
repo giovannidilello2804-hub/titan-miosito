@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
@@ -391,7 +391,7 @@
         </div>
       </div>
       <div style="margin-top: 16px; text-align: right;">
-        <button class="btn-primary" style="width: auto; padding: 10px 24px;" onclick="mintNewArtifact()">CONIA & REGISTRA</button>
+        <button id="btnMintAction" class="btn-primary" style="width: auto; padding: 10px 24px;" onclick="mintNewArtifact()">CONIA & REGISTRA</button>
       </div>
     </div>
   </div>
@@ -525,8 +525,16 @@
       const balance = document.getElementById('newCardBalance').value;
 
       if (!token || !name) {
-        alert("Compila tutti i campi!");
+        alert("Compila tutti i campi: Token ID e Nome sono obbligatori!");
         return;
+      }
+
+      const activePin = currentPin || sessionStorage.getItem('titan_vault_pin') || "2804";
+
+      const btn = document.getElementById('btnMintAction');
+      if (btn) {
+        btn.innerText = "⏳ CONIO IN CORSO...";
+        btn.disabled = true;
       }
 
       try {
@@ -535,20 +543,41 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             action: 'admin_update',
-            pin: currentPin,
+            pin: activePin,
             targetToken: token,
             newName: name,
             newCoin: coin,
-            newBalance: balance
+            newBalance: Number(balance) || 10
           })
         });
         const data = await res.json();
+        if (btn) {
+          btn.innerText = "CONIA & REGISTRA";
+          btn.disabled = false;
+        }
+
         if (data.success) {
-          alert(data.message);
-          loadArtifacts();
+          alert(`🎉 CHIAVE CONIATA CON SUCCESSO!\n\n` +
+                `Nome: ${name}\n` +
+                `Token ID: ${token}\n` +
+                `Saldo: ${balance} ${coin}\n\n` +
+                `🔗 Link per testare subito lo sblocco:\n` +
+                `https://www.titan3d.it/vip?key=${encodeURIComponent(token)}\n\n` +
+                `💻 Nel file titan_vip_key.ino per il chip imposta:\n` +
+                `const char* SECRET_TOKEN = "${token}";`);
+          
+          await loadArtifacts();
+          document.getElementById('newCardToken').value = 'TITAN-KEY-' + Math.floor(100 + Math.random() * 900);
+          document.getElementById('newCardName').value = '';
+        } else {
+          alert("⚠️ Errore conio: " + (data.error || "Operazione non riuscita. Verifica il PIN."));
         }
       } catch (err) {
-        alert("Errore: " + err.message);
+        if (btn) {
+          btn.innerText = "CONIA & REGISTRA";
+          btn.disabled = false;
+        }
+        alert("Errore di connessione: " + err.message);
       }
     }
 

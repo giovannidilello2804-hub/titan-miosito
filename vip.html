@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
@@ -90,7 +90,7 @@
       box-shadow: 0 0 60px rgba(255, 0, 85, 0.1);
       position: relative;
       overflow: hidden;
-      max-width: 600px;
+      max-width: 620px;
       margin: 0 auto;
       transition: all 0.4s ease;
     }
@@ -137,7 +137,6 @@
       gap: 12px;
       box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
       transition: all 0.25s ease;
-      margin-top: 24px;
     }
 
     .btn-unlock:hover {
@@ -410,14 +409,17 @@
         scaricare file 3D inediti e usare i vantaggi VIP, collega la tua <b>Chiave Fisica Titan 3D</b> via USB o inserisci il token.
       </p>
 
-      <div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 24px;">
         <button class="btn-unlock" onclick="connectUsbKey()">
           <span>🔑</span> SBLOCCA CON CHIAVE USB
+        </button>
+        <button onclick="promptManualToken()" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-subtle); color: var(--border-cyan); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; margin-top: 6px;">
+          ⌨️ Oppure Inserisci Codice / Token Manuale
         </button>
       </div>
 
       <div id="serialStatus" style="margin-top: 18px; font-size: 0.85rem; color: var(--text-muted);">
-        Inserisci la Chiave Titan nella porta USB e clicca sul pulsante sopra
+        Inserisci la Chiave Titan nella porta USB o inserisci il tuo codice univoco
       </div>
     </div>
 
@@ -580,36 +582,66 @@
   </div>
 
   <script>
-    const EXPECTED_TOKEN = "TITAN-AUTH-TOKEN-GOLD-001";
-    let activeToken = EXPECTED_TOKEN;
+    let activeToken = "TITAN-AUTH-TOKEN-GOLD-001";
 
-    // Controlla se c'è la chiave nell'URL (es. aperta da smartphone o redirect del chip)
-    window.addEventListener('DOMContentLoaded', () => {
+    // Validazione dinamica del token contro l'API del server
+    async function validateTokenWithServer(token) {
+      if (!token) return null;
+      const cleanToken = token.trim();
+      try {
+        const res = await fetch(`/api/artifacts?token=${encodeURIComponent(cleanToken)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success) return data;
+        }
+      } catch (err) {
+        console.error("Errore validazione token:", err);
+      }
+      return null;
+    }
+
+    // Controlla se c'è la chiave nell'URL (es. aperta da smartphone o link diretto)
+    window.addEventListener('DOMContentLoaded', async () => {
       const params = new URLSearchParams(window.location.search);
       const urlKey = params.get('key');
       if (urlKey) {
-        activeToken = urlKey;
-        unlockVault("CHIAVE RILEVATA DA SMARTPHONE");
+        const validData = await validateTokenWithServer(urlKey);
+        if (validData) {
+          activeToken = urlKey.trim();
+          unlockVault("CHIAVE RILEVATA DA LINK", validData);
+        } else {
+          document.getElementById('serialStatus').innerHTML = `<span style="color: var(--red-alert);">Token "${urlKey}" non trovato o non registrato!</span>`;
+        }
       }
     });
+
+    // Inserimento manuale del token (per test rapido o browser senza USB diretta)
+    async function promptManualToken() {
+      const manual = prompt("Inserisci il Token ID della tua chiave Titan (es. TITAN-003, TITAN-AUTH-TOKEN-GOLD-001, ecc.):", activeToken || "TITAN-003");
+      if (!manual) return;
+      const status = document.getElementById('serialStatus');
+      status.innerHTML = "<span style='color: var(--accent-gold);'>Verifica crittografica in corso...</span>";
+      const validData = await validateTokenWithServer(manual);
+      if (validData) {
+        activeToken = manual.trim();
+        unlockVault("CHIAVE AUTENTICATA MANUALMENTE", validData);
+      } else {
+        status.innerHTML = "<span style='color: var(--red-alert);'>Token non trovato nel registro Titan!</span>";
+        alert(`❌ Il token "${manual}" non risulta registrato.\nConialo prima nella dashboard di controllo.`);
+      }
+    }
 
     // Sblocco via WebSerial (Chrome / Edge / Opera su PC o Android)
     async function connectUsbKey() {
       const status = document.getElementById('serialStatus');
 
       if (!("serial" in navigator)) {
-        const manual = prompt("Il tuo browser non supporta la lettura USB diretta.\nInserisci il codice segreto della tua chiave:");
-        if (manual === EXPECTED_TOKEN || manual === 'TITAN-001') {
-          activeToken = manual;
-          unlockVault("CHIAVE AUTENTICATA MANUALMENTE");
-        } else {
-          alert("Codice non valido!");
-        }
+        promptManualToken();
         return;
       }
 
       try {
-        status.innerHTML = "<span style='color: var(--border-cyan);'>Seleziona la porta COM della Chiave Titan...</span>";
+        status.innerHTML = "<span style='color: var(--border-cyan);'>Seleziona la porta USB della Chiave Titan...</span>";
         const port = await navigator.serial.requestPort();
         await port.open({ baudRate: 115200 });
 
@@ -623,13 +655,13 @@
         let received = "";
         const timeout = setTimeout(() => {
           reader.cancel();
-        }, 3000);
+        }, 3500);
 
         while (true) {
           const { value, done } = await reader.read();
           if (done) break;
           received += new TextDecoder().decode(value);
-          if (received.includes(EXPECTED_TOKEN) || received.includes("TITAN-001")) {
+          if (received.includes("TITAN-")) {
             clearTimeout(timeout);
             break;
           }
@@ -637,51 +669,61 @@
         reader.releaseLock();
         await port.close();
 
-        if (received.includes(EXPECTED_TOKEN) || received.includes("TITAN-001")) {
-          activeToken = received.includes(EXPECTED_TOKEN) ? EXPECTED_TOKEN : "TITAN-001";
-          unlockVault("CHIAVE USB AUTENTICATA CON SUCCESSO");
-        } else {
-          status.innerHTML = "<span style='color: var(--red-alert);'>Chiave non riconosciuta o non valida!</span>";
+        // Estrai token identificativo
+        const match = received.match(/TITAN-[A-Za-z0-9_-]+/);
+        const candidate = match ? match[0].trim() : received.trim();
+
+        if (candidate) {
+          status.innerHTML = "<span style='color: var(--border-cyan);'>Verifica crittografica della chiave...</span>";
+          const validData = await validateTokenWithServer(candidate);
+          if (validData) {
+            activeToken = candidate;
+            unlockVault("CHIAVE USB AUTENTICATA CON SUCCESSO", validData);
+            return;
+          }
         }
 
+        status.innerHTML = "<span style='color: var(--red-alert);'>Chiave non riconosciuta nel registro Titan!</span>";
       } catch (err) {
         console.error(err);
         status.innerHTML = "<span style='color: var(--red-alert);'>Connessione annullata o porta occupata. Riprova.</span>";
       }
     }
 
-    async function unlockVault(origin) {
+    async function unlockVault(origin, preloadedData) {
       document.getElementById('lockedState').style.display = 'none';
       document.getElementById('unlockedState').style.display = 'block';
-      document.getElementById('keySerialLabel').innerText = "TITAN-KEY-GOLD-001 (AUTORIZZATO)";
-      await fetchKeyWalletData();
+      if (preloadedData) {
+        renderKeyWalletData(preloadedData);
+      } else {
+        await fetchKeyWalletData();
+      }
+    }
+
+    function renderKeyWalletData(data) {
+      document.getElementById('keySerialLabel').innerText = `${data.serial} • ${data.name}`;
+      document.getElementById('revolutCausale').innerText = `RICARICA ${data.serial}`;
+      document.getElementById('cryptoBalanceLabel').innerText = `${data.balance} ${data.coin}`;
+      document.getElementById('cryptoEurLabel').innerText = `≈ ${data.eurValue.toFixed(2)} € (Prezzo Live Binance: 1 ${data.coin} = ${data.unitPriceEur.toFixed(2)} €)`;
+      
+      const badge = document.getElementById('claimBadgeStatus');
+      if (data.claimed) {
+        badge.style.background = 'rgba(255, 0, 85, 0.15)';
+        badge.style.color = '#ff0055';
+        badge.style.borderColor = '#ff0055';
+        badge.innerText = `⚠️ RISCATTATO SU: ${data.claimedToWallet || 'Wallet Esterno'}`;
+      } else {
+        badge.style.background = 'rgba(0, 255, 102, 0.15)';
+        badge.style.color = '#00ff66';
+        badge.style.borderColor = '#00ff66';
+        badge.innerText = '🛡️ SALDO CUSTODITO NEL CHIP';
+      }
     }
 
     async function fetchKeyWalletData() {
-      try {
-        const res = await fetch(`/api/artifacts?token=${encodeURIComponent(activeToken)}`);
-        const data = await res.json();
-        if (data.success) {
-          document.getElementById('keySerialLabel').innerText = `${data.serial} • ${data.name}`;
-          document.getElementById('revolutCausale').innerText = `RICARICA ${data.serial}`;
-          document.getElementById('cryptoBalanceLabel').innerText = `${data.balance} ${data.coin}`;
-          document.getElementById('cryptoEurLabel').innerText = `≈ ${data.eurValue.toFixed(2)} € (Prezzo Live Binance: 1 ${data.coin} = ${data.unitPriceEur.toFixed(2)} €)`;
-          
-          const badge = document.getElementById('claimBadgeStatus');
-          if (data.claimed) {
-            badge.style.background = 'rgba(255, 0, 85, 0.15)';
-            badge.style.color = '#ff0055';
-            badge.style.borderColor = '#ff0055';
-            badge.innerText = `⚠️ RISCATTATO SU: ${data.claimedToWallet || 'Wallet Esterno'}`;
-          } else {
-            badge.style.background = 'rgba(0, 255, 102, 0.15)';
-            badge.style.color = '#00ff66';
-            badge.style.borderColor = '#00ff66';
-            badge.innerText = '🛡️ SALDO CUSTODITO NEL CHIP';
-          }
-        }
-      } catch (err) {
-        console.error("Errore lettura saldo chiave:", err);
+      const data = await validateTokenWithServer(activeToken);
+      if (data) {
+        renderKeyWalletData(data);
       }
     }
 
