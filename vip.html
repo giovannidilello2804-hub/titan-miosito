@@ -1,24 +1,25 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TITAN 3D | Secret VIP Vault & Hardware Key</title>
+  <title>TITAN 3D | Secret VIP Vault & Hardware Crypto Key</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Rajdhani:wght@600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Rajdhani:wght@600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-dark: #07090e;
-      --card-bg: #0f1420;
-      --card-inner: #151c2c;
+      --bg-dark: #06080e;
+      --card-bg: rgba(15, 21, 34, 0.75);
+      --card-inner: rgba(22, 30, 48, 0.85);
       --border-cyan: #00f0ff;
-      --border-subtle: rgba(0, 240, 255, 0.2);
+      --border-cyan-glow: rgba(0, 240, 255, 0.35);
+      --border-subtle: rgba(0, 240, 255, 0.15);
       --accent-gold: #ffb703;
       --accent-gold-glow: rgba(255, 183, 3, 0.4);
       --text-main: #f0f4f8;
-      --text-muted: #8a99ad;
-      --green-glow: #00ff66;
+      --text-muted: #8b9bb2;
+      --green-glow: #00ff88;
       --red-alert: #ff0055;
     }
 
@@ -31,48 +32,98 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 30px 16px;
+      padding: 0 0 50px;
+      overflow-x: hidden;
       background-image: 
-        radial-gradient(circle at 20% 15%, rgba(0, 240, 255, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 85%, rgba(255, 183, 3, 0.08) 0%, transparent 50%);
+        radial-gradient(circle at 15% 20%, rgba(0, 240, 255, 0.1) 0%, transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(255, 183, 3, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.03) 0%, transparent 60%);
+    }
+
+    /* TICKER LIVE CRYPTO IN CIMA */
+    .crypto-ticker-bar {
+      width: 100%;
+      background: rgba(10, 14, 24, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      z-index: 100;
+      position: sticky;
+      top: 0;
+    }
+
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+    }
+
+    .ticker-green { color: var(--green-glow); }
+    .ticker-gold { color: var(--accent-gold); }
+    .ticker-cyan { color: var(--border-cyan); }
+
+    .pulse-dot {
+      width: 8px; height: 8px;
+      background: var(--green-glow);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--green-glow);
+      animation: pulseLive 1.8s infinite;
+    }
+
+    @keyframes pulseLive {
+      0% { opacity: 0.4; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0.4; transform: scale(0.9); }
     }
 
     .container {
-      max-width: 960px;
+      max-width: 980px;
       width: 100%;
+      padding: 30px 16px 0;
     }
 
     /* HEADER */
     .header {
       text-align: center;
-      margin-bottom: 35px;
+      margin-bottom: 30px;
     }
 
     .logo-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 16px;
+      padding: 6px 18px;
       background: rgba(0, 240, 255, 0.08);
       border: 1px solid var(--border-cyan);
       border-radius: 30px;
       color: var(--border-cyan);
       font-size: 0.85rem;
       font-weight: 700;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
     }
 
     .title {
       font-family: 'Outfit', sans-serif;
-      font-size: 2.6rem;
+      font-size: 2.8rem;
       font-weight: 900;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #fff 30%, #ffb703 100%);
+      background: linear-gradient(135deg, #ffffff 20%, #00f0ff 60%, #ffb703 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .subtitle {
@@ -80,17 +131,18 @@
       font-size: 1.05rem;
     }
 
-    /* LOCKED VAULT CARD */
+    /* LOCKED VAULT HERO */
     #lockedState {
       background: var(--card-bg);
-      border: 1px solid rgba(255, 0, 85, 0.3);
-      border-radius: 24px;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 0, 85, 0.4);
+      border-radius: 26px;
       padding: 50px 30px;
       text-align: center;
-      box-shadow: 0 0 60px rgba(255, 0, 85, 0.1);
+      box-shadow: 0 10px 50px rgba(255, 0, 85, 0.12), inset 0 0 30px rgba(255, 0, 85, 0.05);
       position: relative;
       overflow: hidden;
-      max-width: 620px;
+      max-width: 640px;
       margin: 0 auto;
       transition: all 0.4s ease;
     }
@@ -103,46 +155,63 @@
     }
 
     .padlock-box {
-      width: 90px;
-      height: 90px;
+      width: 95px;
+      height: 95px;
       background: rgba(255, 0, 85, 0.1);
       border: 2px solid var(--red-alert);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.8rem;
-      margin: 0 auto 24px;
-      box-shadow: 0 0 30px rgba(255, 0, 85, 0.3);
-      animation: lockPulse 2s infinite;
+      font-size: 3rem;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 35px rgba(255, 0, 85, 0.35);
+      animation: lockPulse 2.2s infinite;
     }
 
     @keyframes lockPulse {
       0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 0, 85, 0.2); }
-      50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(255, 0, 85, 0.5); }
+      50% { transform: scale(1.06); box-shadow: 0 0 45px rgba(255, 0, 85, 0.5); }
       100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 0, 85, 0.2); }
     }
 
     .btn-unlock {
-      background: linear-gradient(135deg, #00f0ff, #0077b6);
+      background: linear-gradient(135deg, #00f0ff 0%, #0077b6 100%);
       color: #000;
-      font-weight: 800;
-      font-size: 1.1rem;
-      padding: 16px 32px;
+      font-weight: 900;
+      font-size: 1.15rem;
+      padding: 16px 36px;
       border: none;
-      border-radius: 12px;
+      border-radius: 14px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 12px;
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
       transition: all 0.25s ease;
     }
 
     .btn-unlock:hover {
       transform: translateY(-3px);
-      box-shadow: 0 0 45px rgba(0, 240, 255, 0.6);
+      box-shadow: 0 0 50px rgba(0, 240, 255, 0.7);
       background: linear-gradient(135deg, #00f0ff, #ffb703);
+    }
+
+    .btn-manual-token {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--border-cyan);
+      padding: 10px 22px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .btn-manual-token:hover {
+      background: rgba(0, 240, 255, 0.12);
+      border-color: var(--border-cyan);
+      color: #fff;
     }
 
     /* UNLOCKED VAULT */
@@ -156,47 +225,57 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* VIP BANNER */
     .vip-banner {
       background: linear-gradient(135deg, rgba(255, 183, 3, 0.15), rgba(0, 240, 255, 0.1));
       border: 1px solid var(--accent-gold);
-      border-radius: 18px;
+      border-radius: 20px;
       padding: 24px 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 25px;
-      box-shadow: 0 0 30px rgba(255, 183, 3, 0.15);
+      box-shadow: 0 0 35px rgba(255, 183, 3, 0.15);
       flex-wrap: wrap;
       gap: 16px;
     }
 
     .vip-title {
       font-family: 'Outfit', sans-serif;
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       font-weight: 800;
       color: #fff;
     }
 
     .vip-badge {
-      background: var(--accent-gold);
+      background: linear-gradient(135deg, var(--accent-gold), #fb8500);
       color: #000;
-      padding: 6px 14px;
+      padding: 6px 16px;
       border-radius: 20px;
       font-weight: 900;
       font-size: 0.85rem;
       letter-spacing: 1px;
+      box-shadow: 0 0 15px rgba(255, 183, 3, 0.4);
     }
 
-    /* HARDWARE CRYPTO VAULT HERO CARD */
+    /* CASSAFORTE CRYPTO HARDWARE (HOLOGRAPHIC VAULT CARD) */
     .crypto-vault-card {
-      background: linear-gradient(145deg, #0d121f, #151d30);
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
       border: 2px solid var(--border-cyan);
-      border-radius: 20px;
-      padding: 28px;
-      margin-bottom: 25px;
-      box-shadow: 0 0 35px rgba(0, 240, 255, 0.15);
+      border-radius: 24px;
+      padding: 30px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 45px rgba(0, 240, 255, 0.18), inset 0 0 35px rgba(0, 240, 255, 0.04);
       position: relative;
       overflow: hidden;
+    }
+
+    .crypto-vault-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, transparent, #00f0ff, #ffb703, transparent);
     }
 
     .crypto-vault-header {
@@ -208,43 +287,80 @@
       margin-bottom: 20px;
     }
 
+    .hardware-chip-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 183, 3, 0.12);
+      border: 1px solid var(--accent-gold);
+      color: var(--accent-gold);
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
     .crypto-balance-display {
-      background: #090c14;
+      background: rgba(8, 12, 20, 0.9);
       border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 20px 24px;
+      border-radius: 18px;
+      padding: 24px 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 20px;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
+      box-shadow: inset 0 0 25px rgba(0,0,0,0.6);
     }
 
     .crypto-amount {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 2.8rem;
+      font-size: 3.2rem;
       font-weight: 800;
       color: #fff;
       line-height: 1;
+      text-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
     }
 
     .crypto-eur {
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       color: var(--accent-gold);
       font-weight: 700;
-      margin-top: 4px;
+      margin-top: 6px;
     }
 
+    /* MINI PILLS COIN VALORI */
+    .coin-pills-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .coin-pill {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* BOTTONI AZIONI RAPIDE */
     .crypto-actions-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 14px;
     }
 
     .btn-crypto-act {
-      padding: 14px 18px;
-      border-radius: 10px;
+      padding: 15px 20px;
+      border-radius: 14px;
       font-weight: 800;
       font-size: 0.95rem;
       cursor: pointer;
@@ -253,29 +369,29 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       transition: all 0.25s ease;
       text-decoration: none;
     }
 
     .btn-revolut {
-      background: linear-gradient(135deg, #0075ff, #00d2ff);
+      background: linear-gradient(135deg, #0075ff 0%, #00d2ff 100%);
       color: #fff;
-      box-shadow: 0 0 20px rgba(0, 117, 255, 0.3);
+      box-shadow: 0 0 25px rgba(0, 117, 255, 0.35);
     }
     .btn-revolut:hover {
       transform: translateY(-2px);
-      box-shadow: 0 0 30px rgba(0, 210, 255, 0.5);
+      box-shadow: 0 0 40px rgba(0, 210, 255, 0.6);
     }
 
     .btn-crypto-swap {
-      background: linear-gradient(135deg, #ffb703, #fb8500);
+      background: linear-gradient(135deg, #ffb703 0%, #fb8500 100%);
       color: #000;
-      box-shadow: 0 0 20px rgba(255, 183, 3, 0.3);
+      box-shadow: 0 0 25px rgba(255, 183, 3, 0.35);
     }
     .btn-crypto-swap:hover {
       transform: translateY(-2px);
-      box-shadow: 0 0 30px rgba(255, 183, 3, 0.5);
+      box-shadow: 0 0 40px rgba(255, 183, 3, 0.6);
     }
 
     .btn-claim-wallet {
@@ -286,51 +402,70 @@
     .btn-claim-wallet:hover {
       background: var(--green-glow);
       color: #000;
-      box-shadow: 0 0 25px rgba(0, 255, 102, 0.4);
+      box-shadow: 0 0 30px rgba(0, 255, 102, 0.45);
     }
 
-    /* MODAL TOPUP / REVOLUT */
+    /* MODAL BOX */
     .modal-box {
       display: none;
-      background: #0c111c;
+      background: #0a0f1c;
       border: 1px solid var(--border-cyan);
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 24px;
-      margin-top: 20px;
+      margin-top: 22px;
       animation: fadeIn 0.3s ease;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+
+    .amount-btn-pill {
+      padding: 10px 18px;
+      background: #0075ff;
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .amount-btn-pill:hover {
+      background: #00d2ff;
+      color: #000;
+      transform: scale(1.05);
     }
 
     /* SECTIONS */
     .grid-sections {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
       gap: 20px;
       margin-bottom: 30px;
     }
 
     .vault-card {
       background: var(--card-bg);
+      backdrop-filter: blur(14px);
       border: 1px solid var(--border-subtle);
-      border-radius: 18px;
-      padding: 24px;
+      border-radius: 20px;
+      padding: 26px;
       transition: all 0.3s ease;
       position: relative;
     }
 
     .vault-card:hover {
       border-color: var(--border-cyan);
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
-      transform: translateY(-2px);
+      box-shadow: 0 10px 35px rgba(0, 240, 255, 0.18);
+      transform: translateY(-3px);
     }
 
     .vault-card-icon {
-      font-size: 2.2rem;
+      font-size: 2.4rem;
       margin-bottom: 12px;
     }
 
     .vault-card-title {
       font-family: 'Outfit', sans-serif;
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       font-weight: 700;
       margin-bottom: 8px;
       color: #fff;
@@ -338,20 +473,22 @@
 
     .vault-card-desc {
       color: var(--text-muted);
-      font-size: 0.9rem;
-      line-height: 1.5;
-      margin-bottom: 18px;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      margin-bottom: 20px;
     }
 
     .btn-download {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       width: 100%;
-      text-align: center;
-      padding: 12px;
+      padding: 12px 14px;
       background: var(--card-inner);
       border: 1px solid var(--border-cyan);
       color: var(--border-cyan);
-      border-radius: 8px;
+      border-radius: 10px;
       font-weight: 700;
       text-decoration: none;
       cursor: pointer;
@@ -361,64 +498,91 @@
     .btn-download:hover {
       background: var(--border-cyan);
       color: #000;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
     }
 
     .coupon-box {
       background: #080c14;
       border: 1px dashed var(--accent-gold);
-      border-radius: 12px;
-      padding: 16px;
+      border-radius: 14px;
+      padding: 18px;
       text-align: center;
       margin-top: 10px;
+      position: relative;
     }
 
     .coupon-code {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 1.8rem;
-      font-weight: 700;
+      font-size: 2.2rem;
+      font-weight: 800;
       color: var(--accent-gold);
-      letter-spacing: 3px;
+      letter-spacing: 4px;
+      text-shadow: 0 0 15px rgba(255, 183, 3, 0.3);
     }
 
     /* CERTIFICATE */
     .certificate-box {
       background: var(--card-bg);
-      border: 1px solid rgba(0, 255, 102, 0.3);
-      border-radius: 18px;
-      padding: 24px;
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(0, 255, 102, 0.35);
+      border-radius: 20px;
+      padding: 26px;
       text-align: center;
-      box-shadow: 0 0 30px rgba(0, 255, 102, 0.08);
+      box-shadow: 0 0 35px rgba(0, 255, 102, 0.1);
     }
   </style>
 </head>
 <body>
 
+  <!-- TICKER LIVE STREAMING BINANCE -->
+  <div class="crypto-ticker-bar">
+    <div class="ticker-item">
+      <div class="pulse-dot"></div>
+      <span>HARDWARE CRYPTO VAULT</span>
+    </div>
+    <div class="ticker-item">
+      <span>🟠 BTC:</span>
+      <span id="tickerBtcVal" class="ticker-gold">58.500 €</span>
+    </div>
+    <div class="ticker-item">
+      <span>🟢 USDT:</span>
+      <span id="tickerUsdtVal" class="ticker-green">0.92 €</span>
+    </div>
+    <div class="ticker-item">
+      <span>🔵 DGB (Farm Titan):</span>
+      <span id="tickerDgbVal" class="ticker-cyan">0.0078 €</span>
+    </div>
+    <div class="ticker-item" style="color: var(--accent-gold);">
+      <span>⚡ REVENUE SHARE: <b>2.0% Fisso</b></span>
+    </div>
+  </div>
+
   <div class="container">
     <div class="header">
       <div class="logo-badge">🛡️ TITAN 3D STUDIO • HARDWARE VAULT</div>
       <h1 class="title">SECRET VIP VAULT & CRYPTO WALLET</h1>
-      <p class="subtitle">Accesso riservato e gestione saldi hardware con la Chiave Fisica Titan</p>
+      <p class="subtitle">Accesso ultra-riservato e cassaforte crittografica con la Chiave Fisica Titan</p>
     </div>
 
     <!-- LOCKED STATE -->
     <div id="lockedState">
       <div class="padlock-box">🔒</div>
-      <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.6rem; margin-bottom: 10px;">ACCESSO PROTETTO DA CHIAVE HARDWARE</h2>
-      <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">
-        Questa cassaforte è crittografata. Per consultare il tuo saldo crypto reale, ricaricare, 
-        scaricare file 3D inediti e usare i vantaggi VIP, collega la tua <b>Chiave Fisica Titan 3D</b> via USB o inserisci il token.
+      <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.7rem; margin-bottom: 12px;">ACCESSO PROTETTO DA CHIAVE FISICA</h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; max-width: 500px; margin: 0 auto;">
+        Questa cassaforte è crittografata su chip hardware. Per visualizzare il tuo saldo in criptovaluta reale, 
+        effettuare ricariche o scaricare i file 3D inediti, collega la tua <b>Chiave Fisica Titan 3D</b> alla porta USB.
       </p>
 
-      <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 24px;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 28px;">
         <button class="btn-unlock" onclick="connectUsbKey()">
           <span>🔑</span> SBLOCCA CON CHIAVE USB
         </button>
-        <button onclick="promptManualToken()" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-subtle); color: var(--border-cyan); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; margin-top: 6px;">
+        <button class="btn-manual-token" onclick="promptManualToken()">
           ⌨️ Oppure Inserisci Codice / Token Manuale
         </button>
       </div>
 
-      <div id="serialStatus" style="margin-top: 18px; font-size: 0.85rem; color: var(--text-muted);">
+      <div id="serialStatus" style="margin-top: 20px; font-size: 0.85rem; color: var(--text-muted);">
         Inserisci la Chiave Titan nella porta USB o inserisci il tuo codice univoco
       </div>
     </div>
@@ -441,24 +605,36 @@
       <div class="crypto-vault-card">
         <div class="crypto-vault-header">
           <div>
-            <div style="font-size: 0.8rem; color: var(--border-cyan); font-weight: 700; letter-spacing: 1px;">CASSAFORTE CRITTOGRAFICA HARDWARE</div>
-            <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.6rem; color: #fff;">Saldo Criptovaluta della Chiave</h2>
+            <div style="font-size: 0.8rem; color: var(--border-cyan); font-weight: 800; letter-spacing: 1px;">CASSAFORTE CRITTOGRAFICA HARDWARE</div>
+            <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.7rem; color: #fff;">Saldo Criptovaluta della Chiave</h2>
           </div>
-          <div id="claimBadgeStatus" style="background: rgba(0,255,102,0.15); color: #00ff66; border: 1px solid #00ff66; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;">
-            🛡️ SALDO CUSTODITO NEL CHIP
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <div class="hardware-chip-badge">
+              <span>⚡</span> CHIP SECURE ELEMENT
+            </div>
+            <div id="claimBadgeStatus" style="background: rgba(0,255,102,0.15); color: #00ff66; border: 1px solid #00ff66; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;">
+              🛡️ SALDO CUSTODITO NEL CHIP
+            </div>
           </div>
         </div>
 
         <div class="crypto-balance-display">
           <div>
-            <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Saldo Reale Disponibile:</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Saldo Reale Disponibile:</div>
             <div class="crypto-amount" id="cryptoBalanceLabel">10.00 USDT</div>
             <div class="crypto-eur" id="cryptoEurLabel">≈ 9.20 € (Prezzo Live Binance)</div>
+            
+            <div class="coin-pills-row">
+              <span class="coin-pill">🟢 <b>USDT:</b> <span id="pillUsdtVal">10.00</span></span>
+              <span class="coin-pill">🟠 <b>Bitcoin:</b> <span id="pillBtcVal">≈ 17,100 SATS</span></span>
+              <span class="coin-pill">🔵 <b>DGB:</b> <span id="pillDgbVal">≈ 1,280 DGB</span></span>
+            </div>
           </div>
+
           <div style="text-align: right;">
             <div style="font-size: 0.8rem; color: var(--text-muted);">Crittografia & Sicurezza:</div>
-            <div style="font-weight: 700; color: #fff;">Hardware Token Chip ESP8266/ESP32</div>
-            <div style="font-size: 0.75rem; color: var(--green-glow); margin-top: 4px;">● Commissione di custodia: 2.0%</div>
+            <div style="font-weight: 700; color: #fff; font-size: 1.05rem;">Chip Hardware ESP32/ESP8266</div>
+            <div style="font-size: 0.8rem; color: var(--green-glow); margin-top: 6px;">● Custodia e Revenue Share: <b>2.0% Diretto</b></div>
           </div>
         </div>
 
@@ -478,44 +654,45 @@
         <!-- MODAL / BOX RICARICA REVOLUT -->
         <div id="revolutModal" class="modal-box">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-            <h3 style="font-family: 'Outfit', sans-serif; color: #00d2ff; font-size: 1.2rem;">💳 Ricarica Rapida tramite Revolut o Bonifico</h3>
-            <button onclick="toggleRevolutModal()" style="background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer;">✕</button>
+            <h3 style="font-family: 'Outfit', sans-serif; color: #00d2ff; font-size: 1.3rem;">💳 Ricarica Rapida tramite Revolut o Bonifico</h3>
+            <button onclick="toggleRevolutModal()" style="background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer;">✕</button>
           </div>
-          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px; line-height: 1.5;">
-            Puoi ricaricare il saldo della tua Chiave Titan inviando l'importo direttamente tramite Revolut (senza commissioni di circuito) oppure con bonifico istantaneo.
+          <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 18px; line-height: 1.6;">
+            Ricarica la tua Chiave Hardware inviando l'importo tramite Revolut (istantaneo senza commissioni bancarie) o bonifico:
           </p>
 
-          <div style="background: var(--card-inner); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 16px; margin-bottom: 16px;">
-            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px;">CANALE DIRETTO REVOLUT:</div>
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-              <span style="font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 700; color: #fff;">Revolut: <b style="color: #00d2ff;">@giovannidilello</b></span>
-              <a href="https://revolut.me" target="_blank" class="btn-crypto-act btn-revolut" style="padding: 8px 16px; font-size: 0.85rem;">Apri Revolut</a>
+          <div style="background: var(--card-inner); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 18px; margin-bottom: 18px;">
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px;">CANALE DIRETTO REVOLUT DI GIOVANNI:</div>
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+              <span style="font-family: 'Rajdhani', sans-serif; font-size: 1.6rem; font-weight: 700; color: #fff;">Revolut: <b style="color: #00d2ff;">@giovannidilello</b></span>
+              <a href="https://revolut.me" target="_blank" class="btn-crypto-act btn-revolut" style="padding: 10px 20px; font-size: 0.9rem;">Apri Revolut App</a>
             </div>
-            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">
-              Causale ricarica da inserire: <b style="color: var(--accent-gold);" id="revolutCausale">RICARICA TITAN-KEY-001</b>
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 10px;">
+              Causale ricarica da inserire: <b style="color: var(--accent-gold); font-size: 1rem;" id="revolutCausale">RICARICA TITAN-KEY-001</b>
             </div>
           </div>
 
-          <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-            <span style="font-size: 0.85rem; color: var(--text-muted);">Oppure simula una ricarica immediata:</span>
-            <button onclick="submitRevolutTopup(10)" style="padding: 8px 14px; background: #0075ff; border: none; color: #fff; border-radius: 6px; cursor: pointer; font-weight: 700;">+10 €</button>
-            <button onclick="submitRevolutTopup(25)" style="padding: 8px 14px; background: #0075ff; border: none; color: #fff; border-radius: 6px; cursor: pointer; font-weight: 700;">+25 €</button>
-            <button onclick="submitRevolutTopup(50)" style="padding: 8px 14px; background: #0075ff; border: none; color: #fff; border-radius: 6px; cursor: pointer; font-weight: 700;">+50 €</button>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+            <span style="font-size: 0.9rem; color: var(--text-muted);">Oppure simula una ricarica immediata di test:</span>
+            <button class="amount-btn-pill" onclick="submitRevolutTopup(10)">+10 €</button>
+            <button class="amount-btn-pill" onclick="submitRevolutTopup(25)">+25 €</button>
+            <button class="amount-btn-pill" onclick="submitRevolutTopup(50)">+50 €</button>
+            <button class="amount-btn-pill" onclick="submitRevolutTopup(100)">+100 €</button>
           </div>
         </div>
 
         <!-- MODAL / BOX RISCATTO WALLET -->
         <div id="claimModal" class="modal-box">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-            <h3 style="font-family: 'Outfit', sans-serif; color: var(--green-glow); font-size: 1.2rem;">💸 Riscatta / Trasferisci su Tuo Wallet Personale</h3>
-            <button onclick="toggleClaimModal()" style="background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer;">✕</button>
+            <h3 style="font-family: 'Outfit', sans-serif; color: var(--green-glow); font-size: 1.3rem;">💸 Riscatta / Trasferisci su Tuo Wallet Personale</h3>
+            <button onclick="toggleClaimModal()" style="background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer;">✕</button>
           </div>
-          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">
-            Inserisci l'indirizzo del tuo wallet privato (USDT TRC20/BEP20 o Bitcoin) per prelevare il saldo presente sulla chiave.
+          <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 16px;">
+            Inserisci l'indirizzo del tuo wallet privato (USDT TRC20/BEP20 o Bitcoin) per prelevare il saldo presente sulla chiave:
           </p>
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <input type="text" id="targetWalletInput" placeholder="Incolla indirizzo wallet (es. 0x... o T...)" style="flex: 1; min-width: 260px; padding: 12px; background: var(--card-inner); border: 1px solid var(--border-subtle); border-radius: 8px; color: #fff;">
-            <button onclick="submitClaim()" class="btn-crypto-act btn-claim-wallet" style="padding: 12px 24px;">Conferma Riscatto</button>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <input type="text" id="targetWalletInput" placeholder="Incolla indirizzo wallet (es. 0x... o T...)" style="flex: 1; min-width: 260px; padding: 14px; background: var(--card-inner); border: 1px solid var(--border-subtle); border-radius: 10px; color: #fff; font-size: 0.95rem;">
+            <button onclick="submitClaim()" class="btn-crypto-act btn-claim-wallet" style="padding: 14px 28px;">Conferma Riscatto</button>
           </div>
         </div>
 
@@ -529,9 +706,9 @@
           <div class="vault-card-icon">📁</div>
           <h3 class="vault-card-title">File 3D Inediti (STL/3MF)</h3>
           <p class="vault-card-desc">
-            Modelli ad alta risoluzione non disponibili pubblicamente. Pronti per la stampa FDM o Resina con tolleranze calibrate.
+            Modelli ad altissima risoluzione riservati ai possessori della Chiave Fisica. Tolleranze calibrate per stampa FDM e Resina.
           </p>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
             <button class="btn-download" onclick="downloadFile('Titan_Cyber_Skull_VIP.stl')">⬇️ Scarica: Cyber Skull VIP (.stl)</button>
             <button class="btn-download" onclick="downloadFile('WallStreet_Bull_Geometric.stl')">⬇️ Scarica: Toro Wall Street (.stl)</button>
             <button class="btn-download" onclick="downloadFile('Bitcoin_Desk_Trophy_Vault.3mf')">⬇️ Scarica: Bitcoin Trophy (.3mf)</button>
@@ -543,12 +720,12 @@
           <div class="vault-card-icon">🎟️</div>
           <h3 class="vault-card-title">Coupon VIP Permanente</h3>
           <p class="vault-card-desc">
-            Sconto del <b>20% a vita</b> su qualsiasi ordine di stampa 3D, prototipazione o verniciatura su Titan 3D Studio.
+            Sconto del <b>20% a vita</b> su qualsiasi ordine di stampa 3D, scansione, prototipazione o verniciatura su Titan 3D Studio.
           </p>
           <div class="coupon-box">
-            <div style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Il tuo Codice Esclusivo:</div>
+            <div style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Il tuo Codice Esclusivo:</div>
             <div class="coupon-code">TITANVIP20</div>
-            <div style="color: var(--green-glow); font-size: 0.8rem; margin-top: 4px;">● Attivo e collegato alla tua Chiave</div>
+            <div style="color: var(--green-glow); font-size: 0.85rem; margin-top: 6px;">● Valido e collegato alla tua Chiave</div>
           </div>
         </div>
 
@@ -557,9 +734,9 @@
           <div class="vault-card-icon">⚡</div>
           <h3 class="vault-card-title">Assistenza & Canale VIP</h3>
           <p class="vault-card-desc">
-            Supporto prioritario con Giovanni e test delle nuove parti prima del rilascio ufficiale.
+            Accesso prioritario per testare i nuovi pezzi prima che vengano messi in vendita, con contatto diretto con Gio nel laboratorio.
           </p>
-          <div style="background: var(--card-inner); padding: 14px; border-radius: 10px; font-size: 0.85rem; color: #fff;">
+          <div style="background: var(--card-inner); padding: 16px; border-radius: 12px; font-size: 0.9rem; color: #fff;">
             📱 <b>Telegram Prioritario:</b><br>
             <a href="https://t.me/titan_capital_gio_bot" target="_blank" style="color: var(--border-cyan); text-decoration: none; font-weight: 700;">@titan_capital_gio_bot</a>
           </div>
@@ -569,12 +746,12 @@
 
       <!-- CERTIFICATE OF OWNERSHIP -->
       <div class="certificate-box">
-        <h4 style="font-family: 'Outfit', sans-serif; font-size: 1.2rem; color: var(--green-glow); margin-bottom: 6px;">
-          ✓ CERTIFICATO DI AUTENTICITÀ HARDWARE & CASSAFORTE
+        <h4 style="font-family: 'Outfit', sans-serif; font-size: 1.3rem; color: var(--green-glow); margin-bottom: 8px;">
+          ✓ CERTIFICATO DI AUTENTICITÀ HARDWARE & CASSAFORTE DIGITALE
         </h4>
-        <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 650px; margin: 0 auto;">
-          Questo dispositivo è stato fabbricato e programmato artigianalmente da Titan 3D Studio. 
-          La firma digitale crittografata nel chip garantisce la proprietà esclusiva del dispositivo e l'accesso ai fondi custoditi.
+        <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 650px; margin: 0 auto; line-height: 1.6;">
+          Questo dispositivo è stato fabbricato e programmato artigianalmente nei laboratori Titan 3D Studio. 
+          La firma crittografica custodita nel silicio garantisce l'autenticità del pezzo, l'accesso ai file riservati e la custodia dei fondi.
         </p>
       </div>
 
@@ -583,6 +760,25 @@
 
   <script>
     let activeToken = "TITAN-AUTH-TOKEN-GOLD-001";
+
+    // Aggiornamento prezzi live da Binance
+    async function updateLiveTickers() {
+      try {
+        const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbols=["BTCEUR","EURUSDT","DGBUSDT"]');
+        if (res.ok) {
+          const arr = await res.json();
+          let btc = 58500, usdt = 0.92, dgb = 0.0078;
+          arr.forEach(t => {
+            if (t.symbol === "BTCEUR") btc = parseFloat(t.price);
+            if (t.symbol === "EURUSDT") usdt = Number((1 / parseFloat(t.price)).toFixed(4));
+            if (t.symbol === "DGBUSDT") dgb = Number((parseFloat(t.price) * usdt).toFixed(5));
+          });
+          document.getElementById('tickerBtcVal').innerText = `${btc.toLocaleString('it-IT', {maximumFractionDigits:0})} €`;
+          document.getElementById('tickerUsdtVal').innerText = `${usdt.toFixed(2)} €`;
+          document.getElementById('tickerDgbVal').innerText = `${dgb.toFixed(4)} €`;
+        }
+      } catch (e) {}
+    }
 
     // Validazione dinamica del token contro l'API del server
     async function validateTokenWithServer(token) {
@@ -600,22 +796,25 @@
       return null;
     }
 
-    // Controlla se c'è la chiave nell'URL (es. aperta da smartphone o link diretto)
+    // Controlla se c'è la chiave nell'URL (es. aperta da ESP32 SuperMini con BadUSB o smartphone)
     window.addEventListener('DOMContentLoaded', async () => {
+      updateLiveTickers();
+      setInterval(updateLiveTickers, 15000);
+
       const params = new URLSearchParams(window.location.search);
       const urlKey = params.get('key');
       if (urlKey) {
         const validData = await validateTokenWithServer(urlKey);
         if (validData) {
           activeToken = urlKey.trim();
-          unlockVault("CHIAVE RILEVATA DA LINK", validData);
+          unlockVault("CHIAVE RILEVATA AUTOMATICAMENTE", validData);
         } else {
-          document.getElementById('serialStatus').innerHTML = `<span style="color: var(--red-alert);">Token "${urlKey}" non trovato o non registrato!</span>`;
+          document.getElementById('serialStatus').innerHTML = `<span style="color: var(--red-alert);">Token "${urlKey}" non registrato nel sistema!</span>`;
         }
       }
     });
 
-    // Inserimento manuale del token (per test rapido o browser senza USB diretta)
+    // Inserimento manuale del token
     async function promptManualToken() {
       const manual = prompt("Inserisci il Token ID della tua chiave Titan (es. TITAN-003, TITAN-AUTH-TOKEN-GOLD-001, ecc.):", activeToken || "TITAN-003");
       if (!manual) return;
@@ -669,7 +868,6 @@
         reader.releaseLock();
         await port.close();
 
-        // Estrai token identificativo
         const match = received.match(/TITAN-[A-Za-z0-9_-]+/);
         const candidate = match ? match[0].trim() : received.trim();
 
@@ -706,6 +904,13 @@
       document.getElementById('cryptoBalanceLabel').innerText = `${data.balance} ${data.coin}`;
       document.getElementById('cryptoEurLabel').innerText = `≈ ${data.eurValue.toFixed(2)} € (Prezzo Live Binance: 1 ${data.coin} = ${data.unitPriceEur.toFixed(2)} €)`;
       
+      const btcPrice = 58500;
+      const sats = Math.round((data.eurValue / btcPrice) * 100000000);
+      const dgbCount = Math.round(data.eurValue / 0.0078);
+      document.getElementById('pillUsdtVal').innerText = `${data.balance} ${data.coin}`;
+      document.getElementById('pillBtcVal').innerText = `≈ ${sats.toLocaleString('it-IT')} SATS`;
+      document.getElementById('pillDgbVal').innerText = `≈ ${dgbCount.toLocaleString('it-IT')} DGB`;
+
       const badge = document.getElementById('claimBadgeStatus');
       if (data.claimed) {
         badge.style.background = 'rgba(255, 0, 85, 0.15)';
