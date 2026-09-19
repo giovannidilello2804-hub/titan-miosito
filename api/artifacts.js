@@ -1,4 +1,4 @@
-﻿// Vercel Serverless Function: /api/artifacts
+// Vercel Serverless Function: /api/artifacts
 // Gestione dei "Titan Crypto-Artifacts", Prezzi Live e Revenue Share (1.5% - 2%)
 
 const AFFILIATE_CODE = process.env.FIXEDFLOAT_AFFILIATE || "kdee8haa";
@@ -374,6 +374,29 @@ export default async function handler(req, res) {
           };
           artifactsStore.push(newItem);
           return res.status(200).json({ success: true, message: `Nuova chiave ${newItem.token} coniata con successo!`, item: newItem });
+        }
+      }
+
+      // 5. ADMIN: ELIMINA CHIAVE / MANUFATTO
+      if (action === "admin_delete") {
+        if (pin !== ADMIN_PIN) {
+          return res.status(401).json({ success: false, error: "PIN non autorizzato (Richiesto: 2804)" });
+        }
+        const { targetToken } = body;
+        if (!targetToken) {
+          return res.status(400).json({ success: false, error: "Token ID mancante" });
+        }
+        const cleanToken = targetToken.trim().toUpperCase();
+        const initialCount = artifactsStore.length;
+        artifactsStore = artifactsStore.filter(a => a.token.toUpperCase() !== cleanToken);
+
+        if (artifactsStore.length < initialCount) {
+          return res.status(200).json({
+            success: true,
+            message: `Chiave "${cleanToken}" eliminata definitivamente dal sistema!`
+          });
+        } else {
+          return res.status(404).json({ success: false, error: `Chiave "${cleanToken}" non trovata` });
         }
       }
 

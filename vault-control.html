@@ -489,6 +489,7 @@
             <button class="btn-action" style="border-color: var(--accent-gold); color: var(--accent-gold);" onclick="simulateSwap('${item.token}', 10)">⚡ Simula Ricarica 10€ (+0.20€ a te)</button>
             <button class="btn-action" onclick="topUpBalance('${item.token}', ${item.balance})">💳 Ricarica Saldo</button>
             ${item.claimed ? `<button class="btn-action" style="border-color: var(--border-cyan); color: var(--border-cyan);" onclick="resetClaimStatus('${item.token}')">🔄 Ripristina Riscatto</button>` : ''}
+            <button class="btn-action" style="border-color: var(--red-alert); color: var(--red-alert);" onclick="deleteArtifact('${item.token}', '${item.name}')">🗑️ Elimina Chiave</button>
           </div>
         `;
         container.appendChild(card);
@@ -620,6 +621,35 @@
         if (data.success) loadArtifacts();
       } catch (err) {
         alert("Errore: " + err.message);
+      }
+    }
+
+    async function deleteArtifact(token, name) {
+      if (!confirm(`Sei sicuro di voler eliminare definitivamente la chiave "${name}" (${token})?\n\nQuesta azione revocherà l'accesso e cancellerà la chiave dal registro.`)) {
+        return;
+      }
+
+      const activePin = currentPin || sessionStorage.getItem('titan_vault_pin') || "2804";
+
+      try {
+        const res = await fetch('/api/artifacts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'admin_delete',
+            pin: activePin,
+            targetToken: token
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(`🗑️ ${data.message}`);
+          await loadArtifacts();
+        } else {
+          alert("Errore eliminazione: " + (data.error || "Impossibile eliminare la chiave"));
+        }
+      } catch (err) {
+        alert("Errore di rete: " + err.message);
       }
     }
   </script>
