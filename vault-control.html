@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TITAN 3D | Secret Vault & Artifacts Control Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Rajdhani:wght@600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0d14;
+      --card-bg: #121824;
+      --card-bg-subtle: #172033;
+      --border-cyan: #00f0ff;
+      --border-subtle: rgba(0, 240, 255, 0.2);
+      --accent-gold: #ffb703;
+      --text-main: #f0f4f8;
+      --text-muted: #8a99ad;
+      --green-glow: #00ff66;
+      --red-alert: #ff0055;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.07) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(255, 183, 3, 0.07) 0%, transparent 40%);
+    }
+
+    .container {
+      max-width: 1050px;
+      width: 100%;
+    }
+
+    /* HEADER */
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 28px;
+    }
+
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      font-size: 1.6rem;
+      letter-spacing: 1px;
+      background: linear-gradient(135deg, #00f0ff, #ffb703);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 255, 102, 0.1);
+      border: 1px solid var(--green-glow);
+      color: var(--green-glow);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--green-glow);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--green-glow);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.3; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.3); }
+      100% { opacity: 0.3; transform: scale(0.9); }
+    }
+
+    /* AUTH LOCK SCREEN */
+    #authOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 13, 20, 0.96);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 20px;
+    }
+
+    .auth-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-cyan);
+      border-radius: 20px;
+      padding: 40px 30px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(0, 240, 255, 0.15);
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 14px;
+      background: #080c14;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1.4rem;
+      text-align: center;
+      letter-spacing: 8px;
+      margin: 20px 0;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .auth-input:focus {
+      border-color: var(--border-cyan);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #00f0ff, #00a8ff);
+      border: none;
+      border-radius: 10px;
+      color: #000;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+    }
+
+    /* STATS GRID */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--border-cyan), transparent);
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .stat-val {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* ARTIFACTS SECTION */
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .artifact-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      transition: all 0.25s ease;
+    }
+
+    .artifact-card:hover {
+      border-color: var(--border-cyan);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.1);
+    }
+
+    .artifact-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .artifact-serial {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--border-cyan);
+      background: rgba(0, 240, 255, 0.1);
+      padding: 3px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+    }
+
+    .artifact-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .artifact-meta {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+
+    .artifact-balance-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #0a0e17;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 183, 3, 0.2);
+      width: fit-content;
+    }
+
+    .balance-val {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+    }
+
+    .badge-status {
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-online {
+      background: rgba(0, 255, 102, 0.15);
+      color: var(--green-glow);
+      border: 1px solid var(--green-glow);
+    }
+
+    .status-offline {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .badge-claimed {
+      background: rgba(255, 0, 85, 0.15);
+      color: var(--red-alert);
+      border: 1px solid var(--red-alert);
+    }
+
+    .badge-unclaimed {
+      background: rgba(0, 240, 255, 0.15);
+      color: var(--border-cyan);
+      border: 1px solid var(--border-cyan);
+    }
+
+    .btn-action {
+      background: var(--card-bg-subtle);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+      background: var(--border-cyan);
+      color: #000;
+    }
+
+    /* CREATE NEW FORM */
+    .mint-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 30px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      background: #0a0e17;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--border-cyan);
+    }
+
+    @media (max-width: 680px) {
+      .artifact-card {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PIN OVERLAY -->
+  <div id="authOverlay">
+    <div class="auth-card">
+      <div style="font-size: 2.5rem; margin-bottom: 12px;">🛡️</div>
+      <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.4rem;">TITAN ARTIFACTS VAULT</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 6px;">Inserisci il PIN amministratore per accedere</p>
+      <input type="password" id="pinInput" class="auth-input" maxlength="8" placeholder="••••">
+      <button class="btn-primary" onclick="authenticate()">ACCEDI AL VAULT</button>
+      <div id="authError" style="color: var(--red-alert); font-size: 0.85rem; margin-top: 12px; display: none;">PIN non corretto. Riprova.</div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <div class="container" id="mainDashboard" style="display: none;">
+    <div class="header-bar">
+      <div>
+        <div class="brand-title">TITAN 3D STUDIO</div>
+        <div style="color: var(--text-muted); font-size: 0.85rem;">Master Control • Crypto-Artifacts Ecosystem</div>
+      </div>
+      <div class="badge-live">
+        <div class="pulse-dot"></div>
+        SERVERLESS CLOUD ONLINE
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Manufatti Coniati</div>
+        <div class="stat-val" id="statTotalCount">--</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Dispositivi Online Ora</div>
+        <div class="stat-val" style="color: var(--green-glow);" id="statOnlineCount">--</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Tesoretto Custodito</div>
+        <div class="stat-val" style="color: var(--accent-gold);" id="statTotalCoins">-- DUCO</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Mining Farm Link</div>
+        <div class="stat-val" style="color: var(--border-cyan);">1.77 TH/s</div>
+      </div>
+    </div>
+
+    <!-- ARTIFACTS LIST -->
+    <div class="section-title">
+      <span>🏺 Manufatti 3D Attivi</span>
+      <button class="btn-action" style="margin-left: auto;" onclick="loadArtifacts()">🔄 Aggiorna</button>
+    </div>
+    <div id="artifactsList">
+      <!-- Popolato dinamicamente da JS -->
+    </div>
+
+    <!-- MINT NEW ARTIFACT FORM -->
+    <div class="mint-card">
+      <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; margin-bottom: 4px;">⚡ Conia / Registra Nuovo Manufatto 3D</h3>
+      <p style="color: var(--text-muted); font-size: 0.85rem;">Associa un nuovo chip D1 Mini / SuperMini a una somma crypto precaricata</p>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Token Identificativo (da flashare sul chip)</label>
+          <input type="text" id="newCardToken" class="form-input" placeholder="es. TITAN-002" value="TITAN-002">
+        </div>
+        <div class="form-group">
+          <label>Nome Creazione 3D</label>
+          <input type="text" id="newCardName" class="form-input" placeholder="es. Cyber Skull 3D" value="Titan Cyber Relic #002">
+        </div>
+        <div class="form-group">
+          <label>Criptovaluta</label>
+          <select id="newCardCoin" class="form-input">
+            <option value="DUCO">Duino-Coin (DUCO)</option>
+            <option value="DGB">DigiByte (DGB)</option>
+            <option value="SATS">Bitcoin Satoshis (SATS)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Importo Precaricato</label>
+          <input type="number" id="newCardBalance" class="form-input" placeholder="50" value="50">
+        </div>
+      </div>
+      <div style="margin-top: 16px; text-align: right;">
+        <button class="btn-primary" style="width: auto; padding: 10px 24px;" onclick="mintNewArtifact()">CONIA & ASSEGNA</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentPin = sessionStorage.getItem('titan_vault_pin') || '';
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (currentPin) {
+        verifyPin(currentPin);
+      }
+    });
+
+    async function authenticate() {
+      const pin = document.getElementById('pinInput').value.trim();
+      if (!pin) return;
+      verifyPin(pin);
+    }
+
+    async function verifyPin(pin) {
+      try {
+        const res = await fetch(`/api/artifacts?action=admin_list&pin=${encodeURIComponent(pin)}`);
+        if (res.ok) {
+          const data = await res.json();
+          currentPin = pin;
+          sessionStorage.setItem('titan_vault_pin', pin);
+          document.getElementById('authOverlay').style.display = 'none';
+          document.getElementById('mainDashboard').style.display = 'block';
+          renderArtifacts(data.artifacts);
+        } else {
+          document.getElementById('authError').style.display = 'block';
+        }
+      } catch (err) {
+        console.error(err);
+        document.getElementById('authError').style.display = 'block';
+      }
+    }
+
+    async function loadArtifacts() {
+      if (!currentPin) return;
+      try {
+        const res = await fetch(`/api/artifacts?action=admin_list&pin=${encodeURIComponent(currentPin)}`);
+        const data = await res.json();
+        if (data.success) {
+          renderArtifacts(data.artifacts);
+        }
+      } catch (e) {
+        console.error("Errore caricamento:", e);
+      }
+    }
+
+    function renderArtifacts(artifacts) {
+      const container = document.getElementById('artifactsList');
+      container.innerHTML = '';
+
+      let totalCoins = 0;
+      let onlineCount = 0;
+
+      artifacts.forEach(item => {
+        totalCoins += Number(item.balance || 0);
+        
+        // Verifica se online negli ultimi 180 secondi
+        const isOnline = item.lastSeen && (Date.now() - new Date(item.lastSeen).getTime()) < 180000;
+        if (isOnline) onlineCount++;
+
+        const card = document.createElement('div');
+        card.className = 'artifact-card';
+        card.innerHTML = `
+          <div>
+            <div class="artifact-header">
+              <span class="artifact-serial">${item.serial}</span>
+              <span class="artifact-name">${item.name}</span>
+              <span class="badge-status ${isOnline ? 'status-online' : 'status-offline'}">
+                ${isOnline ? '● ONLINE' : '○ OFFLINE'}
+              </span>
+              <span class="badge-status ${item.claimed ? 'badge-claimed' : 'badge-unclaimed'}">
+                ${item.claimed ? '⚠️ RISCATTATO' : '🛡️ CUSTODITO'}
+              </span>
+            </div>
+            <div class="artifact-meta">
+              Token ID: <b style="color: #fff;">${item.token}</b> • Materiale: ${item.material || 'PLA Titan'} • Coniato: ${item.createdAt}
+              ${item.localIp ? `<br>IP Locale LAN: <code style="color: var(--border-cyan);">${item.localIp}</code> • MAC: ${item.macAddress}` : ''}
+              ${item.claimed ? `<br><span style="color: var(--red-alert);">Riscattato da: ${item.claimedToWallet} (in data ${new Date(item.claimedAt).toLocaleString('it-IT')})</span>` : ''}
+            </div>
+            <div class="artifact-balance-box">
+              <span style="color: var(--text-muted); font-size: 0.8rem;">TESORETTO PRECARICATO:</span>
+              <span class="balance-val">${item.balance} ${item.coin}</span>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; justify-content: center; gap: 8px;">
+            <button class="btn-action" onclick="topUpBalance('${item.token}', ${item.balance})">💳 Ricarica Saldo</button>
+            ${item.claimed ? `<button class="btn-action" style="border-color: var(--accent-gold); color: var(--accent-gold);" onclick="resetClaimStatus('${item.token}')">🔄 Ripristina Riscatto</button>` : ''}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      document.getElementById('statTotalCount').innerText = artifacts.length;
+      document.getElementById('statOnlineCount').innerText = onlineCount;
+      document.getElementById('statTotalCoins').innerText = totalCoins + ' DUCO';
+    }
+
+    async function mintNewArtifact() {
+      const token = document.getElementById('newCardToken').value.trim();
+      const name = document.getElementById('newCardName').value.trim();
+      const coin = document.getElementById('newCardCoin').value;
+      const balance = document.getElementById('newCardBalance').value;
+
+      if (!token || !name) {
+        alert("Inserisci token e nome del manufatto!");
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/artifacts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'admin_update',
+            pin: currentPin,
+            targetToken: token,
+            newName: name,
+            newCoin: coin,
+            newBalance: balance
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(data.message);
+          loadArtifacts();
+        } else {
+          alert("Errore: " + data.error);
+        }
+      } catch (err) {
+        alert("Errore di rete: " + err.message);
+      }
+    }
+
+    async function topUpBalance(token, currentBalance) {
+      const add = prompt(`Ricarica saldo per ${token}.\nSaldo attuale: ${currentBalance}.\nInserisci il nuovo saldo totale desiderato:`, currentBalance + 50);
+      if (add === null || isNaN(add)) return;
+
+      try {
+        const res = await fetch('/api/artifacts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'admin_update',
+            pin: currentPin,
+            targetToken: token,
+            newBalance: Number(add)
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          loadArtifacts();
+        }
+      } catch (err) {
+        alert("Errore: " + err.message);
+      }
+    }
+
+    async function resetClaimStatus(token) {
+      if (!confirm(`Vuoi azzerare lo stato di riscatto per ${token} e renderlo nuovamente riscattabile?`)) return;
+
+      try {
+        const res = await fetch('/api/artifacts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'admin_update',
+            pin: currentPin,
+            targetToken: token,
+            resetClaim: true
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          loadArtifacts();
+        }
+      } catch (err) {
+        alert("Errore: " + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
