@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TITAN 3D | Secret Vault & Artifacts Control Center</title>
+  <title>TITAN 3D | Secret Vault & Revenue Control Center</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Rajdhani:wght@600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -21,12 +21,7 @@
       --red-alert: #ff0055;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Space Grotesk', sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Space Grotesk', sans-serif; }
 
     body {
       background-color: var(--bg-dark);
@@ -41,10 +36,7 @@
         radial-gradient(circle at 90% 80%, rgba(255, 183, 3, 0.07) 0%, transparent 40%);
     }
 
-    .container {
-      max-width: 1050px;
-      width: 100%;
-    }
+    .container { max-width: 1050px; width: 100%; }
 
     /* HEADER */
     .header-bar {
@@ -53,7 +45,9 @@
       align-items: center;
       padding-bottom: 20px;
       border-bottom: 1px solid var(--border-subtle);
-      margin-bottom: 28px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
     .brand-title {
@@ -80,8 +74,7 @@
     }
 
     .pulse-dot {
-      width: 8px;
-      height: 8px;
+      width: 8px; height: 8px;
       background-color: var(--green-glow);
       border-radius: 50%;
       box-shadow: 0 0 10px var(--green-glow);
@@ -94,17 +87,13 @@
       100% { opacity: 0.3; transform: scale(0.9); }
     }
 
-    /* AUTH LOCK SCREEN */
+    /* AUTH OVERLAY */
     #authOverlay {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: rgba(10, 13, 20, 0.96);
       backdrop-filter: blur(12px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      padding: 20px;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 999; padding: 20px;
     }
 
     .auth-card {
@@ -112,42 +101,27 @@
       border: 1px solid var(--border-cyan);
       border-radius: 20px;
       padding: 40px 30px;
-      max-width: 420px;
-      width: 100%;
+      max-width: 420px; width: 100%;
       text-align: center;
       box-shadow: 0 0 50px rgba(0, 240, 255, 0.15);
     }
 
     .auth-input {
-      width: 100%;
-      padding: 14px;
+      width: 100%; padding: 14px;
       background: #080c14;
       border: 1px solid var(--border-subtle);
       border-radius: 10px;
-      color: #fff;
-      font-size: 1.4rem;
-      text-align: center;
-      letter-spacing: 8px;
-      margin: 20px 0;
-      outline: none;
-      transition: all 0.3s ease;
-    }
-
-    .auth-input:focus {
-      border-color: var(--border-cyan);
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+      color: #fff; font-size: 1.4rem;
+      text-align: center; letter-spacing: 8px;
+      margin: 20px 0; outline: none;
     }
 
     .btn-primary {
-      width: 100%;
-      padding: 14px;
+      width: 100%; padding: 14px;
       background: linear-gradient(135deg, #00f0ff, #00a8ff);
-      border: none;
-      border-radius: 10px;
-      color: #000;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
+      border: none; border-radius: 10px;
+      color: #000; font-weight: 700;
+      font-size: 1rem; cursor: pointer;
       transition: all 0.25s ease;
     }
 
@@ -156,12 +130,26 @@
       box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
     }
 
+    /* TICKER */
+    .market-ticker {
+      background: rgba(0, 240, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
     /* STATS GRID */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 16px;
-      margin-bottom: 30px;
+      margin-bottom: 28px;
     }
 
     .stat-card {
@@ -174,42 +162,27 @@
     }
 
     .stat-card::after {
-      content: '';
-      position: absolute;
+      content: ''; position: absolute;
       top: 0; left: 0; right: 0; height: 2px;
       background: linear-gradient(90deg, transparent, var(--border-cyan), transparent);
     }
 
     .stat-label {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
+      color: var(--text-muted); font-size: 0.8rem;
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
     }
 
     .stat-val {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 2rem;
-      font-weight: 700;
-      color: #fff;
+      font-size: 2rem; font-weight: 700; color: #fff;
     }
 
-    /* ARTIFACTS SECTION */
-    .section-title {
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.3rem;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
+    /* ARTIFACT CARDS */
     .artifact-card {
       background: var(--card-bg);
       border: 1px solid var(--border-subtle);
       border-radius: 16px;
-      padding: 24px;
+      padding: 22px;
       margin-bottom: 16px;
       display: grid;
       grid-template-columns: 1fr auto;
@@ -223,145 +196,85 @@
     }
 
     .artifact-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 8px;
+      display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap;
     }
 
     .artifact-serial {
       font-family: 'Rajdhani', sans-serif;
-      font-weight: 700;
-      font-size: 1.2rem;
+      font-weight: 700; font-size: 1.15rem;
       color: var(--border-cyan);
       background: rgba(0, 240, 255, 0.1);
-      padding: 3px 10px;
-      border-radius: 6px;
+      padding: 3px 8px; border-radius: 6px;
       border: 1px solid rgba(0, 240, 255, 0.3);
     }
 
-    .artifact-name {
-      font-size: 1.15rem;
-      font-weight: 700;
-    }
-
-    .artifact-meta {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-bottom: 12px;
-    }
-
     .artifact-balance-box {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #0a0e17;
-      padding: 10px 16px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 183, 3, 0.2);
-      width: fit-content;
+      display: flex; align-items: center; gap: 12px;
+      background: #080c14; padding: 10px 16px;
+      border-radius: 10px; border: 1px solid rgba(255, 183, 3, 0.2);
+      width: fit-content; margin-top: 10px;
     }
 
     .balance-val {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 1.4rem;
-      font-weight: 700;
+      font-size: 1.5rem; font-weight: 700;
       color: var(--accent-gold);
     }
 
-    .badge-status {
-      padding: 4px 10px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .status-online {
-      background: rgba(0, 255, 102, 0.15);
+    .eur-val {
       color: var(--green-glow);
-      border: 1px solid var(--green-glow);
+      font-size: 0.95rem; font-weight: 700;
     }
 
-    .status-offline {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-muted);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+    .fee-badge {
+      background: rgba(255, 183, 3, 0.1);
+      border: 1px solid var(--accent-gold);
+      color: var(--accent-gold);
+      padding: 2px 8px; border-radius: 6px;
+      font-size: 0.75rem; font-weight: 700;
     }
 
-    .badge-claimed {
-      background: rgba(255, 0, 85, 0.15);
-      color: var(--red-alert);
-      border: 1px solid var(--red-alert);
+    .badge-status {
+      padding: 3px 8px; border-radius: 6px;
+      font-size: 0.75rem; font-weight: 700;
     }
-
-    .badge-unclaimed {
-      background: rgba(0, 240, 255, 0.15);
-      color: var(--border-cyan);
-      border: 1px solid var(--border-cyan);
-    }
+    .status-online { background: rgba(0,255,102,0.15); color: var(--green-glow); border: 1px solid var(--green-glow); }
+    .status-offline { background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1); }
+    .badge-claimed { background: rgba(255,0,85,0.15); color: var(--red-alert); border: 1px solid var(--red-alert); }
+    .badge-unclaimed { background: rgba(0,240,255,0.15); color: var(--border-cyan); border: 1px solid var(--border-cyan); }
 
     .btn-action {
       background: var(--card-bg-subtle);
       border: 1px solid var(--border-subtle);
       color: var(--text-main);
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 600;
-      transition: all 0.2s ease;
+      padding: 7px 12px; border-radius: 8px;
+      cursor: pointer; font-size: 0.8rem; font-weight: 600;
+      transition: all 0.2s;
     }
+    .btn-action:hover { background: var(--border-cyan); color: #000; }
 
-    .btn-action:hover {
-      background: var(--border-cyan);
-      color: #000;
-    }
-
-    /* CREATE NEW FORM */
+    /* MINT CARD */
     .mint-card {
       background: var(--card-bg);
       border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 24px;
-      margin-top: 30px;
+      border-radius: 16px; padding: 24px; margin-top: 24px;
     }
-
     .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 14px;
-      margin-top: 14px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px; margin-top: 14px;
     }
-
     .form-group label {
-      display: block;
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      margin-bottom: 6px;
+      display: block; color: var(--text-muted); font-size: 0.8rem; margin-bottom: 6px;
     }
-
     .form-input {
-      width: 100%;
-      padding: 10px 14px;
-      background: #0a0e17;
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      color: #fff;
-      font-size: 0.95rem;
-      outline: none;
+      width: 100%; padding: 10px 14px; background: #080c14;
+      border: 1px solid var(--border-subtle); border-radius: 8px;
+      color: #fff; font-size: 0.95rem; outline: none;
     }
-
-    .form-input:focus {
-      border-color: var(--border-cyan);
-    }
+    .form-input:focus { border-color: var(--border-cyan); }
 
     @media (max-width: 680px) {
-      .artifact-card {
-        grid-template-columns: 1fr;
-      }
+      .artifact-card { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -371,51 +284,60 @@
   <div id="authOverlay">
     <div class="auth-card">
       <div style="font-size: 2.5rem; margin-bottom: 12px;">🛡️</div>
-      <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.4rem;">TITAN ARTIFACTS VAULT</h2>
+      <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.4rem;">TITAN REVENUE & VAULT</h2>
       <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 6px;">Inserisci il PIN amministratore per accedere</p>
       <input type="password" id="pinInput" class="auth-input" maxlength="8" placeholder="••••">
       <button class="btn-primary" onclick="authenticate()">ACCEDI AL VAULT</button>
-      <div id="authError" style="color: var(--red-alert); font-size: 0.85rem; margin-top: 12px; display: none;">PIN non corretto. Riprova.</div>
+      <div id="authError" style="color: var(--red-alert); font-size: 0.85rem; margin-top: 12px; display: none;">PIN errato. Riprova.</div>
     </div>
   </div>
 
-  <!-- MAIN CONTAINER -->
+  <!-- MAIN DASHBOARD -->
   <div class="container" id="mainDashboard" style="display: none;">
     <div class="header-bar">
       <div>
         <div class="brand-title">TITAN 3D STUDIO</div>
-        <div style="color: var(--text-muted); font-size: 0.85rem;">Master Control • Crypto-Artifacts Ecosystem</div>
+        <div style="color: var(--text-muted); font-size: 0.85rem;">Master Control • Crypto-Artifacts & Revenue Share Engine</div>
       </div>
       <div class="badge-live">
         <div class="pulse-dot"></div>
-        SERVERLESS CLOUD ONLINE
+        REVENUE ENGINE 2.0% ATTIVO
       </div>
+    </div>
+
+    <!-- MARKET TICKER -->
+    <div class="market-ticker" id="marketTicker">
+      <span>⚡ <b>TICKER LIVE (Binance):</b></span>
+      <span id="tickerUsdt">USDT: 0.92 €</span>
+      <span id="tickerBtc">BTC: 60.000 €</span>
+      <span id="tickerDgb">DGB: 0.0090 €</span>
+      <span>💰 <b>TUA COMMISSIONE CAMBIO:</b> <span style="color: var(--accent-gold); font-weight: bold;">2.0% Diretto</span></span>
     </div>
 
     <!-- STATS -->
     <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Valore Totale Custodito</div>
+        <div class="stat-val" style="color: var(--green-glow);" id="statTotalEur">-- €</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Commissioni Guadagnate Gio (2%)</div>
+        <div class="stat-val" style="color: var(--accent-gold);" id="statEarnedFees">0.00 €</div>
+      </div>
       <div class="stat-card">
         <div class="stat-label">Manufatti Coniati</div>
         <div class="stat-val" id="statTotalCount">--</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Dispositivi Online Ora</div>
-        <div class="stat-val" style="color: var(--green-glow);" id="statOnlineCount">--</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Tesoretto Custodito</div>
-        <div class="stat-val" style="color: var(--accent-gold);" id="statTotalCoins">-- DUCO</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Mining Farm Link</div>
-        <div class="stat-val" style="color: var(--border-cyan);">1.77 TH/s</div>
+        <div class="stat-val" style="color: var(--border-cyan);" id="statOnlineCount">--</div>
       </div>
     </div>
 
     <!-- ARTIFACTS LIST -->
-    <div class="section-title">
-      <span>🏺 Manufatti 3D Attivi</span>
-      <button class="btn-action" style="margin-left: auto;" onclick="loadArtifacts()">🔄 Aggiorna</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem;">🏺 Manufatti Fisici & Saldo Cripto Reale</h3>
+      <button class="btn-action" onclick="loadArtifacts()">🔄 Aggiorna Dati</button>
     </div>
     <div id="artifactsList">
       <!-- Popolato dinamicamente da JS -->
@@ -424,32 +346,33 @@
     <!-- MINT NEW ARTIFACT FORM -->
     <div class="mint-card">
       <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; margin-bottom: 4px;">⚡ Conia / Registra Nuovo Manufatto 3D</h3>
-      <p style="color: var(--text-muted); font-size: 0.85rem;">Associa un nuovo chip D1 Mini / SuperMini a una somma crypto precaricata</p>
+      <p style="color: var(--text-muted); font-size: 0.85rem;">Assegna un saldo in criptovaluta vera (USDT, DGB, Bitcoin Satoshis) con la tua commissione del 2% su ogni cambio</p>
       
       <div class="form-grid">
         <div class="form-group">
-          <label>Token Identificativo (da flashare sul chip)</label>
-          <input type="text" id="newCardToken" class="form-input" placeholder="es. TITAN-002" value="TITAN-002">
+          <label>Token ID (identificativo da flashare sul chip)</label>
+          <input type="text" id="newCardToken" class="form-input" placeholder="es. TITAN-003" value="TITAN-003">
         </div>
         <div class="form-group">
           <label>Nome Creazione 3D</label>
-          <input type="text" id="newCardName" class="form-input" placeholder="es. Cyber Skull 3D" value="Titan Cyber Relic #002">
+          <input type="text" id="newCardName" class="form-input" placeholder="es. Cyber Trophy 3D" value="Titan Trophy 3D Gold">
         </div>
         <div class="form-group">
-          <label>Criptovaluta</label>
+          <label>Criptovaluta Reale</label>
           <select id="newCardCoin" class="form-input">
-            <option value="DUCO">Duino-Coin (DUCO)</option>
-            <option value="DGB">DigiByte (DGB)</option>
+            <option value="USDT">USDT (Tether USD - 100% Stabile)</option>
+            <option value="DGB">DigiByte (DGB - Minato da Farm Titan)</option>
             <option value="SATS">Bitcoin Satoshis (SATS)</option>
+            <option value="DUCO">Duino-Coin (DUCO)</option>
           </select>
         </div>
         <div class="form-group">
-          <label>Importo Precaricato</label>
-          <input type="number" id="newCardBalance" class="form-input" placeholder="50" value="50">
+          <label>Quantità Precaricata</label>
+          <input type="number" id="newCardBalance" class="form-input" placeholder="10" value="10">
         </div>
       </div>
       <div style="margin-top: 16px; text-align: right;">
-        <button class="btn-primary" style="width: auto; padding: 10px 24px;" onclick="mintNewArtifact()">CONIA & ASSEGNA</button>
+        <button class="btn-primary" style="width: auto; padding: 10px 24px;" onclick="mintNewArtifact()">CONIA & REGISTRA</button>
       </div>
     </div>
   </div>
@@ -458,9 +381,7 @@
     let currentPin = sessionStorage.getItem('titan_vault_pin') || '';
 
     window.addEventListener('DOMContentLoaded', () => {
-      if (currentPin) {
-        verifyPin(currentPin);
-      }
+      if (currentPin) verifyPin(currentPin);
     });
 
     async function authenticate() {
@@ -478,12 +399,11 @@
           sessionStorage.setItem('titan_vault_pin', pin);
           document.getElementById('authOverlay').style.display = 'none';
           document.getElementById('mainDashboard').style.display = 'block';
-          renderArtifacts(data.artifacts);
+          renderDashboard(data);
         } else {
           document.getElementById('authError').style.display = 'block';
         }
       } catch (err) {
-        console.error(err);
         document.getElementById('authError').style.display = 'block';
       }
     }
@@ -493,25 +413,29 @@
       try {
         const res = await fetch(`/api/artifacts?action=admin_list&pin=${encodeURIComponent(currentPin)}`);
         const data = await res.json();
-        if (data.success) {
-          renderArtifacts(data.artifacts);
-        }
+        if (data.success) renderDashboard(data);
       } catch (e) {
-        console.error("Errore caricamento:", e);
+        console.error(e);
       }
     }
 
-    function renderArtifacts(artifacts) {
+    function renderDashboard(data) {
       const container = document.getElementById('artifactsList');
       container.innerHTML = '';
 
-      let totalCoins = 0;
+      if (data.prices) {
+        if (data.prices.USDT) document.getElementById('tickerUsdt').innerText = `USDT: ${data.prices.USDT.toFixed(2)} €`;
+        if (data.prices.BTC) document.getElementById('tickerBtc').innerText = `BTC: ${data.prices.BTC.toLocaleString('it-IT')} €`;
+        if (data.prices.DGB) document.getElementById('tickerDgb').innerText = `DGB: ${data.prices.DGB.toFixed(4)} €`;
+      }
+
+      document.getElementById('statTotalEur').innerText = `${data.totalVaultEur.toFixed(2)} €`;
+      document.getElementById('statEarnedFees').innerText = `${(data.totalFeesEarnedEur || 0).toFixed(2)} €`;
+      document.getElementById('statTotalCount').innerText = data.count;
+
       let onlineCount = 0;
 
-      artifacts.forEach(item => {
-        totalCoins += Number(item.balance || 0);
-        
-        // Verifica se online negli ultimi 180 secondi
+      data.artifacts.forEach(item => {
         const isOnline = item.lastSeen && (Date.now() - new Date(item.lastSeen).getTime()) < 180000;
         if (isOnline) onlineCount++;
 
@@ -521,7 +445,8 @@
           <div>
             <div class="artifact-header">
               <span class="artifact-serial">${item.serial}</span>
-              <span class="artifact-name">${item.name}</span>
+              <span style="font-size: 1.15rem; font-weight: 700;">${item.name}</span>
+              <span class="fee-badge">💰 TUA COMMISSIONE: 2.0%</span>
               <span class="badge-status ${isOnline ? 'status-online' : 'status-offline'}">
                 ${isOnline ? '● ONLINE' : '○ OFFLINE'}
               </span>
@@ -529,27 +454,49 @@
                 ${item.claimed ? '⚠️ RISCATTATO' : '🛡️ CUSTODITO'}
               </span>
             </div>
-            <div class="artifact-meta">
-              Token ID: <b style="color: #fff;">${item.token}</b> • Materiale: ${item.material || 'PLA Titan'} • Coniato: ${item.createdAt}
+            <div style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 6px;">
+              Token ID: <b style="color: #fff;">${item.token}</b> • Cripto: <b style="color: var(--border-cyan);">${item.coin}</b> • Coniato: ${item.createdAt}
               ${item.localIp ? `<br>IP Locale LAN: <code style="color: var(--border-cyan);">${item.localIp}</code> • MAC: ${item.macAddress}` : ''}
-              ${item.claimed ? `<br><span style="color: var(--red-alert);">Riscattato da: ${item.claimedToWallet} (in data ${new Date(item.claimedAt).toLocaleString('it-IT')})</span>` : ''}
+              ${item.claimed ? `<br><span style="color: var(--red-alert);">Riscattato da: ${item.claimedToWallet} (${new Date(item.claimedAt).toLocaleString('it-IT')})</span>` : ''}
+              <br><span style="color: var(--green-glow);">Volume Scambi Ricevuto: <b>${(item.totalVolumeEur || 0).toFixed(2)} €</b> • Tua Commissione Incassata: <b>${(item.earnedFeesEur || 0).toFixed(2)} €</b></span>
             </div>
             <div class="artifact-balance-box">
-              <span style="color: var(--text-muted); font-size: 0.8rem;">TESORETTO PRECARICATO:</span>
+              <span style="color: var(--text-muted); font-size: 0.8rem;">SALDO REALE:</span>
               <span class="balance-val">${item.balance} ${item.coin}</span>
+              <span class="eur-val">(≈ ${item.eurValue.toFixed(2)} €)</span>
             </div>
           </div>
           <div style="display: flex; flex-direction: column; justify-content: center; gap: 8px;">
+            <button class="btn-action" style="border-color: var(--accent-gold); color: var(--accent-gold);" onclick="simulateSwap('${item.token}', 10)">⚡ Simula Ricarica 10€ (+0.20€ a te)</button>
             <button class="btn-action" onclick="topUpBalance('${item.token}', ${item.balance})">💳 Ricarica Saldo</button>
-            ${item.claimed ? `<button class="btn-action" style="border-color: var(--accent-gold); color: var(--accent-gold);" onclick="resetClaimStatus('${item.token}')">🔄 Ripristina Riscatto</button>` : ''}
+            ${item.claimed ? `<button class="btn-action" style="border-color: var(--border-cyan); color: var(--border-cyan);" onclick="resetClaimStatus('${item.token}')">🔄 Ripristina Riscatto</button>` : ''}
           </div>
         `;
         container.appendChild(card);
       });
 
-      document.getElementById('statTotalCount').innerText = artifacts.length;
       document.getElementById('statOnlineCount').innerText = onlineCount;
-      document.getElementById('statTotalCoins').innerText = totalCoins + ' DUCO';
+    }
+
+    async function simulateSwap(token, eurAmount) {
+      try {
+        const res = await fetch('/api/artifacts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'record_swap',
+            token: token,
+            amount_eur: eurAmount
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(`🎉 SCAMBIO COMPLETATO!\n\nImporto Scambiato: ${data.swapAmountEur.toFixed(2)} €\nCommissione Guadagnata da Gio (2%): +${data.gioFeeEarnedEur.toFixed(2)} €\nAccredito programmato su wallet BTC: ${data.payoutWallet}\n\nTotale commissioni su questo manufatto: ${data.totalEarnedOnItem.toFixed(2)} €`);
+          loadArtifacts();
+        }
+      } catch (err) {
+        alert("Errore: " + err.message);
+      }
     }
 
     async function mintNewArtifact() {
@@ -559,7 +506,7 @@
       const balance = document.getElementById('newCardBalance').value;
 
       if (!token || !name) {
-        alert("Inserisci token e nome del manufatto!");
+        alert("Compila tutti i campi!");
         return;
       }
 
@@ -580,16 +527,14 @@
         if (data.success) {
           alert(data.message);
           loadArtifacts();
-        } else {
-          alert("Errore: " + data.error);
         }
       } catch (err) {
-        alert("Errore di rete: " + err.message);
+        alert("Errore: " + err.message);
       }
     }
 
     async function topUpBalance(token, currentBalance) {
-      const add = prompt(`Ricarica saldo per ${token}.\nSaldo attuale: ${currentBalance}.\nInserisci il nuovo saldo totale desiderato:`, currentBalance + 50);
+      const add = prompt(`Modifica saldo per ${token}.\nSaldo attuale: ${currentBalance}.\nInserisci il nuovo saldo:`, currentBalance + 10);
       if (add === null || isNaN(add)) return;
 
       try {
@@ -604,17 +549,14 @@
           })
         });
         const data = await res.json();
-        if (data.success) {
-          loadArtifacts();
-        }
+        if (data.success) loadArtifacts();
       } catch (err) {
         alert("Errore: " + err.message);
       }
     }
 
     async function resetClaimStatus(token) {
-      if (!confirm(`Vuoi azzerare lo stato di riscatto per ${token} e renderlo nuovamente riscattabile?`)) return;
-
+      if (!confirm(`Ripristinare lo stato del manufatto ${token}?`)) return;
       try {
         const res = await fetch('/api/artifacts', {
           method: 'POST',
@@ -627,9 +569,7 @@
           })
         });
         const data = await res.json();
-        if (data.success) {
-          loadArtifacts();
-        }
+        if (data.success) loadArtifacts();
       } catch (err) {
         alert("Errore: " + err.message);
       }
