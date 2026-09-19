@@ -1,18 +1,19 @@
-// Vercel Serverless Function: /api/artifacts
+﻿// Vercel Serverless Function: /api/artifacts
 // Gestione dei "Titan Crypto-Artifacts", Prezzi Live e Revenue Share (1.5% - 2%)
 
 const AFFILIATE_CODE = process.env.FIXEDFLOAT_AFFILIATE || "kdee8haa";
 const GIO_BTC_WALLET = process.env.BTC_WALLET || "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk";
 const PARTNER_FEE_PERCENT = 2.0; // Commissione netta per Gio su ogni scambio/ricarica (2%)
+const ADMIN_PIN = "2804";
 
 let artifactsStore = [
   {
-    token: "TITAN-001",
-    serial: "TITAN-ED-001",
-    name: "Titan Genesis 3D Artifact",
-    material: "PLA Carbon Fiber / Resina 8K",
+    token: "TITAN-AUTH-TOKEN-GOLD-001",
+    serial: "TITAN-KEY-GOLD-001",
+    name: "Chiave Fisica Titan Hardware Vault",
+    material: "Guscio 3D PLA Carbon + Chip D1 Mini (COM8)",
     coin: "USDT",
-    balance: 10.0, // 10€ di valore reale precaricato
+    balance: 10.0, // 10 USDT di valore reale precaricato
     claimed: false,
     claimedAt: null,
     claimedToWallet: null,
@@ -20,7 +21,27 @@ let artifactsStore = [
     macAddress: "ec:fa:bc:0e:c7:d9",
     lastSeen: new Date().toISOString(),
     lastIp: "Local Network",
-    localIp: "192.168.1.100",
+    localIp: "192.168.1.114",
+    status: "active",
+    totalSwapsCount: 0,
+    totalVolumeEur: 0,
+    earnedFeesEur: 0
+  },
+  {
+    token: "TITAN-001",
+    serial: "TITAN-ED-001",
+    name: "Titan Genesis 3D Artifact",
+    material: "PLA Carbon Fiber / Resina 8K",
+    coin: "USDT",
+    balance: 10.0,
+    claimed: false,
+    claimedAt: null,
+    claimedToWallet: null,
+    createdAt: "2026-09-19",
+    macAddress: "ec:fa:bc:0e:c7:d9",
+    lastSeen: new Date().toISOString(),
+    lastIp: "Local Network",
+    localIp: "192.168.1.114",
     status: "active",
     totalSwapsCount: 0,
     totalVolumeEur: 0,
@@ -48,54 +69,54 @@ let artifactsStore = [
   }
 ];
 
-// Funzione ausiliaria per recuperare i prezzi live da Binance
+// Prezzi live da Binance con fallback
 async function fetchCryptoPrices() {
   const prices = {
-    USDT: 0.92, // 1 USD in EUR approssimativo
-    BTC: 60000.0,
-    DGB: 0.009,
-    SATS: 0.0006,
-    DUCO: 0.0002
+    USDT: 0.92,
+    BTC: 58500.0,
+    DGB: 0.0078
   };
 
   try {
-    const [resBtc, resDgb] = await Promise.all([
-      fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCEUR").then(r => r.json()).catch(() => null),
-      fetch("https://api.binance.com/api/v3/ticker/price?symbol=DGBUSDT").then(r => r.json()).catch(() => null)
-    ]);
+    const resBtc = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCEUR");
+    if (resBtc.ok) {
+      const dataBtc = await resBtc.json();
+      if (dataBtc.price) prices.BTC = parseFloat(dataBtc.price);
+    }
+  } catch (e) {}
 
-    if (resBtc && resBtc.price) {
-      prices.BTC = parseFloat(resBtc.price);
-      prices.SATS = prices.BTC / 100000000;
+  try {
+    const resUsdt = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=EURUSDT");
+    if (resUsdt.ok) {
+      const dataUsdt = await resUsdt.json();
+      if (dataUsdt.price) prices.USDT = Number((1 / parseFloat(dataUsdt.price)).toFixed(4));
     }
-    if (resDgb && resDgb.price) {
-      const dgbUsd = parseFloat(resDgb.price);
-      prices.DGB = dgbUsd * prices.USDT; // in EUR
+  } catch (e) {}
+
+  try {
+    const resDgb = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=DGBUSDT");
+    if (resDgb.ok) {
+      const dataDgb = await resDgb.json();
+      if (dataDgb.price) prices.DGB = Number((parseFloat(dataDgb.price) * prices.USDT).toFixed(5));
     }
-  } catch (err) {
-    console.error("Errore fetch prezzi Binance:", err);
-  }
+  } catch (e) {}
 
   return prices;
 }
 
 export default async function handler(req, res) {
-  // CORS Headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
+  if (req.method === "OPTIONS") return res.status(200).end();
 
-  const ADMIN_PIN = process.env.TITAN_ADMIN_PIN || "2804";
   const prices = await fetchCryptoPrices();
 
   if (req.method === "GET") {
-    const { token, action, pin } = req.query;
+    const { action, token, pin } = req.query;
 
-    // 1. VISTA ADMIN: Lista completa con calcolo Euro e Commissioni guadagnate
+    // 1. VISTA ADMIN: Dashboard protetta da PIN
     if (action === "admin_list") {
       if (pin !== ADMIN_PIN) {
         return res.status(401).json({ success: false, error: "PIN non valido" });
@@ -127,9 +148,13 @@ export default async function handler(req, res) {
       });
     }
 
-    // 2. VISTA CLIENTE / MANUFATTO: Dettagli pubblici, valore in Euro e Link di Scambio
+    // 2. VISTA CLIENTE / HARDWARE KEY
     if (token) {
-      const item = artifactsStore.find(a => a.token.toUpperCase() === token.toUpperCase());
+      const item = artifactsStore.find(a => 
+        a.token.toUpperCase() === token.toUpperCase() ||
+        (token.toUpperCase() === "TITAN-AUTH-TOKEN-GOLD-001" && a.token === "TITAN-AUTH-TOKEN-GOLD-001")
+      );
+
       if (!item) {
         return res.status(404).json({ success: false, error: "Manufatto non trovato" });
       }
@@ -137,7 +162,6 @@ export default async function handler(req, res) {
       const unitPrice = prices[item.coin] || 1.0;
       const eurVal = Number((item.balance * unitPrice).toFixed(2));
 
-      // Link di scambio precompilati con il codice referral di Gio
       const swapUrls = {
         fixedFloat: `https://ff.io/?ref=${AFFILIATE_CODE}`,
         simpleSwapBtc: `https://simpleswap.io/?from=${item.coin.toLowerCase()}&to=btc&address=${GIO_BTC_WALLET}`,
@@ -155,6 +179,7 @@ export default async function handler(req, res) {
         unitPriceEur: unitPrice,
         claimed: item.claimed,
         claimedAt: item.claimedAt,
+        claimedToWallet: item.claimedToWallet,
         createdAt: item.createdAt,
         lastSeen: item.lastSeen,
         status: item.status,
@@ -163,7 +188,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // Default: statistiche generali
+    // Default
     return res.status(200).json({
       success: true,
       service: "Titan Crypto-Artifacts Engine",
@@ -181,7 +206,7 @@ export default async function handler(req, res) {
       const body = req.body || {};
       const { action, token, pin } = body;
 
-      // 1. PING dal chip fisico D1 Mini / SuperMini
+      // 1. PING dal chip fisico D1 Mini
       if (action === "ping" && token) {
         const item = artifactsStore.find(a => a.token.toUpperCase() === token.toUpperCase());
         const clientIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress || "Unknown";
@@ -200,8 +225,7 @@ export default async function handler(req, res) {
         }
       }
 
-      // 2. SIMULAZIONE / REGISTRAZIONE SCAMBIO (Il cliente scambia o ricarica X Euro)
-      // Gio riceve il 2% sul volume scambiato!
+      // 2. SCAMBIO / RICARICA CON FEE PER GIO
       if (action === "record_swap" && token) {
         const item = artifactsStore.find(a => a.token.toUpperCase() === token.toUpperCase());
         if (!item) {
@@ -209,20 +233,28 @@ export default async function handler(req, res) {
         }
 
         const swapAmountEur = Number(body.amount_eur || 10.0);
-        const gioFeeEur = Number((swapAmountEur * (PARTNER_FEE_PERCENT / 100)).toFixed(3)); // es. 10€ -> 0.20€
+        const gioFeeEur = Number((swapAmountEur * (PARTNER_FEE_PERCENT / 100)).toFixed(3));
 
         item.totalSwapsCount = (item.totalSwapsCount || 0) + 1;
         item.totalVolumeEur = (item.totalVolumeEur || 0) + swapAmountEur;
         item.earnedFeesEur = (item.earnedFeesEur || 0) + gioFeeEur;
 
+        // Se è una ricarica effettiva con accredito al saldo
+        if (body.credit_balance) {
+          const unitPrice = prices[item.coin] || 1.0;
+          const netCryptoAdded = Number(((swapAmountEur - gioFeeEur) / unitPrice).toFixed(2));
+          item.balance = Number((item.balance + netCryptoAdded).toFixed(2));
+        }
+
         return res.status(200).json({
           success: true,
-          message: `Scambio da ${swapAmountEur.toFixed(2)}€ registrato!`,
+          message: `Ricarica da ${swapAmountEur.toFixed(2)}€ registrata con successo!`,
           swapAmountEur,
           partnerFeePercent: PARTNER_FEE_PERCENT,
           gioFeeEarnedEur: gioFeeEur,
           payoutWallet: GIO_BTC_WALLET,
-          totalEarnedOnItem: item.earnedFeesEur
+          totalEarnedOnItem: item.earnedFeesEur,
+          newBalance: item.balance
         });
       }
 
