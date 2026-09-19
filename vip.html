@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
@@ -662,6 +662,8 @@
         const res = await fetch(`/api/artifacts?token=${encodeURIComponent(activeToken)}`);
         const data = await res.json();
         if (data.success) {
+          document.getElementById('keySerialLabel').innerText = `${data.serial} • ${data.name}`;
+          document.getElementById('revolutCausale').innerText = `RICARICA ${data.serial}`;
           document.getElementById('cryptoBalanceLabel').innerText = `${data.balance} ${data.coin}`;
           document.getElementById('cryptoEurLabel').innerText = `≈ ${data.eurValue.toFixed(2)} € (Prezzo Live Binance: 1 ${data.coin} = ${data.unitPriceEur.toFixed(2)} €)`;
           
