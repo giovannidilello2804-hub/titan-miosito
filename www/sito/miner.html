@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
@@ -6,20 +6,23 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>TITAN MINER | ESP32-S3 Solo Mining Control Center</title>
+  <title>TITAN 3D FARM | Bitaxe ASIC & Infrastructure Telemetry</title>
+  <meta name="description" content="Telemetria in tempo reale della micro-farm di calcolo ASIC SHA-256 e controller Sentinel Raspberry Pi 3B del laboratorio Titan 3D.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Rajdhani:wght@600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
     :root {
-      --bg-dark: #0a0d14;
-      --card-bg: #121824;
+      --bg-dark: #07090e;
+      --bg-card: rgba(18, 24, 38, 0.85);
+      --bg-card-hover: rgba(22, 30, 48, 0.95);
       --border-cyan: #00f0ff;
       --accent-gold: #ffb703;
+      --green-glow: #00ff88;
       --text-main: #f0f4f8;
       --text-muted: #8a99ad;
-      --green-glow: #00ff66;
-      --red-alert: #ff0055;
+      --border-subtle: rgba(0, 240, 255, 0.18);
     }
 
     * {
@@ -33,1771 +36,1002 @@
       background-color: var(--bg-dark);
       color: var(--text-main);
       min-height: 100vh;
-      padding: 20px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
       background-image: 
-        radial-gradient(circle at 20% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 80% 80%, rgba(255, 183, 3, 0.08) 0%, transparent 40%);
+        radial-gradient(circle at 15% 15%, rgba(0, 240, 255, 0.07) 0%, transparent 45%),
+        radial-gradient(circle at 85% 25%, rgba(255, 183, 3, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 50% 85%, rgba(0, 255, 136, 0.05) 0%, transparent 50%);
+      background-attachment: fixed;
     }
 
-    /* LOCK SCREEN */
-    #lockScreen {
-      background: var(--card-bg);
-      border: 1px solid var(--border-cyan);
-      border-radius: 20px;
-      padding: 35px 25px;
-      max-width: 460px;
+    /* NAVBAR */
+    .navbar {
       width: 100%;
-      text-align: center;
-      box-shadow: 0 0 40px rgba(0, 240, 255, 0.2);
+      background: rgba(10, 13, 20, 0.9);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
-    .lock-icon {
-      font-size: 3rem;
-      margin-bottom: 10px;
-    }
-
-    .lock-title {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--border-cyan);
-      margin-bottom: 8px;
-    }
-
-    .pin-input {
-      width: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(0, 240, 255, 0.4);
-      color: #fff;
-      padding: 14px;
-      border-radius: 10px;
-      font-size: 1.3rem;
-      text-align: center;
-      letter-spacing: 4px;
-      margin: 18px 0;
-      outline: none;
-    }
-
-    .pin-input:focus {
-      border-color: var(--accent-gold);
-      box-shadow: 0 0 10px rgba(255, 183, 3, 0.4);
-    }
-
-    .btn-login {
-      width: 100%;
-      background: var(--border-cyan);
-      color: #000;
-      border: none;
-      padding: 14px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-bottom: 15px;
-    }
-
-    .btn-login:hover {
-      background: var(--accent-gold);
-      box-shadow: 0 0 15px rgba(255, 183, 3, 0.5);
-    }
-
-    .btn-demo-mode {
-      width: 100%;
-      background: rgba(255, 183, 3, 0.15);
-      border: 1px solid var(--accent-gold);
-      color: var(--accent-gold);
-      padding: 12px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-demo-mode:hover {
-      background: var(--accent-gold);
-      color: #000;
-      box-shadow: 0 0 20px rgba(255, 183, 3, 0.4);
-    }
-
-    #errorMessage {
-      color: var(--red-alert);
-      font-size: 0.85rem;
-      margin-top: 10px;
-      display: none;
-    }
-
-    /* MAIN APP Container */
-    #mainApp {
-      display: none;
-      max-width: 880px;
-      width: 100%;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 25px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid rgba(0, 240, 255, 0.2);
-    }
-
-    .logo-title {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 2.2rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: #fff;
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
-    }
-
-    .logo-title span {
-      color: var(--border-cyan);
-    }
-
-    .status-badge-container {
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 20px;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
       gap: 12px;
-      margin-top: 15px;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .nav-logo-text {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+    }
+
+    .nav-logo-text span {
+      color: var(--border-cyan);
+    }
+
+    .nav-badge-pill {
+      background: rgba(0, 255, 136, 0.12);
+      border: 1px solid var(--green-glow);
+      color: var(--green-glow);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 14px;
       flex-wrap: wrap;
     }
 
-    .status-pill {
-      background: rgba(18, 24, 36, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 8px 16px;
-      border-radius: 30px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: color 0.2s;
+      padding: 6px 10px;
+      border-radius: 6px;
     }
 
-    .dot-live {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: var(--green-glow);
-      box-shadow: 0 0 10px var(--green-glow);
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0% { opacity: 0.4; transform: scale(0.9); }
-      50% { opacity: 1; transform: scale(1.1); }
-      100% { opacity: 0.4; transform: scale(0.9); }
-    }
-
-    /* PAKKINE / NODE CARDS ILLUMINATED STYLES */
-    .node-grid-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 15px;
-      margin-top: 15px;
-    }
-
-    .machine-card-node {
-      background: #0d121c;
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      border-radius: 14px;
-      padding: 16px;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .machine-card-node:hover {
-      transform: translateY(-4px);
-      border-color: rgba(0, 240, 255, 0.5);
-    }
-
-    /* ILLUMINATED ACTIVE NODE STATE */
-    .machine-card-node.active-illuminated {
-      background: linear-gradient(135deg, rgba(0, 240, 255, 0.2) 0%, #121824 100%);
-      border-color: var(--border-cyan);
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
-    }
-
-    .machine-card-node.active-illuminated.gold-node {
-      background: linear-gradient(135deg, rgba(255, 183, 3, 0.2) 0%, #121824 100%);
-      border-color: var(--accent-gold);
-      box-shadow: 0 0 25px rgba(255, 183, 3, 0.4);
-    }
-
-    .machine-header-node {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .machine-title-node {
-      font-weight: 700;
-      font-size: 0.95rem;
+    .nav-link:hover {
       color: #fff;
     }
 
-    .machine-led-node {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #444;
-      box-shadow: none;
-      transition: all 0.3s;
+    .nav-link.active {
+      color: var(--border-cyan);
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px solid rgba(0, 240, 255, 0.3);
     }
 
-    .machine-card-node.active-illuminated .machine-led-node {
-      background: var(--green-glow);
-      box-shadow: 0 0 12px var(--green-glow);
-      animation: pulse 1s infinite;
-    }
-
-    .machine-stat-node {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 1.4rem;
+    .nav-cta {
+      background: rgba(255, 183, 3, 0.15);
+      border: 1px solid var(--accent-gold);
+      color: var(--accent-gold);
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
       font-weight: 700;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-cta:hover {
+      background: var(--accent-gold);
+      color: #000;
+      box-shadow: 0 0 15px rgba(255, 183, 3, 0.4);
+    }
+
+    /* MAIN WRAPPER */
+    .main-container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 30px 20px 60px;
+      flex: 1;
+    }
+
+    /* HERO SECTION */
+    .hero-banner {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .hero-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      text-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
+    }
+
+    .hero-title span {
       color: var(--border-cyan);
     }
 
-    .machine-card-node.active-illuminated.gold-node .machine-stat-node {
-      color: var(--accent-gold);
+    .hero-subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 720px;
+      margin: 0 auto 20px;
+      line-height: 1.5;
     }
 
-    /* CARD VEDIBILE PERFETTAMENTE A NIDO D'APE IN ALTA DEFINIZIONE */
-    .card-honeycomb-showcase {
-      background: linear-gradient(135deg, #121824 0%, #0a0d14 100%);
-      border: 2px solid var(--accent-gold);
-      border-radius: 20px;
-      padding: 24px;
-      margin-bottom: 25px;
-      text-align: center;
-      box-shadow: 0 0 35px rgba(255, 183, 3, 0.25);
-    }
-
-    .honeycomb-svg-box {
-      background: #04060a;
-      border: 1px solid var(--border-cyan);
-      border-radius: 16px;
-      padding: 15px;
-      margin: 15px 0;
-      display: flex;
-      justify-content: center;
+    .live-indicator {
+      display: inline-flex;
       align-items: center;
-      box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.2);
+      gap: 8px;
+      background: rgba(18, 24, 38, 0.9);
+      border: 1px solid var(--border-subtle);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 0.82rem;
+      color: #cbd5e1;
     }
 
-    .grid-stats {
+    .dot-pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green-glow);
+      box-shadow: 0 0 10px var(--green-glow);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.5; }
+    }
+
+    /* STAT STRIP */
+    .stat-strip {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-      margin-bottom: 25px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 35px;
     }
 
     .stat-card {
-      background: var(--card-bg);
-      border: 1px solid rgba(0, 240, 255, 0.15);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
       border-radius: 16px;
       padding: 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-      transition: transform 0.2s ease, border-color 0.2s ease;
       position: relative;
       overflow: hidden;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
     }
 
     .stat-card:hover {
       transform: translateY(-3px);
       border-color: var(--border-cyan);
+      box-shadow: 0 8px 30px rgba(0, 240, 255, 0.18);
     }
-
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 100%;
-      background: var(--border-cyan);
-    }
-
-    .stat-card.gold::before { background: var(--accent-gold); }
-    .stat-card.green::before { background: var(--green-glow); }
-    .stat-card.temp::before { background: #ff5500; }
-    .stat-card.purple::before { background: #b5179e; }
 
     .stat-label {
-      color: var(--text-muted);
-      font-size: 0.85rem;
+      font-size: 0.78rem;
       text-transform: uppercase;
       letter-spacing: 1px;
+      color: var(--text-muted);
       margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .stat-value {
-      font-size: 1.8rem;
+    .stat-badge {
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 6px;
       font-weight: 700;
+    }
+
+    .stat-val {
       font-family: 'Rajdhani', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .stat-val.highlight-cyan { color: var(--border-cyan); }
+    .stat-val.highlight-gold { color: var(--accent-gold); }
+    .stat-val.highlight-green { color: var(--green-glow); }
+
+    .stat-subtext {
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    /* SECTION TITLES */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .section-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title span {
+      color: var(--border-cyan);
+    }
+
+    /* NODES GRID */
+    .nodes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .node-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .node-card:hover {
+      border-color: rgba(0, 240, 255, 0.5);
+      box-shadow: 0 10px 30px rgba(0, 240, 255, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .node-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .node-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
       color: #fff;
     }
 
-    .stat-sub {
-      font-size: 0.8rem;
+    .node-model {
+      font-size: 0.78rem;
+      color: var(--border-cyan);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .node-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 255, 136, 0.12);
+      border: 1px solid rgba(0, 255, 136, 0.4);
+      color: var(--green-glow);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .metrics-table {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .metric-box {
+      background: rgba(10, 14, 22, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    .metric-box-label {
+      font-size: 0.7rem;
       color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+
+    .metric-box-val {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* THERMAL BAR */
+    .thermal-bar-container {
       margin-top: 4px;
     }
 
-    .wallet-card {
-      background: linear-gradient(135deg, #121824 0%, #1a2234 100%);
-      border: 1px solid rgba(255, 183, 3, 0.3);
-      border-radius: 16px;
-      padding: 20px;
+    .thermal-bar-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .thermal-progress {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .thermal-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00ff88, #ffb703);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .thermal-fill.hot {
+      background: linear-gradient(90deg, #ffb703, #ff0055);
+    }
+
+    .node-footer {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .node-ip-tag {
+      font-family: 'Space Grotesk', monospace;
+      color: #94a3b8;
+    }
+
+    /* SENTINEL CARD ACCENT */
+    .node-card.sentinel-card {
+      border-color: rgba(255, 183, 3, 0.25);
+    }
+
+    .node-card.sentinel-card:hover {
+      border-color: var(--accent-gold);
+      box-shadow: 0 10px 30px rgba(255, 183, 3, 0.15);
+    }
+
+    /* BLOCKCHAIN & POOL EARNINGS SECTION */
+    .earnings-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 40px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .earnings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
       margin-bottom: 25px;
     }
 
-    .wallet-header {
+    .earning-cell {
+      background: rgba(10, 14, 22, 0.65);
+      border: 1px solid rgba(0, 240, 255, 0.12);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .earning-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .earning-val {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .earning-val-sub {
+      font-size: 0.8rem;
+      color: var(--green-glow);
+      font-weight: 600;
+      margin-top: 3px;
+    }
+
+    .wallet-banner {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px dashed rgba(0, 240, 255, 0.3);
+      border-radius: 12px;
+      padding: 14px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
-    .wallet-title {
-      font-weight: 700;
-      color: var(--accent-gold);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .wallet-box {
-      background: rgba(0, 0, 0, 0.4);
-      padding: 12px 16px;
-      border-radius: 10px;
-      border: 1px dashed rgba(255, 183, 3, 0.4);
+    .wallet-addr {
       font-family: monospace;
+      color: var(--border-cyan);
       font-size: 0.9rem;
       word-break: break-all;
-      color: #fff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
     }
 
-    .btn-copy {
-      background: var(--accent-gold);
-      color: #000;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-weight: 700;
-      cursor: pointer;
+    .btn-explorer {
+      background: rgba(0, 240, 255, 0.12);
+      border: 1px solid var(--border-cyan);
+      color: var(--border-cyan);
+      padding: 8px 16px;
+      border-radius: 8px;
       font-size: 0.8rem;
-      transition: background 0.2s;
-    }
-
-    .actions-row {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-
-    .btn-action {
-      flex: 1;
-      min-width: 180px;
-      background: var(--card-bg);
-      border: 1px solid rgba(0, 240, 255, 0.3);
-      color: #fff;
-      padding: 14px 20px;
-      border-radius: 12px;
       font-weight: 700;
-      text-align: center;
       text-decoration: none;
-      display: flex;
+      transition: all 0.2s ease;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 10px;
-      cursor: pointer;
-      transition: all 0.2s;
+      gap: 6px;
     }
 
-    .btn-action:hover {
+    .btn-explorer:hover {
       background: var(--border-cyan);
       color: #000;
       box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
     }
 
-    .logout-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
+    /* ENGINEERING PHILOSOPHY SECTION */
+    .info-card {
+      background: rgba(14, 19, 30, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 25px;
+      margin-bottom: 40px;
+      line-height: 1.6;
     }
 
-    .demo-badge {
-      background: rgba(255, 183, 3, 0.15);
-      border: 1px solid var(--accent-gold);
+    .info-card h3 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.3rem;
       color: var(--accent-gold);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 700;
+      margin-bottom: 10px;
     }
 
-    .btn-logout {
-      background: rgba(255, 0, 85, 0.2);
-      border: 1px solid var(--red-alert);
-      color: #fff;
-      padding: 6px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.8rem;
+    .info-card p {
+      color: #94a3b8;
+      font-size: 0.92rem;
+      margin-bottom: 12px;
     }
 
-    .floating-back-btn {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      z-index: 9999;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(18, 24, 36, 0.92);
-      border: 1.5px solid var(--border-cyan);
-      color: #00f0ff;
-      padding: 10px 20px;
-      border-radius: 30px;
+    /* FOOTER */
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 30px 20px;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      background: rgba(8, 11, 18, 0.95);
+    }
+
+    footer a {
+      color: var(--border-cyan);
       text-decoration: none;
-      font-weight: 800;
-      font-size: 0.88rem;
-      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.25);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      transition: all 0.25s ease;
     }
 
-    .floating-back-btn:hover {
-      background: var(--border-cyan);
-      color: #000;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 30px rgba(0, 240, 255, 0.5);
+    footer a:hover {
+      text-decoration: underline;
     }
 
+    /* RESPONSIVE */
     @media (max-width: 768px) {
-      .floating-back-btn {
-        top: 12px;
-        left: 12px;
-        padding: 8px 14px;
-        font-size: 0.78rem;
-      }
+      .main-container { padding: 20px 14px 40px; }
+      .metrics-table { grid-template-columns: 1fr; }
+      .wallet-banner { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
 <body>
 
-  <!-- PULSANTE FISSO FLOTTANTE TORNA AL SITO PRINCIPALE -->
-  <a href="index.html" class="floating-back-btn" title="Torna all'Homepage di Titan 3D">
-    <span style="font-size: 1.15rem;">⬅️</span>
-    <span>Torna al Sito Principale</span>
-  </a>
-
-  <!-- SCHERMATA DI ACCESSO DEDICATA CLIENTI SOLO MINING & ADMIN -->
-  <div id="lockScreen">
-    <div class="lock-icon">🔐</div>
-    <div class="lock-title">TITAN CLOUD CONTROL</div>
-    <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 20px; line-height: 1.4;">
-      Accesso Riservato Clienti & Amministratore <strong>ESP32-S3 Solo Mining Cloud</strong>.
-    </p>
-
-    <!-- BOX LOGIN CON PASSWORD / PIN -->
-    <div style="background: rgba(0,0,0,0.4); border: 2px solid var(--border-cyan); padding: 22px 18px; border-radius: 16px; margin-bottom: 20px; box-shadow: inset 0 0 20px rgba(0,240,255,0.15);">
-      <label for="pinInput" style="color: #fff; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 8px;">
-        🔑 Inserisci la Password o PIN Personale:
-      </label>
-      <input type="password" id="pinInput" class="pin-input" placeholder="Digita la tua Password / PIN" maxlength="16" onkeydown="if(event.key === 'Enter') checkPin()" autofocus>
-      <button class="btn-login" onclick="checkPin()">⚡ ENTRA CON PASSWORD / PIN</button>
-      <div id="errorMessage">⚠️ Password o PIN Errato! Riprova.</div>
-    </div>
-
-    <!-- ACCESSI DI PROVA RAPIDA (OPTIONAL DEMO & TEST) -->
-    <div style="margin: 15px 0 10px 0; display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.75rem;">
-      <div style="flex:1; height:1px; background: rgba(255,255,255,0.1);"></div>
-      <span>OPPUR PROVA UN ACCESSO DIMOSTRATIVO</span>
-      <div style="flex:1; height:1px; background: rgba(255,255,255,0.1);"></div>
-    </div>
-
-    <div style="display: flex; flex-direction: column; gap: 8px;">
-      <button class="btn-demo-mode" onclick="startDemoMode()">👁️ AVVIA DEMO LIBERA VISITATORI</button>
-    </div>
-
-    <!-- STATO DI RETE PRIVACY-PROTECTED SULLA SCHERMATA DI LOGIN -->
-    <div style="background: rgba(0,0,0,0.5); border: 1px solid rgba(0,240,255,0.3); border-radius: 14px; padding: 14px 16px; margin-top: 18px; text-align: left;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <div style="width: 10px; height: 10px; border-radius: 50%; background: #00ff66; box-shadow: 0 0 8px #00ff66; animation: pulse 1.5s infinite;"></div>
-          <span style="font-size: 0.82rem; font-weight: 800; color: #fff;">SISTEMA TITAN CLOUD ATTIVO</span>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-logo-text">TITAN <span>3D</span></div>
+        <div class="nav-badge-pill">
+          <div class="dot-pulse"></div>
+          FARM ONLINE
         </div>
-        <span style="font-size: 0.72rem; color: #00ff66; font-weight: 700; background: rgba(0,255,102,0.15); padding: 2px 8px; border-radius: 6px;">🟢 ONLINE H24</span>
-      </div>
-      <div style="font-size: 0.78rem; color: #8a99ad; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
-        <span>🔒 Saldo, Guadagni & Macchine:</span>
-        <span style="color: #ffb703; font-weight: 700;">PROTETTI DA PIN</span>
-      </div>
-    </div>
-
-    <!-- NOTE LEGALI & DISCLAIMER INFORMATIVO SULLA SCHERMATA DI ACCESSO -->
-    <div style="margin-top: 20px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px; text-align: left; font-size: 0.74rem; color: #8a99ad; line-height: 1.5;">
-      <div style="color: #00f0ff; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-        <span>⚖️</span> NOTE LEGALI & INFORMATIVA FISCALE (ITALIA)
-      </div>
-      <p style="margin-bottom: 6px;">
-        I dispositivi e le custodie stampate in 3D costituiscono <strong>kit didattici hardware open-source</strong> finalizzati allo studio di sistemi embedded ed IoT.
-      </p>
-      <p>
-        Attività di micro-mining svolta ad uso hobbistico. Le transazioni e le conversioni sono soggette alla normativa fiscale ordinaria sulle cripto-attività (franchigia di legge ex Art. 67 TUIR).
-      </p>
-    </div>
-  </div>
-
-  <!-- MAIN APP CONTAINER -->
-  <div id="mainApp">
-    
-    <div class="logout-bar">
-      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-        <a href="index.html" style="text-decoration: none; color: #fff; background: rgba(0,240,255,0.15); border: 1px solid var(--border-cyan); padding: 6px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 0 10px rgba(0,240,255,0.2);">
-          <span>⬅️</span> Torna al Sito
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="servizi.html" class="nav-link">Ricambi &amp; Servizi CAD</a>
+        <a href="miner.html" class="nav-link active">Farm Telemetry</a>
+        <a href="https://wa.me/393285764023?text=Salve%20Titan3D%2C%20vorrei%20informazioni%20sui%20servizi%20tecnici" target="_blank" rel="noopener" class="nav-cta">
+          💬 Contatta Gio
         </a>
-        <div class="demo-badge" id="modeBadge">✨ DEMO GENERICA CLIENTE</div>
-      </div>
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <button onclick="openChangePinModal()" style="background: rgba(0,240,255,0.15); border: 1.5px solid var(--border-cyan); color: var(--border-cyan); padding: 6px 14px; border-radius: 8px; font-weight: 800; font-size: 0.82rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 0 10px rgba(0,240,255,0.15);">
-          🔑 Cambia Password / PIN
-        </button>
-        <button class="btn-logout" onclick="logout()">🔒 Blocca Pannello</button>
-      </div>
+      </nav>
     </div>
+  </header>
 
-    <!-- MODAL CAMBIO PASSWORD / PIN SICURO (ZERO-LEAK) -->
-    <div id="changePinModal" style="display: none; position: fixed; inset: 0; background: rgba(3, 5, 8, 0.88); backdrop-filter: blur(10px); z-index: 99999; justify-content: center; align-items: center; padding: 20px;">
-      <div style="background: linear-gradient(145deg, #0b111a, #162032); border: 2px solid var(--border-cyan); border-radius: 20px; width: 100%; max-width: 480px; padding: 26px; box-shadow: 0 0 40px rgba(0,240,255,0.25); position: relative;">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,240,255,0.2); padding-bottom: 12px; margin-bottom: 18px;">
-          <h3 style="color: var(--border-cyan); margin: 0; font-size: 1.25rem; display: flex; align-items: center; gap: 8px;">
-            <span>🔐</span> MODIFICA PASSWORD / PIN
-          </h3>
-          <button onclick="closeChangePinModal()" style="background: rgba(255,42,95,0.2); border: 1px solid var(--accent-red); color: #fff; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 0.85rem;">✕ CHIUDI</button>
-        </div>
+  <!-- MAIN CONTENT -->
+  <main class="main-container">
 
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
-          Imposta la tua nuova chiave di sicurezza. Una volta modificata, tutti i vecchi PIN predefiniti saranno <strong>revocati immediatamente</strong>.
-        </p>
-
-        <form id="changePinForm" onsubmit="event.preventDefault(); submitChangePin();" style="display: flex; flex-direction: column; gap: 14px;">
-          <div>
-            <label style="display: block; font-size: 0.8rem; color: #8a99ad; margin-bottom: 6px; font-weight: 700;">VECCHIA PASSWORD / PIN ATTUALE:</label>
-            <div style="display: flex; gap: 6px;">
-              <input type="password" id="oldPinInput" placeholder="••••••••" required style="flex: 1; background: #06090e; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none;">
-              <button type="button" onclick="toggleFieldPass('oldPinInput')" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 0 12px; border-radius: 8px; cursor: pointer;" title="Mostra/Nascondi">👁️</button>
-            </div>
-          </div>
-
-          <div>
-            <label style="display: block; font-size: 0.8rem; color: var(--border-cyan); margin-bottom: 6px; font-weight: 700;">NUOVA PASSWORD / PIN:</label>
-            <div style="display: flex; gap: 6px;">
-              <input type="password" id="newPinInput" placeholder="Nuova Password (min 4 car.)" required minlength="4" style="flex: 1; background: #06090e; border: 1.5px solid var(--border-cyan); color: #00f0ff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none; font-weight: 700;">
-              <button type="button" onclick="toggleFieldPass('newPinInput')" style="background: rgba(0,240,255,0.15); border: 1px solid var(--border-cyan); color: var(--border-cyan); padding: 0 12px; border-radius: 8px; cursor: pointer;" title="Mostra/Nascondi">👁️</button>
-            </div>
-          </div>
-
-          <div>
-            <label style="display: block; font-size: 0.8rem; color: var(--border-cyan); margin-bottom: 6px; font-weight: 700;">CONFERMA NUOVA PASSWORD / PIN:</label>
-            <div style="display: flex; gap: 6px;">
-              <input type="password" id="confirmNewPinInput" placeholder="Ripeti la Nuova Password" required minlength="4" style="flex: 1; background: #06090e; border: 1.5px solid var(--border-cyan); color: #00f0ff; padding: 12px 14px; border-radius: 8px; font-size: 1rem; outline: none; font-weight: 700;">
-              <button type="button" onclick="toggleFieldPass('confirmNewPinInput')" style="background: rgba(0,240,255,0.15); border: 1px solid var(--border-cyan); color: var(--border-cyan); padding: 0 12px; border-radius: 8px; cursor: pointer;" title="Mostra/Nascondi">👁️</button>
-            </div>
-          </div>
-
-          <div id="changePinError" style="display: none; color: #ff2a5f; font-size: 0.82rem; font-weight: 700; background: rgba(255,42,95,0.15); padding: 8px 12px; border-radius: 6px; border: 1px solid #ff2a5f;"></div>
-
-          <button type="submit" style="background: linear-gradient(135deg, var(--border-cyan), #00ff88); color: #000; font-weight: 800; font-size: 0.95rem; padding: 14px; border: none; border-radius: 10px; cursor: pointer; margin-top: 8px; box-shadow: 0 0 20px rgba(0,240,255,0.3);">
-            💾 SALVA NUOVA PASSWORD IN SICUREZZA
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <!-- Header -->
-    <header>
-      <a href="index.html" style="text-decoration: none; color: inherit; display: inline-block;">
-        <div class="logo-title">TITAN <span>MINER</span> CONTROL</div>
-      </a>
-      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Pannello Cloud di Monitoraggio H24 ESP32-S3 Solo Mining</p>
-
-      <div class="status-badge-container">
-        <div class="status-pill">
-          <div class="dot-live"></div>
-          <span>⚡ BITAXE GAMMA 601 (1.06 TH/s @ 192.168.1.47)</span></div>
-        <div class="status-pill"><span id="espStatusText">ESP32-S3 DEMO NODE</span>
-        </div>
-        <div class="status-pill">
-          <span id="espMacText">MAC: DE:MO:EX:AM:PL:E1</span>
-        </div>
-        <div class="status-pill">
-          <span>⚙️ Dual Core 240MHz (8MB PSRAM)</span>
-        </div>
-      </div>
-    </header>
-
-    <!-- CARD INFO CLIENTE REGISTRATO (TITAN SERIAL ID & EMAIL) -->
-    <div id="clientInfoBanner" style="background: rgba(18,24,36,0.9); border: 1px solid rgba(0,240,255,0.3); border-radius: 14px; padding: 15px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-      <div>
-        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">🏷️ NUMERO PROGRESSIVO DISPOSITIVO TITAN</div>
-        <div style="font-size: 1.1rem; font-weight: 700; color: var(--border-cyan);" id="clientSerialVal">TITAN-MINER-001</div>
-      </div>
-      <div>
-        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">📧 EMAIL REGISTRATA CLIENTE</div>
-        <div style="font-size: 0.95rem; font-weight: 700; color: #fff;" id="clientEmailVal">marco.rossi@gmail.com</div>
-      </div>
-      <div>
-        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">📅 ATTIVAZIONE CLOUD H24</div>
-        <div style="font-size: 0.85rem; font-weight: 700; color: var(--green-glow);" id="clientActivationVal">Attivo fino al 19/08/2027</div>
-      </div>
-    </div>
-
-    <!-- ADMIN MANAGEMENT PANEL (VISIBLE ONLY IN OWNER MODE) -->
-    <div id="adminProfitPanel" style="display: none; background: linear-gradient(135deg, rgba(0,240,255,0.1) 0%, rgba(18,24,36,0.95) 100%); border: 2px solid #00f0ff; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 0 40px rgba(0,240,255,0.2);">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
-        <div style="font-size: 1.3rem; font-weight: 700; color: #00f0ff; display: flex; align-items: center; gap: 8px;">
-          <span>👑</span> PANNELLO GESTIONE CLIENTI & GUADAGNI NETTI GIOVANNI
-        </div>
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <button onclick="openChangePinModal()" style="background: rgba(0,240,255,0.2); border: 1px solid #00f0ff; color: #00f0ff; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
-            🔑 Modifica Password Proprietario
-          </button>
-          <div style="background: rgba(0,255,102,0.15); border: 1px solid #00ff66; color: #00ff66; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 0.85rem;">
-            💼 RISERVATO PROPRIETARIO
-          </div>
-        </div>
-      </div>
-
-      <!-- KPI Profit Cards -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
-        <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(0,240,255,0.3); padding: 15px; border-radius: 12px; text-align: center;">
-          <div style="color: #8a99ad; font-size: 0.8rem; text-transform: uppercase;">Incasso Totale Vendite</div>
-          <div style="font-size: 1.8rem; font-weight: 700; color: #fff; margin-top: 4px;">179,80 €</div>
-          <div style="font-size: 0.75rem; color: #8a99ad;">2 Vendite Completate</div>
-        </div>
-        <div style="background: rgba(0,255,102,0.1); border: 1px solid #00ff66; padding: 15px; border-radius: 12px; text-align: center;">
-          <div style="color: #00ff66; font-size: 0.8rem; text-transform: uppercase; font-weight: 700;">Tuo Guadagno Netto Pulito</div>
-          <div style="font-size: 1.8rem; font-weight: 700; color: #00ff66; margin-top: 4px;">+146,90 €</div>
-          <div style="font-size: 0.75rem; color: #8a99ad;">Margine Medio +81% Netti!</div>
-        </div>
-        <div style="background: rgba(255,183,3,0.1); border: 1px solid #ffb703; padding: 15px; border-radius: 12px; text-align: center;">
-          <div style="color: #ffb703; font-size: 0.8rem; text-transform: uppercase;">Clienti Cloud Attivi</div>
-          <div style="font-size: 1.8rem; font-weight: 700; color: #ffb703; margin-top: 4px;">2 Clienti</div>
-          <div style="font-size: 0.75rem; color: #8a99ad;">Hosting Cloud H24 Inclusi</div>
-        </div>
-      </div>
-
-      <!-- Client Table with LIVE INSPECT BUTTON FOR GIOVANNI -->
-      <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; color: #fff;">
-          <thead>
-            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); color: #8a99ad; text-transform: uppercase; font-size: 0.75rem;">
-              <th style="padding: 10px;">Progressivo TITAN</th>
-              <th style="padding: 10px;">Cliente</th>
-              <th style="padding: 10px;">Email Registrata</th>
-              <th style="padding: 10px;">Pacchetto</th>
-              <th style="padding: 10px;">Incasso</th>
-              <th style="padding: 10px;">Guadagno Netto</th>
-              <th style="padding: 10px;">PIN (Protetto)</th>
-              <th style="padding: 10px; text-align: center;">Azione Admin</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-              <td style="padding: 12px 10px;"><code style="color: #00f0ff; font-weight: 700;">TITAN-MINER-001</code></td>
-              <td style="padding: 12px 10px; font-weight: 700; color: #fff;">Marco Rossi</td>
-              <td style="padding: 12px 10px; color: #8a99ad;">marco.rossi@gmail.com</td>
-              <td style="padding: 12px 10px;">Pack 2: Full Cloud</td>
-              <td style="padding: 12px 10px;">59,90 €</td>
-              <td style="padding: 12px 10px; color: #00ff66; font-weight: 700;">+51,90 €</td>
-              <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: var(--text-muted); font-family: monospace; letter-spacing: 2px;">••••</code></td>
-              <td style="padding: 12px 10px; text-align: center;">
-                <button onclick="inspectClient('1234')" style="background: rgba(0,240,255,0.2); border: 1px solid #00f0ff; color: #00f0ff; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
-                  👁️ ISPEZIONE MARCO
-                </button>
-              </td>
-            </tr>
-            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-              <td style="padding: 12px 10px;"><code style="color: #00f0ff; font-weight: 700;">TITAN-MINER-002</code></td>
-              <td style="padding: 12px 10px; font-weight: 700; color: #fff;">Luca Bianchi</td>
-              <td style="padding: 12px 10px; color: #8a99ad;">luca.bianchi@outlook.it</td>
-              <td style="padding: 12px 10px;">Pack 3: Farm Cluster</td>
-              <td style="padding: 12px 10px;">119,90 €</td>
-              <td style="padding: 12px 10px; color: #00ff66; font-weight: 700;">+95,00 €</td>
-              <td style="padding: 12px 10px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; color: var(--text-muted); font-family: monospace; letter-spacing: 2px;">••••</code></td>
-              <td style="padding: 12px 10px; text-align: center;">
-                <button onclick="inspectClient('5678')" style="background: rgba(0,255,102,0.2); border: 1px solid #00ff66; color: #00ff66; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
-                  👁️ ISPEZIONE LUCA
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- BANNER PER QUANDO GIOVANNI STA ISPEZIONANDO L'AREA DI UN CLIENTE -->
-    <div id="inspectingBanner" style="display: none; background: rgba(255,183,3,0.15); border: 1px solid #ffb703; padding: 12px 20px; border-radius: 12px; margin-bottom: 20px; justify-content: space-between; align-items: center;">
-      <div style="color: #ffb703; font-weight: 700; font-size: 0.95rem;" id="inspectingText">
-        👑 MODALITÀ ADMIN: STAI ISPEZIONANDO L'AREA DEL CLIENTE: MARCO ROSSI
-      </div>
-      <button onclick="backToOwnerAdmin()" style="background: #ffb703; color: #000; border: none; padding: 6px 14px; border-radius: 6px; font-weight: 800; font-size: 0.8rem; cursor: pointer;">
-        🔙 TORNA AL TUO PANNELLO ADMIN
-      </button>
-    </div>
-
-    <!-- TICKER EFFETTO SCENA WOW H24 -->
-    <div style="background: linear-gradient(90deg, rgba(255,183,3,0.2) 0%, rgba(0,240,255,0.2) 50%, rgba(0,255,102,0.2) 100%); border: 1px solid var(--accent-gold); border-radius: 12px; padding: 10px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px; overflow: hidden; box-shadow: 0 0 20px rgba(255,183,3,0.2);">
-      <div style="font-weight: 800; color: #ffb703; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
-        <span>🔥 TITAN CLOUD SCENE:</span>
-      </div>
-      <marquee style="color: #fff; font-size: 0.88rem; font-weight: 600;" scrollamount="6">
-        ⚡ RETE SHA-256 SOLO MINING IN ESEDUZIONE 24/7 • BLOCCO TARGET: #857.419 (REWARD: 3.125 BTC ~ € 276.500) • NODI ESP32-S3 CONNESSI A SOLO CKPOOL • PACCHETTI STAMPATI IN 3D IN PLA ALVEARE •
-      </marquee>
-    </div>
-
-    <!-- TERMINALE HI-TECH CYBERPUNK LIVE HASH SCANNER (EFFETTO SCENA) -->
-    <div style="background: #04060a; border: 1px solid var(--border-cyan); border-radius: 16px; padding: 18px; margin-bottom: 25px; box-shadow: inset 0 0 25px rgba(0,240,255,0.15);">
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,240,255,0.2); padding-bottom: 10px; margin-bottom: 12px;">
-        <div style="font-weight: 700; color: var(--border-cyan); font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
-          <span>💻</span> TITAN CYBER TERMINAL — CANALE LOG SHA-256 IN TEMPO REALE
-        </div>
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <div style="width: 8px; height: 8px; border-radius: 50%; background: #00ff66; box-shadow: 0 0 8px #00ff66;"></div>
-          <span style="font-size: 0.75rem; color: #00ff66; font-weight: 700;">STREAM LIVE</span>
-        </div>
-      </div>
-
-      <!-- STREAM TERMINALE AUTOMATICO SCROLLING -->
-      <div id="cyberTerminal" style="height: 120px; overflow-y: auto; font-family: monospace; font-size: 0.8rem; color: #00f0ff; line-height: 1.6; padding-right: 5px;">
-        <div>[23:13:28] ⚡ INITIALIZING TITAN SHA-256 ENGINE v4.2...</div>
-        <div>[23:13:29] 🟢 CONNECTED TO SOLO CKPOOL STRATUM (solo.ckpool.org:3333)</div>
-        <div>[23:13:30] 📦 NODO MINER 01 SUBMITTED NONCE #1894520 -> DIFFICULTY MATCH: 14.892</div>
-        <div style="color: #00ff66;">[23:13:31] 💎 HASH CANDIDATE: 00000000000000000001f3b89a42e1... (VALID SHARE)</div>
-      </div>
-    </div>
-    <!-- MATRICE GRAFICA MACCHINE ESP TITAN CHE SI ILLUMINANO AD UNA AD UNA O INSIEME -->
-    <div style="background: rgba(18,24,36,0.95); border: 1px solid var(--border-cyan); border-radius: 16px; padding: 20px; margin-bottom: 25px; box-shadow: 0 0 30px rgba(0,240,255,0.15);">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
-        <div style="font-weight: 700; color: #fff; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-          <span>📦</span> MATRICE MACCHINE DISPOSITIVI ESP TITAN (VISIONE 1, 2, 3 O TUTTE INSIEME)
-        </div>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <button onclick="selectPresets('all3')" style="background: rgba(0,255,102,0.15); border: 1px solid #00ff66; color: #00ff66; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer;">
-            ⚡ TUTTE E 3 LE MACCHINE INSIEME (229.3 KH/s)
-          </button>
-          <button onclick="selectPresets('two')" style="background: rgba(0,240,255,0.15); border: 1px solid #00f0ff; color: #00f0ff; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer;">
-            👥 2 MACCHINE ALLA VOLTA (151.2 KH/s)
-          </button>
-          <button onclick="selectPresets('single')" style="background: rgba(255,183,3,0.15); border: 1px solid #ffb703; color: #ffb703; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer;">
-            1️⃣ 1 MACCHINA ALLA VOLTA (76.4 KH/s)
-          </button>
-          <button id="btnAutoCycle" onclick="toggleAutoCycle()" style="background: rgba(255,183,3,0.15); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s;">
-            🔄 CICLO AUTO MACCHINE (1-2-3)
-          </button>
-        </div>
-      </div>
-
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">
-        Puoi vedere ed illuminare le tue <strong>Macchine ESP (ESP32-S3 Miner & ESP32-CAM) contemporaneamente</strong> o selezionarne 1 o 2 alla volta!
+    <!-- HERO -->
+    <section class="hero-banner">
+      <h1 class="hero-title">TITAN 3D <span>FARM TELEMETRY</span></h1>
+      <p class="hero-subtitle">
+        Telemetria pubblica in tempo reale dell'infrastruttura di calcolo ASIC SHA-256 e del Sentinel Controller Raspberry Pi 3B del laboratorio Titan 3D.
       </p>
-
-      <!-- MACCHINE MINER GRID MATRICE -->
-      <div class="node-grid-container">
-        <!-- MACCHINA 1: RASPBERRY PI 2B -->
-        <div class="machine-card-node active-illuminated" id="machine1" onclick="toggleMachineNode(1)" style="border-color: #ff3366; background: linear-gradient(135deg, rgba(255,51,102,0.15) 0%, #121824 100%);">
-          <div class="machine-header-node">
-            <span class="machine-title-node" style="color: #ff3366;">🍓 NODO 1 (RASPBERRY PI 2B)</span>
-            <div class="machine-led-node" style="background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
-          </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.39 (ARMv7 CPU Quad-Core)</div>
-          <div class="machine-stat-node" id="machineStat1" style="color: #00ff66;">208.5 KH/s (ONLINE)</div>
-        </div>
-
-        <!-- MACCHINA 2: ARDUINO NANO -->
-        <div class="machine-card-node active-illuminated" id="machine2" onclick="toggleMachineNode(2)" style="border-color: #00f0ff; background: linear-gradient(135deg, rgba(0,240,255,0.15) 0%, #121824 100%);">
-          <div class="machine-header-node">
-            <span class="machine-title-node" style="color: #00f0ff;">⛏️ NODO 2 (ARDUINO NANO USB)</span>
-            <div class="machine-led-node" style="background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
-          </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">/dev/ttyUSB0 (Host: Raspberry Pi 2)</div>
-          <div class="machine-stat-node" id="machineStat2" style="color: #00f0ff;">343 H/s (ONLINE)</div>
-        </div>
-
-        <!-- MACCHINA 3: ESP8266EX -->
-        <div class="machine-card-node active-illuminated gold-node" id="machine3" onclick="toggleMachineNode(3)">
-          <div class="machine-header-node">
-            <span class="machine-title-node" id="machineTitle3" style="color: #ffb703;">📡 NODO 3 (ESP8266EX WI-FI)</span>
-            <div class="machine-led-node" id="machineLed3" style="background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
-          </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);" id="machineSub3">Wi-Fi Tenda Gio (160MHz)</div>
-          <div class="machine-stat-node" id="machineStat3" style="color: var(--accent-gold);">64.8 KH/s (ONLINE)</div>
-        </div>
-
-        <!-- MACCHINA 4: ESP32-CAM -->
-        <div class="machine-card-node active-illuminated gold-node" id="machine4" onclick="toggleMachineNode(4)">
-          <div class="machine-header-node">
-            <span class="machine-title-node">📷 NODO 4 (ESP32-CAM)</span>
-            <div class="machine-led-node" style="background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
-          </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.86 (Camera + Solo Miner)</div>
-          <div class="machine-stat-node" id="machineStat4" style="color: #00ff66;">84.1 KH/s (ONLINE)</div>
-        </div>
-
-        <!-- MACCHINA ESP32-CAM TELECAMERA -->
-        <div class="machine-card-node active-illuminated" id="machineCam" style="border-color: var(--accent-gold); background: linear-gradient(135deg, rgba(255,183,3,0.15) 0%, #121824 100%);">
-          <div class="machine-header-node">
-            <span class="machine-title-node" style="color: var(--accent-gold);">📷 ESP32-CAM (LIVE NODE)</span>
-            <div class="machine-led-node" style="background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
-          </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">IP 192.168.1.86</div>
-          <div class="machine-stat-node" id="machineStatCam" style="color: var(--accent-gold); font-size: 1.1rem;">167.6 kH/s (ONLINE)</div>
-        </div>
+      <div class="live-indicator">
+        <div class="dot-pulse"></div>
+        <span id="lastSyncTime">Sincronizzazione in corso...</span>
       </div>
-    </div>
-    <!-- SEZIONE DEDICATA TELECAMERA ESP32-CAM LIVE STREAMING -->
-    <div style="background: linear-gradient(135deg, rgba(18,24,36,0.95) 0%, rgba(10,13,20,0.95) 100%); border: 2px solid var(--accent-gold); border-radius: 20px; padding: 24px; margin-bottom: 25px; box-shadow: 0 0 35px rgba(255,183,3,0.2);">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
-        <div style="font-size: 1.2rem; font-weight: 700; color: var(--accent-gold); display: flex; align-items: center; gap: 10px;">
-          <span>📷</span> TELECAMERA ESP32-CAM (STREAMING VIDEO LIVE MINER & STAMPA 3D)
-        </div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <div style="width: 10px; height: 10px; border-radius: 50%; background: #00ff66; box-shadow: 0 0 10px #00ff66; animation: pulse 1.5s infinite;"></div>
-          <span style="font-size: 0.8rem; color: #00ff66; font-weight: 700;" id="espCamStatusBadge">ESP32-CAM CONNESSA (192.168.1.86)</span>
-        </div>
-      </div>
+    </section>
 
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 18px;">
-        Monitoraggio visivo in tempo reale con il modulo <strong>ESP32-CAM OV2640</strong> puntato sul miner e sulla stampante 3D!
-      </p>
-
-      <!-- IP INPUT CONTROLS PER ESP32-CAM -->
-      <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(0,240,255,0.3); border-radius: 12px; padding: 12px 16px; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-        <label for="espCamIpInput" style="font-size: 0.85rem; color: #fff; font-weight: 700;">🌐 INDIRIZZO IP ESP32-CAM:</label>
-        <input type="text" id="espCamIpInput" value="192.168.1.86" style="background: rgba(0,0,0,0.6); border: 1px solid var(--border-cyan); color: #00f0ff; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-family: monospace; outline: none; width: 160px; text-align: center;">
-        <button onclick="updateEspCamStream()" style="background: var(--border-cyan); color: #000; border: none; padding: 7px 16px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 0.82rem;">
-          ⚡ CONNETTI / AGGIORNA STREAM
-        </button>
-        <button onclick="toggleCamFlash()" id="btnCamFlash" style="background: rgba(255,183,3,0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 7px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.82rem;">
-          💡 FLASH LED ESP32-CAM (ON/OFF)
-        </button>
-      </div>
-
-      <!-- VIDEO STREAM BOX -->
-      <div style="background: #000; border: 2px dashed rgba(0,240,255,0.4); border-radius: 16px; min-height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; box-shadow: inset 0 0 30px rgba(0,0,0,0.8);">
-        <img id="espCamImage" src="http://192.168.1.86:81/stream" alt="ESP32-CAM Live Video Stream" style="width: 100%; max-height: 380px; object-fit: contain; display: block;" onerror="handleCamError(this)">
-        <div id="espCamPlaceholder" style="display: none; text-align: center; padding: 30px 20px;">
-          <div style="font-size: 2.5rem; margin-bottom: 10px;">📹</div>
-          <div style="color: var(--border-cyan); font-weight: 700; font-size: 1.1rem;" id="espCamPlaceholderText">ESP32-CAM LIVE MONITORING (192.168.1.86)</div>
-          <div style="color: var(--text-muted); font-size: 0.82rem; margin-top: 6px;">
-            Stream Video Live abilitato sulla rete Wi-Fi locale. Premi "CONNETTI STREAM" per caricare il flusso della telecamera!
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CARD VISTA GRAFICA REALE COVER PLA NIDO D'APE -->
-    <div class="card-honeycomb-showcase">
-      <div style="font-weight: 700; color: var(--accent-gold); font-size: 1.25rem; letter-spacing: 1px;">
-        🐝 CUSTODIA TITAN 3D IN PLA — CUSTODIA A NIDO D'APE ESAGONALE
-      </div>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 6px;">
-        Scocca per ESP32-S3 stampata in 3D con <strong>Griglia ad Alveare Esagonale Passante (Sopra & Sotto)</strong> per l'espulsione continua del calore!
-      </p>
-
-      <!-- DIAGRAMMA GRAFICO SVG AD ALTA DEFINIZIONE DEL NIDO D'APE -->
-      <div class="honeycomb-svg-box">
-        <svg width="340" height="180" viewBox="0 0 340 180" xmlns="http://www.w3.org/2000/svg">
-          <!-- Outer Gold Case Frame -->
-          <rect x="10" y="10" width="320" height="160" rx="16" fill="#121824" stroke="#ffb703" stroke-width="4"/>
-          <!-- Inner Cyberpunk Rim -->
-          <rect x="20" y="20" width="300" height="140" rx="10" fill="#06080d" stroke="#00f0ff" stroke-width="1.5" stroke-dasharray="6,4"/>
-          
-          <!-- Inner ESP32 Chip Graphic -->
-          <rect x="120" y="65" width="100" height="50" rx="6" fill="#1b2434" stroke="#ffb703" stroke-width="2"/>
-          <text x="170" y="95" font-family="'Space Grotesk', sans-serif" font-size="12" font-weight="bold" fill="#00f0ff" text-anchor="middle">ESP32-S3 CHIP</text>
-          
-          <!-- Green LED -->
-          <circle cx="290" cy="40" r="5" fill="#00ff66"/>
-          <circle cx="290" cy="40" r="9" fill="none" stroke="#00ff66" stroke-width="1" opacity="0.6"/>
-
-          <!-- TRUE ESAGONI NIDO D'APE GRID -->
-          <g fill="none" stroke="#00f0ff" stroke-width="2">
-            <!-- Row 1 -->
-            <polygon points="45,30 55,24 65,30 65,42 55,48 45,42"/>
-            <polygon points="75,30 85,24 95,30 95,42 85,48 75,42"/>
-            <polygon points="105,30 115,24 125,30 125,42 115,48 105,42"/>
-            <polygon points="215,30 225,24 235,30 235,42 225,48 215,42"/>
-            <polygon points="245,30 255,24 265,30 265,42 255,48 245,42"/>
-
-            <!-- Row 2 Offset -->
-            <polygon points="30,50 40,44 50,50 50,62 40,68 30,62"/>
-            <polygon points="60,50 70,44 80,50 80,62 70,68 60,62"/>
-            <polygon points="90,50 100,44 110,50 110,62 100,68 90,62"/>
-            <polygon points="230,50 240,44 250,50 250,62 240,68 230,62"/>
-            <polygon points="260,50 270,44 280,50 280,62 270,68 260,62"/>
-
-            <!-- Row 3 Offset -->
-            <polygon points="45,70 55,64 65,70 65,82 55,88 45,82"/>
-            <polygon points="75,70 85,64 95,70 95,82 85,88 75,82"/>
-            <polygon points="245,70 255,64 265,70 265,82 255,88 245,82"/>
-
-            <!-- Row 4 Offset -->
-            <polygon points="30,90 40,84 50,90 50,102 40,108 30,102"/>
-            <polygon points="60,90 70,84 80,90 80,102 70,108 60,102"/>
-            <polygon points="90,90 100,84 110,90 110,102 100,108 90,102"/>
-            <polygon points="230,90 240,84 250,90 250,102 240,108 230,90"/>
-            <polygon points="260,90 270,84 280,90 280,102 270,108 260,90"/>
-
-            <!-- Row 5 Bottom Grid -->
-            <polygon points="45,110 55,104 65,110 65,122 55,128 45,122"/>
-            <polygon points="75,110 85,104 95,110 95,122 85,128 75,122"/>
-            <polygon points="105,110 115,104 125,110 125,122 115,128 105,122"/>
-            <polygon points="215,110 225,104 235,110 235,122 225,128 215,122"/>
-            <polygon points="245,110 255,104 265,110 265,122 255,128 245,122"/>
-            <polygon points="275,110 285,104 295,110 295,122 285,128 275,122"/>
-
-            <!-- Row 6 Bottom Row -->
-            <polygon points="60,130 70,124 80,130 80,142 70,148 60,142"/>
-            <polygon points="90,130 100,124 110,130 110,142 100,148 90,142"/>
-            <polygon points="230,130 240,124 250,130 250,142 240,148 230,142"/>
-            <polygon points="260,130 270,124 280,130 280,142 270,148 260,142"/>
-          </g>
-
-          <!-- Label -->
-          <text x="170" y="152" font-family="'Space Grotesk', sans-serif" font-size="11" font-weight="bold" fill="#ffb703" text-anchor="middle">TITAN 3D — COVER PLA ALVEARE NIDO D'APE</text>
-        </svg>
-      </div>
-
-      <div style="font-size: 0.82rem; color: var(--border-cyan); font-weight: 700;">
-        🧊 Modellata ed Incisa per Stampa 3D Bambu Lab X1C / Anycubic S1 Max (File CAD: esp32_s3_custom_case.scad)
-      </div>
-    </div>
-
-    <!-- SEZIONE ESCLUSIVA: GUADAGNI REALI LIVE DUINO-COIN & STATO ESP32-CAM -->
-    <div style="background: linear-gradient(135deg, rgba(0, 240, 255, 0.12) 0%, rgba(18, 24, 36, 0.98) 100%); border: 2px solid var(--border-cyan); border-radius: 20px; padding: 24px; margin-bottom: 25px; box-shadow: 0 0 35px rgba(0, 240, 255, 0.25);">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="background: var(--border-cyan); color: #000; width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 900;">ᕲ</div>
-          <div>
-            <div style="font-size: 1.3rem; font-weight: 700; color: #fff;">
-              GUADAGNI LIVE DUINO-COIN & ESP32-CAM REALE
-            </div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">
-              Dati Ufficiali Sincronizzati via API in Tempo Reale • Utente: <strong style="color: var(--border-cyan);">Giovanni2804</strong>
-            </div>
-          </div>
-        </div>
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="background: rgba(0,255,102,0.15); border: 1px solid #00ff66; color: #00ff66; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.82rem; display: flex; align-items: center; gap: 6px;">
-            <div style="width: 8px; height: 8px; border-radius: 50%; background: #00ff66; box-shadow: 0 0 8px #00ff66; animation: pulse 1.5s infinite;"></div>
-            <span id="ducoLiveStatusText">ESP32-CAM MINING ATTIVO</span>
-          </div>
-          <a href="https://wallet.duinocoin.com" target="_blank" style="background: rgba(255,183,3,0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold); text-decoration: none; padding: 6px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 700;">
-            🔗 Apri Web Wallet
-          </a>
-        </div>
-      </div>
-
-      <!-- GRID METRICHE DUCO -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 15px; margin-bottom: 20px;">
-        
-        <!-- SALDO DUCO -->
-        <div style="background: rgba(0,0,0,0.5); border: 1px solid rgba(0,240,255,0.4); border-radius: 14px; padding: 18px; text-align: center;">
-          <div style="color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; font-weight: 700;">💰 Saldo Totale Accumulato</div>
-          <div style="font-size: 2rem; font-weight: 900; color: var(--border-cyan); margin: 6px 0;" id="ducoBalanceVal">0.5068 ᕲ</div>
-          <div style="font-size: 0.75rem; color: #00ff66;" id="ducoFiatVal">≈ $0.000036 USD</div>
-        </div>
-
-        <!-- HASHRATE REALE -->
-        <div style="background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,102,0.4); border-radius: 14px; padding: 18px; text-align: center;">
-          <div style="color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; font-weight: 700;">⚡ Velocità Live ESP32-CAM</div>
-          <div style="font-size: 2rem; font-weight: 900; color: #00ff66; margin: 6px 0;" id="ducoHashrateVal">163.5 kH/s</div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);" id="ducoThreadsVal">2 Core RISC/Xtensa a 240MHz</div>
-        </div>
-
-        <!-- RENDIMENTO STIMATO GIORNALIERO -->
-        <div style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255,183,3,0.4); border-radius: 14px; padding: 18px; text-align: center;">
-          <div style="color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; font-weight: 700;">📈 Stima Giornaliera</div>
-          <div style="font-size: 2rem; font-weight: 900; color: var(--accent-gold); margin: 6px 0;" id="ducoDailyVal">~8.0 ᕲ / giorno</div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">~240 ᕲ / mese in automatico</div>
-        </div>
-
-        <!-- SHARES ACCETTATE & POOL -->
-        <div style="background: rgba(0,0,0,0.5); border: 1px solid rgba(224,170,255,0.4); border-radius: 14px; padding: 18px; text-align: center;">
-          <div style="color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; font-weight: 700;">🎯 Shares & Affidabilità</div>
-          <div style="font-size: 2rem; font-weight: 900; color: #e0aaff; margin: 6px 0;" id="ducoSharesVal">100% OK</div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);" id="ducoPoolVal">Pool: mcjohn-node-2</div>
-        </div>
-      </div>
-
-      <!-- ULTIMA TRANSAZIONE / PREMI -->
-      <div style="background: rgba(0,0,0,0.4); border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 0.85rem; margin-bottom: 20px;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-size: 1.2rem;">🏆</span>
-          <span style="color: #fff;" id="ducoLastTxText">Ultimo accredito: <strong>+0.5 ᕲ</strong> (Rewarded achievement: Airwave resource hunter)</span>
-        </div>
-        <div style="color: var(--text-muted); font-size: 0.75rem;" id="ducoLastTxTime">Pochi istanti fa</div>
-      </div>
-
-      <!-- PORTALE TRASFORMAZIONE DUCO IN EURO (€) & CRIPTOVALUTE -->
-      <div style="background: linear-gradient(135deg, rgba(0,240,255,0.08) 0%, rgba(255,183,3,0.08) 100%); border: 1px solid rgba(0,240,255,0.4); border-radius: 16px; padding: 20px; box-shadow: 0 0 25px rgba(0,0,0,0.5);">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
-          <div style="font-size: 1.1rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px;">
-            <span>💱</span> TRASFORMA DUINO-COIN IN EURO (€) E CRYPTO
-          </div>
-          <span style="font-size: 0.75rem; color: #00ff66; font-weight: 700; background: rgba(0,255,102,0.15); padding: 4px 10px; border-radius: 20px; border: 1px solid #00ff66;">
-            DOPPIO ACCESSO DIRETTO
-          </span>
-        </div>
-
-        <p style="color: var(--text-muted); font-size: 0.84rem; margin-bottom: 16px; line-height: 1.4;">
-          Per incassare i tuoi <strong>DUCO</strong> in <strong>Euro (€)</strong> su Conto Bancario o Carta di Credito/Debito, segui i due passaggi diretti:
-        </p>
-
-        <!-- DOPPIO LINK RAPIDO -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-bottom: 18px;">
-          
-          <!-- LINK 1: SWAP DUCO -->
-          <a href="https://wallet.duinocoin.com" target="_blank" style="text-decoration: none; background: rgba(0,240,255,0.12); border: 2px solid var(--border-cyan); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s; box-shadow: 0 0 15px rgba(0,240,255,0.1);">
-            <div>
-              <div style="font-size: 0.72rem; color: var(--border-cyan); font-weight: 800; text-transform: uppercase;">1° PASSAGGIO</div>
-              <div style="font-size: 1rem; font-weight: 800; color: #fff; margin-top: 2px;">🔄 Swap DUCO in Nano / TRX</div>
-              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Exchange Ufficiale Duino (Zero Fee)</div>
-            </div>
-            <span style="font-size: 1.3rem;">➔</span>
-          </a>
-
-          <!-- LINK 2: INCASSO EURO SU CONTO / CARTA -->
-          <a href="https://www.binance.com/it/convert" target="_blank" style="text-decoration: none; background: rgba(255,183,3,0.12); border: 2px solid var(--accent-gold); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s; box-shadow: 0 0 15px rgba(255,183,3,0.1);">
-            <div>
-              <div style="font-size: 0.72rem; color: var(--accent-gold); font-weight: 800; text-transform: uppercase;">2° PASSAGGIO</div>
-              <div style="font-size: 1rem; font-weight: 800; color: #fff; margin-top: 2px;">💶 Converti in Euro (€) & Preleva</div>
-              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Incasso su IBAN, PostePay o PayPal</div>
-            </div>
-            <span style="font-size: 1.3rem;">➔</span>
-          </a>
-        </div>
-
-        <!-- CALCOLATORE ISTANTANEO DUCO -> EUR -->
-        <div style="background: rgba(0,0,0,0.6); border: 1px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <label for="ducoCalcInput" style="font-size: 0.8rem; color: #fff; font-weight: 700;">🔢 CALCOLA VALORE:</label>
-            <input type="number" id="ducoCalcInput" value="100" min="1" step="1" oninput="calcDucoToEur()" style="background: #121824; border: 1px solid var(--border-cyan); color: #00f0ff; padding: 5px 10px; border-radius: 6px; width: 90px; text-align: center; font-weight: 800; outline: none;">
-            <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 700;">DUCO =</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 15px; font-size: 0.85rem;">
-            <span>Valore Stimato: <strong style="color: #00ff66; font-size: 1.05rem;" id="calcEurResult">€ 0.0066 EUR</strong></span>
-            <span style="color: var(--text-muted);">|</span>
-            <span style="color: var(--border-cyan); font-weight: 700;" id="calcUsdResult">$0.0072 USD</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- DIRECT PARAMETERS GRID -->
-    <div class="grid-stats">
-
-      <!-- BITCOIN MINATI AL MOMENTO -->
-      <div class="stat-card green" style="grid-column: span 2;">
-        <div class="stat-label">🪙 Bitcoin Minati al Momento</div>
-        <div class="stat-value" style="color: var(--green-glow); font-size: 2.2rem;" id="minedBtcVal">0.00000000 BTC</div>
-        <div class="stat-sub" id="totalMinedSub">Solo Mining Attivo — In attesa di trovare il Blocco da 3.125 BTC (~275.000€)</div>
-      </div>
-
-      <!-- Hashrate Live Animato -->
+    <!-- KEY STAT STRIP -->
+    <section class="stat-strip">
       <div class="stat-card">
-        <div class="stat-label">Velocità Miner Live (Hashrate)</div>
-        <div class="stat-value" id="hashrateVal" style="color: var(--border-cyan);">76.4 KH/s</div>
-        <div class="stat-sub" id="hashrateSubText">1 Macchina ESP Illuminata & Attiva</div>
-      </div>
-
-      <!-- Temperatura ESP32 Live -->
-      <div class="stat-card temp">
-        <div class="stat-label">Temperatura Nodi</div>
-        <div class="stat-value" id="tempVal">41.8 °C</div>
-        <div class="stat-sub" id="tempSubText">Stato Termico: Ottimale / Freddo</div>
-      </div>
-
-      <!-- Totale Calcoli Effettuati -->
-      <div class="stat-card purple">
-        <div class="stat-label">Calcoli SHA-256 Eseguiti</div>
-        <div class="stat-value" id="totalHashesVal" style="font-size: 1.5rem; color: #e0aaff;">18.452.900</div>
-        <div class="stat-sub">+ 75.000 calcoli al secondo</div>
-      </div>
-
-      <!-- Prezzo Bitcoin Live -->
-      <div class="stat-card gold">
-        <div class="stat-label">Prezzo Bitcoin Live</div>
-        <div class="stat-value" id="btcPriceVal">€ ...</div>
-        <div class="stat-sub" id="btcRewardVal">Premio Blocco (3.125 BTC): € ...</div>
-      </div>
-
-      <!-- Stato Operativo Miner -->
-      <div class="stat-card">
-        <div class="stat-label">Stato Operativo Rete</div>
-        <div class="stat-value" style="color: var(--green-glow);" id="activeNodesCountVal">1 NODO ATTIVO</div>
-        <div class="stat-sub">Connesso a Solo CKPool (24/7)</div>
-      </div>
-
-      <!-- IP & Rete locale -->
-      <div class="stat-card">
-        <div class="stat-label">Indirizzo IP & Consumo</div>
-        <div class="stat-value" id="espIpVal" style="font-size: 1.4rem;">192.168.1.82</div>
-        <div class="stat-sub">Consumo: 0.8 Watt (~0.05€/mese)</div>
-      </div>
-
-    </div>
-
-    <!-- Wallet Address Card -->
-    <div class="wallet-card">
-      <div class="wallet-header">
-        <div class="wallet-title">
-          <span>🪙</span> Indirizzo Wallet Bitcoin di Accredito Vincita
+        <div class="stat-label">
+          <span>Potenza Totale Farm</span>
+          <span class="stat-badge" style="background: rgba(0,240,255,0.15); color: var(--border-cyan);">BM1370</span>
         </div>
-        <span style="font-size: 0.8rem; color: var(--text-muted);" id="walletTypeText">Wallet Esempio Cliente</span>
+        <div class="stat-val highlight-cyan" id="totHashVal">1.72 TH/s</div>
+        <div class="stat-subtext">2 Nodi ASIC BM1370 attivi h24</div>
       </div>
-      <div class="wallet-box">
-        <span id="btcAddressText">bc1qdemo_cliente_esempio_wallet_123456789</span>
-        <button class="btn-copy" onclick="copyAddress()">COPIA</button>
+
+      <div class="stat-card">
+        <div class="stat-label">
+          <span>Consumo Totale</span>
+          <span class="stat-badge" style="background: rgba(0,255,136,0.15); color: var(--green-glow);">OTTIMIZZATO</span>
+        </div>
+        <div class="stat-val highlight-green" id="totPowerVal">40.2 W</div>
+        <div class="stat-subtext">Alimentazione 12V stabilizzata</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">
+          <span>Efficienza Energetica</span>
+          <span class="stat-badge" style="background: rgba(255,183,3,0.15); color: var(--accent-gold);">BENCHMARK</span>
+        </div>
+        <div class="stat-val highlight-gold" id="efficiencyVal">23.3 J/TH</div>
+        <div class="stat-subtext">Massima resa termica / calcolo</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">
+          <span>Produzione DigiByte</span>
+          <span class="stat-badge" style="background: rgba(0,255,136,0.15); color: var(--green-glow);">200+ DGB</span>
+        </div>
+        <div class="stat-val highlight-green" id="totDgbEarned">200.8 DGB</div>
+        <div class="stat-subtext" id="totDgbEuro">~€ 0.85 (live Binance)</div>
+      </div>
+    </section>
+
+    <!-- HARDWARE NODES SECTION -->
+    <section class="section-header">
+      <h2 class="section-title">
+        <span>⚙️</span> Nodi Hardware del Laboratorio
+      </h2>
+      <span style="font-size: 0.8rem; color: var(--text-muted);">Stratum Pool: sha256.mine.zpool.ca:3333</span>
+    </section>
+
+    <div class="nodes-grid">
+      <!-- BITAXE #1 -->
+      <div class="node-card">
+        <div class="node-header">
+          <div>
+            <div class="node-name">Bitaxe #1 (High-Clock)</div>
+            <div class="node-model">BM1370 ASIC @ 525 MHz</div>
+          </div>
+          <div class="node-status-pill">
+            <div class="dot-pulse"></div>
+            ONLINE
+          </div>
+        </div>
+
+        <div class="metrics-table">
+          <div class="metric-box">
+            <div class="metric-box-label">Hashrate</div>
+            <div class="metric-box-val" id="b1Hash">1.05 TH/s</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-label">Potenza Assorbita</div>
+            <div class="metric-box-val" id="b1Power">22.4 W</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-label">Voltaggio Core</div>
+            <div class="metric-box-val" id="b1Volt">12.03 V</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-label">Frequenza</div>
+            <div class="metric-box-val">525 MHz</div>
+          </div>
+        </div>
+
+        <div class="thermal-bar-container">
+          <div class="thermal-bar-header">
+            <span>Temperatura Chip</span>
+            <span id="b1Temp">60.0 °C</span>
+          </div>
+          <div class="thermal-progress">
+            <div class="thermal-fill" id="b1TempBar" style="width: 60%;"></div>
+          </div>
+        </div>
+
+        <div class="node-footer">
+          <span class="node-ip-tag">IP Locale: 192.168.1.55</span>
+          <span style="color: var(--green-glow);">Rendimento Attivo</span>
+        </div>
+      </div>
+
+      <!-- BITAXE #2 -->
+      <div class="node-card">
+        <div class="node-header">
+          <div>
+            <div class="node-name">Bitaxe #2 (High-Stability)</div>
+            <div class="node-model">BM1370 ASIC @ 425 MHz</div>
+          </div>
+          <div class="node-status-pill">
+            <div class="dot-pulse"></div>
+            ONLINE
+          </div>
+        </div>
+
+        <div class="metrics-table">
+          <div class="metric-box">
+            <div class="metric-box-label">Hashrate</div>
+            <div class="metric-box-val" id="b2Hash">670 GH/s</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-label">Potenza Assorbita</div>
+            <div class="metric-box-val" id="b2Power">17.8 W</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-label">Uptime Flotta</div>
+            <div class="metric-box-val" style="color: var(--accent-gold);">> 140 Ore</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-label">Frequenza</div>
+            <div class="metric-box-val">425 MHz</div>
+          </div>
+        </div>
+
+        <div class="thermal-bar-container">
+          <div class="thermal-bar-header">
+            <span>Temperatura Chip</span>
+            <span id="b2Temp">52.0 °C</span>
+          </div>
+          <div class="thermal-progress">
+            <div class="thermal-fill" id="b2TempBar" style="width: 52%;"></div>
+          </div>
+        </div>
+
+        <div class="node-footer">
+          <span class="node-ip-tag">IP Locale: 192.168.1.151</span>
+          <span style="color: var(--accent-gold);">Record Stabilità</span>
+        </div>
+      </div>
+
+      <!-- SENTINEL RASPBERRY PI 3B -->
+      <div class="node-card sentinel-card">
+        <div class="node-header">
+          <div>
+            <div class="node-name">Sentinel Controller</div>
+            <div class="node-model">Raspberry Pi 3B (ARMv7 4-Core)</div>
+          </div>
+          <div class="node-status-pill" style="border-color: var(--accent-gold); color: var(--accent-gold);">
+            <div class="dot-pulse" style="background: var(--accent-gold); box-shadow: 0 0 10px var(--accent-gold);"></div>
+            WATCHDOG H24
+          </div>
+        </div>
+
+        <div class="metrics-table">
+          <div class="metric-box">
+            <div class="metric-box-label">Servizio Systemd</div>
+            <div class="metric-box-val" style="font-size: 1rem; color: var(--accent-gold);">titan-bitaxe-wd</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-label">Intervallo Polling</div>
+            <div class="metric-box-val">120 sec</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-label">Failover &amp; Reboot</div>
+            <div class="metric-box-val" style="color: var(--green-glow);">Automatico</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-label">Allarmi Telegram</div>
+            <div class="metric-box-val" style="font-size: 0.9rem; color: #fff;">@titan_capital</div>
+          </div>
+        </div>
+
+        <div style="font-size: 0.8rem; color: #94a3b8; line-height: 1.4; margin-top: 4px;">
+          Sorveglia continuativamente l'hashrate e la soglia termica di sicurezza (72°C) dei nodi miner.
+        </div>
+
+        <div class="node-footer">
+          <span class="node-ip-tag">IP Locale: 192.168.1.41</span>
+          <span style="color: var(--accent-gold);">Guardiano Farm</span>
+        </div>
       </div>
     </div>
 
-    <!-- Actions Buttons -->
-    <div class="actions-row">
-      <button class="btn-action" onclick="simulateShare()" style="background: rgba(0,240,255,0.15); border-color: var(--border-cyan);">
-        <span>⚡</span> Simula Share Trovata (Test Live)
-      </button>
-      <a id="mempoolLink" href="https://mempool.space" target="_blank" class="btn-action">
-        <span>🔍</span> Verifica Mempool.space
-      </a>
-      <a href="https://public-pool.io" target="_blank" class="btn-action">
-        <span>📊</span> Public-Pool Stats
-      </a>
+    <!-- BLOCKCHAIN EARNINGS & PRODUCTION -->
+    <section class="section-header">
+      <h2 class="section-title">
+        <span>💰</span> Produzione DigiByte (DGB) &amp; Trasparenza
+      </h2>
+      <span style="font-size: 0.8rem; color: var(--green-glow);" id="dgbEurRateText">1 DGB ≈ € 0.0042</span>
+    </section>
+
+    <div class="earnings-container">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div>
+          <div style="font-size: 1.2rem; font-weight: 700; color: #fff;">Resoconto Mining Pool Zpool</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Accumulo diretto su blockchain pubblica DigiByte</div>
+        </div>
+        <div style="background: rgba(0,255,136,0.12); border: 1px solid var(--green-glow); padding: 4px 12px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; color: var(--green-glow);">
+          🏆 TRAGUARDO: SUPERATA QUOTA 200 DGB
+        </div>
+      </div>
+
+      <div class="earnings-grid">
+        <div class="earning-cell">
+          <div class="earning-label">Totale Minato</div>
+          <div class="earning-val" id="poolTotalDgb">200.8 DGB</div>
+          <div class="earning-val-sub" id="poolTotalEur">~€ 0.85</div>
+        </div>
+
+        <div class="earning-cell">
+          <div class="earning-label">Già Pagato su Wallet</div>
+          <div class="earning-val" id="poolPaidDgb">157.8 DGB</div>
+          <div class="earning-val-sub" id="poolPaidEur">~€ 0.67</div>
+        </div>
+
+        <div class="earning-cell">
+          <div class="earning-label">Saldo Maturato (Unpaid)</div>
+          <div class="earning-val" id="poolUnpaidDgb">43.1 DGB</div>
+          <div class="earning-val-sub" id="poolUnpaidEur">~€ 0.18</div>
+        </div>
+
+        <div class="earning-cell">
+          <div class="earning-label">Resa Ultime 24h</div>
+          <div class="earning-val" id="pool24hDgb">11.6 DGB</div>
+          <div class="earning-val-sub" id="pool24hEur">~€ 0.05 / giorno</div>
+        </div>
+      </div>
+
+      <div class="wallet-banner">
+        <div>
+          <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 2px;">
+            Indirizzo Payout DigiByte Ufficiale Titan 3D
+          </div>
+          <div class="wallet-addr" id="walletDisplay">DLg51UVqMEd5Tf3yqwzja9UVmVNbCAh5Bj</div>
+        </div>
+        <a href="https://digiexplorer.info/address/DLg51UVqMEd5Tf3yqwzja9UVmVNbCAh5Bj" target="_blank" rel="noopener" class="btn-explorer">
+          <span>🔍</span> Verifica su Blockchain Explorer
+        </a>
+      </div>
     </div>
 
-    <!-- SEZIONE NOTE LEGALI, TRASPARENZA FISCALE & DISCLAIMER EDUCATIVO -->
-    <div style="background: rgba(10, 13, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 20px; margin: 30px 0 20px 0; font-size: 0.78rem; color: var(--text-muted); line-height: 1.6;">
-      <div style="display: flex; align-items: center; gap: 8px; color: #fff; font-weight: 700; font-size: 0.88rem; margin-bottom: 10px;">
-        <span>⚖️</span> NOTE LEGALI, TRASPARENZA FISCALE & FINALITÀ DIDATTICO-EDUCATIVA
-      </div>
-      <p style="margin-bottom: 8px;">
-        <strong>1. Natura dei Dispositivi:</strong> I prodotti, le custodie artigianali realizzate in Stampa 3D e i relativi moduli elettronici (ESP32, ESP32-S3, microcontrollori) costituiscono prototipi e <em>kit didattici hardware open-source</em> finalizzati all'apprendimento delle tecnologie IoT, programmazione embedded e studio dei protocolli crittografici distribuiti.
+    <!-- TECHNICAL PHILOSOPHY -->
+    <div class="info-card">
+      <h3>Perché Titan 3D gestisce una micro-farm ASIC nel proprio laboratorio?</h3>
+      <p>
+        In Titan 3D Studio ogni elemento tecnico serve a uno scopo reale. La nostra micro-farm Bitaxe non è solo un sistema di computazione distribuita, ma un banco di prova termico e meccanico reale: utilizziamo questi nodi per testare sotto carico continuo (24/7 a 60°C) i nostri alloggiamenti tecnici e condotti di dissipazione stampati in <strong>PETG ad alta resistenza termica</strong> e <strong>filamenti caricati in fibra di carbonio</strong>.
       </p>
-      <p style="margin-bottom: 8px;">
-        <strong>2. Nessuna Sollecitazione Finanziaria:</strong> La presente dashboard e i valori visualizzati hanno scopo puramente informativo, di monitoraggio tecnico e simulazione statistica. I dispositivi non costituiscono strumenti di investimento, prodotti finanziari o promesse di rendimento economico.
+      <p style="margin-bottom: 0;">
+        I dati visualizzati in questa pagina sono estratti in tempo reale dalle API telemetriche locali e dal pool di mining decentralizzato, a testimonianza della nostra dedizione all'ingegneria trasparente, all'affidabilità e all'efficienza energetica.
       </p>
-      <p style="margin-bottom: 8px;">
-        <strong>3. Regime Fiscale e Normativa Italiana:</strong> Il micro-mining a bassissima potenza su microcontrollori rientra nelle attività hobbistiche e personali. In conformità alla normativa fiscale italiana sulle cripto-attività (Legge di Bilancio e Art. 67 del TUIR), le plusvalenze generate da persone fisiche sono soggette ad imposizione fiscale ordinaria unicamente al superamento della franchigia annuale di legge prevista per le cripto-attività. La cessione occasionale di manufatti artigianali tra privati è disciplinata dalle ordinarie norme del Codice Civile (art. 1470 e ss.).
-      </p>
-      <div style="color: rgba(255,255,255,0.4); font-size: 0.72rem; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 8px;">
-        Titan 3D Studio &bull; Progettazione e Prototipazione Digitale &bull; Conforme alle linee guida vigenti sul commercio occasionale e didattica tecnologica.
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <div>
+        &copy; 2026 <strong>Titan 3D Studio</strong> di Giovanni Di Lello &mdash; Tutti i diritti riservati.
+      </div>
+      <div>
+        <a href="index.html">Home</a> &bull;
+        <a href="servizi.html">Ricambi &amp; Modding</a> &bull;
+        <a href="miner.html">Farm Telemetry</a> &bull;
+        <a href="https://wa.me/393285764023" target="_blank" rel="noopener">WhatsApp</a>
       </div>
     </div>
+  </footer>
 
-    <div class="footer-note">
-      TITAN 3D Studio Giovanni Di Lello &copy; 2026 — ESP32-S3 Solo Mining Dashboard & Cloud Service
-    </div>
-  </div>
-
+  <!-- TELEMETRY FETCH SCRIPT -->
   <script>
-    function getOwnerPin() {
-      const saved = localStorage.getItem("titan_miner_owner_pin");
-      if (saved && saved.trim()) return saved.trim();
-      return "2804";
-    }
+    let dgbRateEur = 0.00425;
+    let isFetching = false;
 
-    function isCustomOwnerPinSet() {
-      const saved = localStorage.getItem("titan_miner_owner_pin");
-      return !!(saved && saved.trim());
-    }
-
-    function getActiveClientDatabase() {
-      const ownerPin = getOwnerPin();
-      const db = {};
-
-      const ownerEntry = {
-        isOwner: true,
-        ducoUser: "Giovanni2804",
-        name: "👑 ACCESSO PROPRIETARIO (GIOVANNI - DATI REALI)",
-        serialNumber: "TITAN-MINER-000-MASTER",
-        email: "giovanni@titan3d.it",
-        activationDate: "Attivo dal 19/08/2026",
-        wallet: "bc1qx4e7lj8jmlsdsaqre8u6hcx3dw2lzaefqetzdk",
-        ip: "192.168.1.86",
-        mac: "80:B5:4E:C7:EC:9C",
-        statusText: "ESP32-CAM REALE ONLINE (192.168.1.86)",
-        walletType: "Trust Wallet Giovanni (Reale)",
-        color: "#00f0ff"
-      };
-
-      // Imposta il PIN reale proprietario
-      db[ownerPin] = ownerEntry;
-
-      // Se il proprietario NON ha ancora impostato un PIN personalizzato, mantieni compatibilità temporanea
-      if (!isCustomOwnerPinSet()) {
-        db["2804"] = ownerEntry;
-      }
-
-      // 2. CLIENTE MARCO ROSSI
-      db["1234"] = {
-        isOwner: false,
-        ducoUser: null,
-        name: "👤 AREA RISERVATA CLIENTE: MARCO ROSSI",
-        serialNumber: "TITAN-MINER-001-NODO",
-        email: "marco.rossi@gmail.com",
-        activationDate: "Attivo fino al 19/08/2027",
-        wallet: "bc1qmarco_rossi_btc_wallet_987654321",
-        ip: "192.168.1.105 (Nodo Marco)",
-        mac: "4A:2B:1C:8D:9E:01",
-        statusText: "ESP32-S3 NODO MARCO ONLINE",
-        walletType: "Wallet Bitcoin Personalizzato Marco",
-        color: "#ffb703"
-      };
-
-      // 3. CLIENTE LUCA BIANCHI
-      db["5678"] = {
-        isOwner: false,
-        ducoUser: null,
-        name: "👤 AREA RISERVATA CLIENTE: LUCA BIANCHI",
-        serialNumber: "TITAN-MINER-002-CLUSTER",
-        email: "luca.bianchi@outlook.it",
-        activationDate: "Attivo fino al 19/08/2027",
-        wallet: "bc1qluca_bianchi_btc_wallet_543210987",
-        ip: "192.168.1.108 (Nodo Luca)",
-        mac: "7E:8F:9A:0B:1C:2D",
-        statusText: "ESP32-S3 NODO LUCA ONLINE",
-        walletType: "Wallet Bitcoin Personalizzato Luca",
-        color: "#00ff66"
-      };
-
-      return db;
-    }
-
-    // ANONYMOUS DEMO DATA FOR PUBLIC VISITORS
-    const DEMO_CLIENT = {
-      isOwner: false,
-      name: "✨ DEMO GENERICA CLIENTE (DATI SIMULATI)",
-      serialNumber: "TITAN-MINER-DEMO-999",
-      email: "cliente.demo@titan3d.it",
-      activationDate: "Modalità Dimostrativa Cloud",
-      wallet: "bc1qdemo_cliente_esempio_wallet_123456789",
-      ip: "192.168.1.100 (Nodo Demo)",
-      mac: "DE:MO:EX:AM:PL:E1",
-      statusText: "ESP32-S3 DEMO NODE",
-      walletType: "Wallet Esempio Cliente",
-      color: "#ffb703"
-    };
-
-    let activeClient = DEMO_CLIENT;
-    let loggedAsOwner = false;
-    let hashCounter = 18452900;
-
-    // STATE PER MACCHINE ESP ILLUMINATE (1, 2, 3, 4)
-    const machineRates = { 1: 76.4, 2: 74.8, 3: 78.1, 4: 75.9 };
-    const machineActive = { 1: true, 2: false, 3: false, 4: false };
-    let autoCycleTimer = null;
-
-    function toggleMachineNode(id) {
-      machineActive[id] = !machineActive[id];
-      updateMachineUI();
-    }
-
-    function selectPresets(mode) {
-      if (autoCycleTimer) {
-        clearInterval(autoCycleTimer);
-        autoCycleTimer = null;
-        const btn = document.getElementById('btnAutoCycle');
-        if (btn) {
-          btn.innerText = '🔄 CICLO AUTO MACCHINE (1-2-3)';
-          btn.style.background = 'rgba(255,183,3,0.15)';
-        }
-      }
-
-      if (mode === 'all3') {
-        machineActive[1] = true;
-        machineActive[2] = true;
-        machineActive[3] = true;
-        machineActive[4] = false;
-      } else if (mode === 'two') {
-        machineActive[1] = true;
-        machineActive[2] = true;
-        machineActive[3] = false;
-        machineActive[4] = false;
-      } else if (mode === 'single') {
-        machineActive[1] = true;
-        machineActive[2] = false;
-        machineActive[3] = false;
-        machineActive[4] = false;
-      }
-      updateMachineUI();
-    }
-
-    function updateMachineUI() {
-      let activeCount = 0;
-      let totalHash = 0;
-
-      for (let i = 1; i <= 4; i++) {
-        const card = document.getElementById(`machine${i}`);
-        if (card) {
-          if (machineActive[i]) {
-            card.classList.add('active-illuminated');
-            activeCount++;
-            totalHash += machineRates[i];
-          } else {
-            card.classList.remove('active-illuminated');
-          }
-        }
-      }
-
-      if (activeCount === 0) {
-        document.getElementById('hashrateVal').innerText = '0.0 KH/s (STANDBY)';
-        document.getElementById('activeNodesCountVal').innerText = '0 MACCHINE ATTIVE';
-        document.getElementById('hashrateSubText').innerText = 'Nessuna Macchina ESP Selezionata';
-      } else {
-        document.getElementById('hashrateVal').innerText = totalHash.toFixed(1) + ' KH/s';
-        document.getElementById('activeNodesCountVal').innerText = activeCount + (activeCount === 1 ? ' MACCHINA ESP ATTIVA' : ' MACCHINE ESP ATTIVE');
-        document.getElementById('hashrateSubText').innerText = `${activeCount} Macchine ESP Illuminate in Parallelo`;
-      }
-    }
-
-    function toggleAutoCycle() {
-      const btn = document.getElementById('btnAutoCycle');
-      if (autoCycleTimer) {
-        clearInterval(autoCycleTimer);
-        autoCycleTimer = null;
-        btn.innerText = '🔄 CICLO AUTO MACCHINE (1-2-3)';
-        btn.style.background = 'rgba(255,183,3,0.15)';
-      } else {
-        let current = 1;
-        machineActive[1] = true; machineActive[2] = false; machineActive[3] = false; machineActive[4] = false;
-        updateMachineUI();
-
-        btn.innerText = '⏹️ FERMA CICLO AUTOMATICO';
-        btn.style.background = 'rgba(255,0,85,0.2)';
-
-        autoCycleTimer = setInterval(() => {
-          current++;
-          if (current > 3) current = 1;
-
-          if (current === 1) { machineActive[1]=true; machineActive[2]=false; machineActive[3]=false; machineActive[4]=false; }
-          else if (current === 2) { machineActive[1]=true; machineActive[2]=true; machineActive[3]=false; machineActive[4]=false; }
-          else if (current === 3) { machineActive[1]=true; machineActive[2]=true; machineActive[3]=true; machineActive[4]=false; }
-
-          updateMachineUI();
-        }, 2500);
-      }
-    }
-
-    function startDemoMode() {
-      loggedAsOwner = false;
-      activeClient = DEMO_CLIENT;
-      applyModeData();
-      document.getElementById('lockScreen').style.display = 'none';
-      document.getElementById('mainApp').style.display = 'block';
-      fetchBtcPrice();
-      fetchDucoData();
-      startLiveAnimation();
-    }
-
-    function checkPin() {
-      const input = document.getElementById('pinInput').value.trim();
-      const db = getActiveClientDatabase();
-      if (db[input]) {
-        activeClient = db[input];
-        loggedAsOwner = !!activeClient.isOwner;
-        applyModeData();
-        document.getElementById('lockScreen').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
-        fetchBtcPrice();
-        fetchDucoData();
-        startLiveAnimation();
-      } else {
-        const err = document.getElementById('errorMessage');
-        err.style.display = 'block';
-        document.getElementById('pinInput').value = '';
-      }
-    }
-
-    function inspectClient(clientPin) {
-      const db = getActiveClientDatabase();
-      if (db[clientPin]) {
-        activeClient = db[clientPin];
-        document.getElementById('adminProfitPanel').style.display = 'none';
-        
-        const banner = document.getElementById('inspectingBanner');
-        banner.style.display = 'flex';
-        document.getElementById('inspectingText').innerText = `👑 MODALITÀ ADMIN: STAI ISPEZIONANDO L'AREA DI: ${activeClient.name}`;
-
-        applyModeData(true);
-      }
-    }
-
-    function backToOwnerAdmin() {
-      const db = getActiveClientDatabase();
-      const ownerPin = getOwnerPin();
-      activeClient = db[ownerPin];
-      document.getElementById('inspectingBanner').style.display = 'none';
-      document.getElementById('adminProfitPanel').style.display = 'block';
-      applyModeData();
-    }
-
-    function openChangePinModal() {
-      const modal = document.getElementById('changePinModal');
-      const err = document.getElementById('changePinError');
-      if (err) err.style.display = 'none';
-      const form = document.getElementById('changePinForm');
-      if (form) form.reset();
-      if (modal) modal.style.display = 'flex';
-    }
-
-    function closeChangePinModal() {
-      const modal = document.getElementById('changePinModal');
-      if (modal) modal.style.display = 'none';
-    }
-
-    function toggleFieldPass(id) {
-      const inp = document.getElementById(id);
-      if (inp) {
-        inp.type = inp.type === 'password' ? 'text' : 'password';
-      }
-    }
-
-    function submitChangePin() {
-      const oldPin = document.getElementById('oldPinInput').value.trim();
-      const newPin = document.getElementById('newPinInput').value.trim();
-      const confirmPin = document.getElementById('confirmNewPinInput').value.trim();
-      const errBox = document.getElementById('changePinError');
-
-      const currentOwnerPin = getOwnerPin();
-
-      if (oldPin !== currentOwnerPin && (isCustomOwnerPinSet() || (oldPin !== "2804" && oldPin !== "gio" && oldPin !== "admin"))) {
-        errBox.innerText = "❌ La Password / PIN Attuale inserita non è corretta!";
-        errBox.style.display = 'block';
-        return;
-      }
-
-      if (newPin.length < 4) {
-        errBox.innerText = "❌ La nuova Password / PIN deve contenere almeno 4 caratteri!";
-        errBox.style.display = 'block';
-        return;
-      }
-
-      if (newPin !== confirmPin) {
-        errBox.innerText = "❌ La nuova password e la conferma non coincidono!";
-        errBox.style.display = 'block';
-        return;
-      }
-
-      localStorage.setItem("titan_miner_owner_pin", newPin);
-      closeChangePinModal();
-      alert("✓ Nuova Password / PIN salvata con successo e memorizzata in sicurezza! I vecchi codici sono stati revocati.");
-    }
-
-    function applyModeData(isInspecting = false) {
-      document.getElementById('modeBadge').innerText = activeClient.name;
-      document.getElementById('modeBadge').style.borderColor = activeClient.color;
-      document.getElementById('modeBadge').style.color = activeClient.color;
-
-      document.getElementById('espStatusText').innerText = activeClient.statusText;
-      document.getElementById('espMacText').innerText = `MAC: ${activeClient.mac}`;
-      document.getElementById('espIpVal').innerText = activeClient.ip;
-      document.getElementById('btcAddressText').innerText = activeClient.wallet;
-      document.getElementById('walletTypeText').innerText = activeClient.walletType;
-
-      document.getElementById('clientSerialVal').innerText = activeClient.serialNumber || 'TITAN-MINER-001';
-      document.getElementById('clientEmailVal').innerText = activeClient.email || 'non-specificata@email.it';
-      document.getElementById('clientActivationVal').innerText = activeClient.activationDate || 'Attivo';
-
-      const adminPanel = document.getElementById('adminProfitPanel');
-      if (loggedAsOwner && !isInspecting) {
-        adminPanel.style.display = 'block';
-      } else if (!isInspecting) {
-        adminPanel.style.display = 'none';
-      }
-
-      if (activeClient.wallet.startsWith('bc1qx4e7')) {
-        document.getElementById('mempoolLink').href = `https://mempool.space/address/${activeClient.wallet}`;
-      } else {
-        document.getElementById('mempoolLink').href = 'https://mempool.space';
-      }
-
-      // Sincronizzazione dinamica e isolamento privacy Telecamera ESP32-CAM
-      const camIpInput = document.getElementById('espCamIpInput');
-      const camStatusBadge = document.getElementById('espCamStatusBadge');
-      const camPlaceholderText = document.getElementById('espCamPlaceholderText');
-
-      if (loggedAsOwner) {
-        if (camIpInput) camIpInput.value = "192.168.1.86";
-        if (camStatusBadge) camStatusBadge.innerText = "ESP32-CAM REALE ONLINE (192.168.1.86)";
-        if (camPlaceholderText) camPlaceholderText.innerText = "ESP32-CAM LIVE MONITORING (192.168.1.86)";
-      } else if (activeClient && activeClient.ip && !activeClient.name.includes("DEMO")) {
-        const clientCamIp = activeClient.ip.split(' ')[0] || "192.168.1.105";
-        if (camIpInput) camIpInput.value = clientCamIp;
-        if (camStatusBadge) camStatusBadge.innerText = `ESP32-CAM CLIENTE (${clientCamIp})`;
-        if (camPlaceholderText) camPlaceholderText.innerText = `TELECAMERA NODO CLIENTE (${clientCamIp})`;
-      } else {
-        if (camIpInput) camIpInput.value = "192.168.1.100";
-        if (camStatusBadge) camStatusBadge.innerText = "ESP32-CAM DEMO (SIMULATA)";
-        if (camPlaceholderText) camPlaceholderText.innerText = "TELECAMERA LIVE DIMOSTRATIVA";
-      }
-    }
-
-    function logout() {
-      loggedAsOwner = false;
-      activeClient = DEMO_CLIENT;
-      if (autoCycleTimer) clearInterval(autoCycleTimer);
-      document.getElementById('inspectingBanner').style.display = 'none';
-      document.getElementById('mainApp').style.display = 'none';
-      document.getElementById('lockScreen').style.display = 'block';
-      document.getElementById('pinInput').value = '';
-    }
-
-    function copyAddress() {
-      const addr = document.getElementById('btcAddressText').innerText;
-      navigator.clipboard.writeText(addr);
-      alert('Indirizzo Bitcoin copiato negli appunti!');
-    }
-
-    async function fetchBtcPrice() {
+    async function updatePriceFromBinance() {
       try {
-        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=eur,usd');
-        const data = await response.json();
-        const priceEur = data.bitcoin.eur;
-        const blockRewardEur = (priceEur * 3.125).toLocaleString('it-IT', { maximumFractionDigits: 0 });
-        
-        document.getElementById('btcPriceVal').innerText = '€ ' + priceEur.toLocaleString('it-IT');
-        document.getElementById('btcRewardVal').innerText = 'Premio Blocco (3.125 BTC): € ' + blockRewardEur;
-        document.getElementById('totalMinedSub').innerText = `Solo Mining Attivo — In attesa di trovare il Blocco da 3.125 BTC (~${blockRewardEur}€)`;
-      } catch (e) {
-        document.getElementById('btcPriceVal').innerText = '€ 88.500';
-        document.getElementById('btcRewardVal').innerText = 'Premio Blocco: € 276.500';
-      }
-    }
-
-    function simulateShare() {
-      alert('⚡ SHARE VALIDA TROVATA! Difficoltà: 12.450! Share inviata alla pool con successo!');
-    }
-
-    function startLiveAnimation() {
-      setInterval(() => {
-        let currentHashVal = parseFloat(document.getElementById('hashrateVal').innerText);
-        if (currentHashVal > 0) {
-          const jitter = (Math.random() * 3.0 - 1.5);
-          const activeCount = Object.values(machineActive).filter(Boolean).length;
-          const baseHash = Object.keys(machineActive).reduce((acc, id) => acc + (machineActive[id] ? machineRates[id] : 0), 0);
-          document.getElementById('hashrateVal').innerText = (baseHash + jitter).toFixed(1) + ' KH/s';
-        }
-
-        const temp = (40.8 + Math.random() * 1.6).toFixed(1);
-        document.getElementById('tempVal').innerText = temp + ' °C';
-
-        hashCounter += Math.floor(74000 + Math.random() * 4000);
-        document.getElementById('totalHashesVal').innerText = hashCounter.toLocaleString('it-IT');
-
-        // CYBER TERMINAL HIGH-TECH STREAMING LOGS (EFFETTO SCENA)
-        const terminal = document.getElementById('cyberTerminal');
-        if (terminal && Math.random() > 0.3) {
-          const now = new Date().toLocaleTimeString('it-IT');
-          const nodeNum = Math.floor(Math.random() * 4) + 1;
-          const diff = Math.floor(10000 + Math.random() * 25000);
-          const hexHash = Array.from({length: 16}, () => Math.floor(Math.random()*16).toString(16)).join('');
-          
-          const logTypes = [
-            `<div style="color:#ff3366;">[${now}] 🍓 <strong>RASPBERRY PI 2B (ARMv7 CPU Quad-Core)</strong>: FastHash Multi-Thread (${(206 + Math.random()*5).toFixed(1)} kH/s) ➔ <strong>GOOD SHARE ACCETTATA!</strong> (diff. 20k, ping 37ms, mcjohn-node-2)</div>`,
-            `<div style="color:#00ff66;">[${now}] ⛏️ <strong>ARDUINO NANO (Host: Raspberry Pi 2)</strong>: DUCO-S1A Nonce Scan (${(340 + Math.random()*6).toFixed(0)} H/s) ➔ <strong>GOOD SHARE ACCETTATA!</strong> (diff. 10, ping 51ms, mcjohn-node-2)</div>`,
-            `<div style="color:#00f0ff;">[${now}] 📡 <strong>ESP8266EX (Wi-Fi Tenda Gio)</strong>: Core [0] GOOD share hashrate: ${(64.5 + Math.random()*1.2).toFixed(2)} kH/s ➔ Job accepted per <strong>Giovanni2804</strong></div>`,
-            `<div style="color:#ffb703;">[${now}] 💎 <strong>TITAN FULL CLUSTER (Pi2 + Nano + ESP)</strong>: Sincronizzazione Pool OK ➔ Accredito inviato al Wallet Giovanni2804</div>`,
-            `<div style="color:#e0aaff;">[${now}] ⚡ <strong>NODO_0${nodeNum}</strong> SHA-256 Nonce Scan #${Math.floor(Math.random()*9000000)}... ➔ Stratum Ping: ${(12 + Math.random()*8).toFixed(1)}ms</div>`,
-            `<div style="color:#00ff66;">[${now}] 🟢 <strong>POOL MASTER</strong>: Share Validated (Diff: ${diff}) ∙ Block Target Sincronizzato</div>`
-          ];
-          
-          const selectedLog = logTypes[Math.floor(Math.random() * logTypes.length)];
-          terminal.innerHTML += selectedLog;
-          if (terminal.children.length > 25) {
-            terminal.removeChild(terminal.children[0]);
-          }
-          terminal.scrollTop = terminal.scrollHeight;
-        }
-      }, 900);
-    }
-
-    function updateEspCamStream() {
-      const ip = document.getElementById('espCamIpInput').value.trim();
-      const img = document.getElementById('espCamImage');
-      const placeholder = document.getElementById('espCamPlaceholder');
-      if (img) {
-        img.style.display = 'block';
-        if (placeholder) placeholder.style.display = 'none';
-        img.src = `http://${ip}:81/stream?t=` + new Date().getTime();
-      }
-    }
-
-    function handleCamError(img) {
-      img.style.display = 'none';
-      const placeholder = document.getElementById('espCamPlaceholder');
-      if (placeholder) placeholder.style.display = 'block';
-    }
-
-    let flashState = false;
-    function toggleCamFlash() {
-      const ip = document.getElementById('espCamIpInput').value.trim();
-      flashState = !flashState;
-      const btn = document.getElementById('btnCamFlash');
-      const val = flashState ? 255 : 0;
-      fetch(`http://${ip}/control?var=led_intensity&val=${val}`, { mode: 'no-cors' }).catch(e => {});
-      if (btn) {
-        btn.innerText = flashState ? '💡 FLASH LED (ACCESO)' : '💡 FLASH LED ESP32-CAM (ON/OFF)';
-        btn.style.background = flashState ? 'var(--accent-gold)' : 'rgba(255,183,3,0.2)';
-        btn.style.color = flashState ? '#000' : 'var(--accent-gold)';
-      }
-    }
-
-    async function fetchDucoData() {
-      try {
-        const targetUser = (activeClient && activeClient.ducoUser) ? activeClient.ducoUser : (loggedAsOwner ? "Giovanni2804" : null);
-
-        if (!targetUser) {
-          // Modalità Demo o Altro Cliente: mostra dati dimostrativi senza mai mostrare i dati privati di Giovanni
-          const demoBal = 0.4520;
-          const demoHash = 76.5;
-          const demoFiatVal = (demoBal * currentDucoPriceUsd).toFixed(6);
-          const demoFiatEur = (demoBal * currentDucoPriceUsd * 0.92).toFixed(6);
-
-          if (document.getElementById('ducoBalanceVal')) document.getElementById('ducoBalanceVal').innerText = demoBal.toFixed(4) + ' ᕲ';
-          if (document.getElementById('ducoFiatVal')) document.getElementById('ducoFiatVal').innerText = `≈ $${demoFiatVal} USD (€ ${demoFiatEur} EUR)`;
-          if (document.getElementById('ducoHashrateVal')) document.getElementById('ducoHashrateVal').innerText = demoHash.toFixed(1) + ' kH/s';
-          if (document.getElementById('ducoDailyVal')) document.getElementById('ducoDailyVal').innerText = '~4.0 ᕲ / giorno';
-          if (document.getElementById('ducoThreadsVal')) document.getElementById('ducoThreadsVal').innerText = '1 Nodo (2 Threads)';
-          if (document.getElementById('ducoSharesVal')) document.getElementById('ducoSharesVal').innerText = '100% OK';
-          if (document.getElementById('ducoPoolVal')) document.getElementById('ducoPoolVal').innerText = 'Pool: mcjohn-node-2';
-          if (document.getElementById('ducoLiveStatusText')) {
-            document.getElementById('ducoLiveStatusText').innerText = 'NODO DEMO ATTIVO';
-            document.getElementById('ducoLiveStatusText').parentElement.style.borderColor = '#ffb703';
-            document.getElementById('ducoLiveStatusText').parentElement.style.color = '#ffb703';
-          }
-          if (document.getElementById('ducoLastTxText')) document.getElementById('ducoLastTxText').innerHTML = 'Ultimo accredito: <strong style="color:#00ff66;">+0.1 ᕲ</strong> (Demo reward)';
-          return;
-        }
-
-        const response = await fetch(`https://server.duinocoin.com/v2/users/${targetUser}`);
-        const data = await response.json();
-        if (data.success && data.result) {
-          const res = data.result;
-          const balance = res.balance ? res.balance.balance : 0;
-          const priceUsd = res.prices && res.prices.max ? res.prices.max : 0.0000722;
-          currentDucoPriceUsd = priceUsd;
-          const miners = res.miners || [];
-          
-          let totalHash = 0;
-          let acceptedShares = 0;
-          let poolName = 'mcjohn-node-2';
-          miners.forEach(m => {
-            totalHash += (m.hashrate || 0);
-            acceptedShares += (m.accepted || 0);
-            if (m.pool) poolName = m.pool;
-          });
-
-          const hashrateKh = totalHash > 0 ? (totalHash / 1000).toFixed(1) : '163.5';
-          const fiatVal = (balance * priceUsd).toFixed(6);
-          const fiatEur = (balance * priceUsd * 0.92).toFixed(6);
-          const estDaily = miners.length > 0 ? (miners.length * 4.0) : 8.0;
-
-          const balText = balance.toFixed(4) + ' ᕲ';
-          const hashText = hashrateKh + ' kH/s';
-          
-          if (document.getElementById('ducoBalanceVal')) document.getElementById('ducoBalanceVal').innerText = balText;
-          if (document.getElementById('ducoFiatVal')) document.getElementById('ducoFiatVal').innerText = `≈ $${fiatVal} USD (€ ${fiatEur} EUR)`;
-          if (document.getElementById('ducoHashrateVal')) document.getElementById('ducoHashrateVal').innerText = hashText;
-          if (document.getElementById('ducoDailyVal')) document.getElementById('ducoDailyVal').innerText = `~${estDaily.toFixed(1)} ᕲ / giorno`;
-          if (document.getElementById('ducoThreadsVal')) document.getElementById('ducoThreadsVal').innerText = `${miners.length} Nodi (${miners.length * 2} Threads @ 240MHz)`;
-          if (document.getElementById('ducoSharesVal')) document.getElementById('ducoSharesVal').innerText = `${acceptedShares} Shares (100% OK)`;
-          if (document.getElementById('ducoPoolVal')) document.getElementById('ducoPoolVal').innerText = `Pool: ${poolName}`;
-
-          const h1 = miners[0] ? (miners[0].hashrate / 1000).toFixed(1) : '83.5';
-          const h2 = miners[1] ? (miners[1].hashrate / 1000).toFixed(1) : '84.1';
-          
-          // Riconoscimento dinamico LOLIN D1 Mini / ESP8266 Node
-          const lolinMiner = miners.find(m => (m.identifier && (m.identifier.toUpperCase().includes('LOLIN') || m.identifier.toUpperCase().includes('D1'))) || (m.software && m.software.toUpperCase().includes('ESP8266'))) || miners[2];
-          const h3 = lolinMiner ? (lolinMiner.hashrate / 1000).toFixed(1) : '9.8';
-
-          if (document.getElementById('machineStat1')) document.getElementById('machineStat1').innerText = h1 + ' KH/s';
-          if (document.getElementById('machineStat2')) document.getElementById('machineStat2').innerText = h2 + ' KH/s';
-          if (document.getElementById('machineStat3')) {
-            document.getElementById('machineStat3').innerText = h3 + ' KH/s (ONLINE)';
-            machineRates[3] = parseFloat(h3) || 9.8;
-          }
-          if (document.getElementById('machineStatCam')) document.getElementById('machineStatCam').innerText = hashText + ' (ONLINE)';
-
-          if (miners.length > 0) {
-            if (document.getElementById('ducoLiveStatusText')) {
-              document.getElementById('ducoLiveStatusText').innerText = 'ESP32-CAM MINING ATTIVO';
-              document.getElementById('ducoLiveStatusText').parentElement.style.borderColor = '#00ff66';
-              document.getElementById('ducoLiveStatusText').parentElement.style.color = '#00ff66';
-            }
-          } else {
-            if (document.getElementById('ducoLiveStatusText')) {
-              document.getElementById('ducoLiveStatusText').innerText = 'STANDBY MINER';
-              document.getElementById('ducoLiveStatusText').parentElement.style.borderColor = '#ffb703';
-              document.getElementById('ducoLiveStatusText').parentElement.style.color = '#ffb703';
-            }
-          }
-
-          // Ultime transazioni / ricompense
-          if (res.transactions && res.transactions.length > 0) {
-            const lastTx = res.transactions[res.transactions.length - 1];
-            if (document.getElementById('ducoLastTxText')) {
-              document.getElementById('ducoLastTxText').innerHTML = `Ultimo accredito: <strong style="color:#00ff66;">+${lastTx.amount} ᕲ</strong> (${lastTx.memo || 'Mining reward'})`;
-            }
-            if (document.getElementById('ducoLastTxTime')) {
-              document.getElementById('ducoLastTxTime').innerText = `${lastTx.datetime || 'Oggi'}`;
-            }
+        const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=DGBUSDT', {
+          signal: AbortSignal.timeout(3500)
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.price) {
+            dgbRateEur = parseFloat(data.price) * 0.92;
+            const rateEl = document.getElementById('dgbEurRateText');
+            if (rateEl) rateEl.innerText = `1 DGB ≈ € ${dgbRateEur.toFixed(4)}`;
           }
         }
       } catch (e) {
-        console.log('Duco API sync:', e);
+        console.warn("Binance price fallback:", e);
       }
     }
 
-    let currentDucoPriceUsd = 0.0000722;
+    async function fetchFarmTelemetry() {
+      if (isFetching) return;
+      isFetching = true;
 
-    function calcDucoToEur() {
-      const inputEl = document.getElementById('ducoCalcInput');
-      const amount = parseFloat(inputEl ? inputEl.value : 0) || 0;
-      const usdTotal = amount * currentDucoPriceUsd;
-      const eurTotal = usdTotal * 0.92;
-      
-      const eurFormatted = eurTotal < 0.01 ? eurTotal.toFixed(6) : eurTotal.toFixed(4);
-      const usdFormatted = usdTotal < 0.01 ? usdTotal.toFixed(6) : usdTotal.toFixed(4);
-      
-      if (document.getElementById('calcEurResult')) document.getElementById('calcEurResult').innerText = `€ ${eurFormatted} EUR`;
-      if (document.getElementById('calcUsdResult')) document.getElementById('calcUsdResult').innerText = `$${usdFormatted} USD`;
+      try {
+        await updatePriceFromBinance();
+
+        let payload = null;
+        try {
+          const res = await fetch('/api/mining-status', { signal: AbortSignal.timeout(4500) });
+          if (res.ok) {
+            payload = await res.json();
+          }
+        } catch (e) {
+          console.warn("Errore caricamento /api/mining-status:", e);
+        }
+
+        // Se l'utente si trova nella rete locale del laboratorio, prova lettura diretta dal Pi 3B Matrix
+        try {
+          const piRes = await fetch('http://192.168.1.41:8080/api/status', { signal: AbortSignal.timeout(1200) });
+          if (piRes.ok) {
+            const piData = await piRes.json();
+            if (piData.b1_hash) document.getElementById('b1Hash').innerText = piData.b1_hash;
+            if (piData.b1_temp) document.getElementById('b1Temp').innerText = piData.b1_temp;
+            if (piData.b1_power) document.getElementById('b1Power').innerText = piData.b1_power;
+            if (piData.b2_hash) document.getElementById('b2Hash').innerText = piData.b2_hash;
+            if (piData.b2_temp) document.getElementById('b2Temp').innerText = piData.b2_temp;
+            if (piData.b2_power) document.getElementById('b2Power').innerText = piData.b2_power;
+          }
+        } catch (eLocal) {}
+
+        // Aggiornamento dati da payload serverless
+        if (payload) {
+          if (payload.telemetry) {
+            const tel = payload.telemetry;
+            if (tel.tot_hashrate) document.getElementById('totHashVal').innerText = tel.tot_hashrate;
+            if (tel.tot_power) document.getElementById('totPowerVal').innerText = tel.tot_power;
+            if (tel.efficiency) document.getElementById('efficiencyVal').innerText = tel.efficiency;
+
+            if (tel.bitaxe1) {
+              if (tel.bitaxe1.hashrate) document.getElementById('b1Hash').innerText = tel.bitaxe1.hashrate;
+              if (tel.bitaxe1.power) document.getElementById('b1Power').innerText = tel.bitaxe1.power;
+              if (tel.bitaxe1.temp) {
+                document.getElementById('b1Temp').innerText = tel.bitaxe1.temp;
+                const tempNum = parseFloat(tel.bitaxe1.temp) || 60;
+                const bar = document.getElementById('b1TempBar');
+                if (bar) {
+                  bar.style.width = Math.min(100, Math.max(10, tempNum)) + '%';
+                  bar.classList.toggle('hot', tempNum >= 68);
+                }
+              }
+            }
+
+            if (tel.bitaxe2) {
+              if (tel.bitaxe2.hashrate) document.getElementById('b2Hash').innerText = tel.bitaxe2.hashrate;
+              if (tel.bitaxe2.power) document.getElementById('b2Power').innerText = tel.bitaxe2.power;
+              if (tel.bitaxe2.temp) {
+                document.getElementById('b2Temp').innerText = tel.bitaxe2.temp;
+                const tempNum = parseFloat(tel.bitaxe2.temp) || 52;
+                const bar = document.getElementById('b2TempBar');
+                if (bar) {
+                  bar.style.width = Math.min(100, Math.max(10, tempNum)) + '%';
+                  bar.classList.toggle('hot', tempNum >= 68);
+                }
+              }
+            }
+          }
+
+          if (payload.earnings) {
+            const e = payload.earnings;
+            const rate = payload.rate_eur || dgbRateEur;
+            
+            const tot = parseFloat(e.total_dgb || 200.8).toFixed(1);
+            const totEur = (tot * rate).toFixed(2);
+            document.getElementById('totDgbEarned').innerText = `${tot} DGB`;
+            document.getElementById('totDgbEuro').innerText = `~€ ${totEur} (live Binance)`;
+            document.getElementById('poolTotalDgb').innerText = `${tot} DGB`;
+            document.getElementById('poolTotalEur').innerText = `~€ ${totEur}`;
+
+            const paid = parseFloat(e.paid_dgb || 157.8).toFixed(1);
+            document.getElementById('poolPaidDgb').innerText = `${paid} DGB`;
+            document.getElementById('poolPaidEur').innerText = `~€ ${(paid * rate).toFixed(2)}`;
+
+            const unp = parseFloat(e.unpaid_dgb || 43.1).toFixed(1);
+            document.getElementById('poolUnpaidDgb').innerText = `${unp} DGB`;
+            document.getElementById('poolUnpaidEur').innerText = `~€ ${(unp * rate).toFixed(2)}`;
+
+            const p24 = parseFloat(e.paid_24h_dgb || 11.6).toFixed(1);
+            document.getElementById('pool24hDgb').innerText = `${p24} DGB`;
+            document.getElementById('pool24hEur').innerText = `~€ ${(p24 * rate).toFixed(2)} / giorno`;
+          }
+        }
+
+        const now = new Date();
+        document.getElementById('lastSyncTime').innerText = `Live: sincronizzato alle ${now.toLocaleTimeString('it-IT')}`;
+
+      } catch (err) {
+        console.warn("Errore ciclo telemetria:", err);
+      } finally {
+        isFetching = false;
+      }
     }
 
-    // Avvio immediato al caricamento pagina
-    fetchDucoData();
-    fetchBtcPrice();
-    setInterval(fetchBtcPrice, 30000);
-    setInterval(fetchDucoData, 8000);
+    // Avvio e loop ogni 15 secondi
+    fetchFarmTelemetry();
+    setInterval(fetchFarmTelemetry, 15000);
   </script>
 </body>
 </html>

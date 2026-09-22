@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   const WALLET_DGB = "DLg51UVqMEd5Tf3yqwzja9UVmVNbCAh5Bj";
 
   // 1. Tasso di cambio DGB -> EUR (Binance DGB/USDT con conversione EUR o fallback)
-  let dgbEurRate = 0.00395;
+  let dgbEurRate = 0.00425;
   try {
     const bRes = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=DGBUSDT", {
       headers: { 'User-Agent': 'Mozilla/5.0' },
@@ -46,19 +46,19 @@ export default async function handler(req, res) {
   // Estrazione sicura dei dati (con fallback intelligenti se Zpool ha ritardi)
   const totalDgb = zpoolData && (zpoolData.total || (parseFloat(zpoolData.unpaid || 0) + parseFloat(zpoolData.paidtotal || 0)))
     ? parseFloat(zpoolData.total || (parseFloat(zpoolData.unpaid || 0) + parseFloat(zpoolData.paidtotal || 0)))
-    : 152.35;
+    : 200.84;
 
   const paidDgb = zpoolData && (zpoolData.paidtotal || zpoolData.paid24h)
     ? parseFloat(zpoolData.paidtotal || zpoolData.paid24h)
-    : 107.69;
+    : 157.77;
 
   const unpaidDgb = zpoolData && zpoolData.unpaid !== undefined
     ? parseFloat(zpoolData.unpaid)
-    : 44.66;
+    : 43.08;
 
   const paid24hDgb = zpoolData && zpoolData.paid24h !== undefined
     ? parseFloat(zpoolData.paid24h)
-    : 16.42;
+    : 11.61;
 
   const totalEuro = (totalDgb * dgbEurRate).toFixed(2);
   const paidEuro = (paidDgb * dgbEurRate).toFixed(2);
@@ -68,8 +68,9 @@ export default async function handler(req, res) {
     status: "online",
     updated_at: new Date().toISOString(),
     currency: "DGB",
-    wallet: "DLg51UVqMEd5Tf3yqwzja9UVmVNbCAh5Bj",
-    rate_eur: parseFloat(dgbEurRate.toFixed(4)),
+    wallet: WALLET_DGB,
+    rate_eur: parseFloat(dgbEurRate.toFixed(5)),
+    milestone: "Superata quota 200 DGB",
     earnings: {
       total_dgb: parseFloat(totalDgb.toFixed(2)),
       total_eur: parseFloat(totalEuro),
@@ -82,28 +83,40 @@ export default async function handler(req, res) {
     telemetry: {
       bitaxe1: {
         id: "bitaxe_1",
-        label: "Bitaxe #1 (BM1366 Ultra)",
-        ip: "192.168.1.150",
-        hashrate: "1.07 TH/s",
-        hashrate_ghs: 1070,
-        temp: "59.8 °C",
+        label: "Bitaxe #1 (BM1370 ASIC)",
+        ip: "192.168.1.55",
+        clock: "525 MHz",
+        hashrate: "1.05 TH/s",
+        hashrate_ghs: 1050,
+        temp: "60.0 °C",
         power: "22.3 W",
-        status: "Rendimento Attivo",
+        status: "Online & Mining",
         pool: "sha256.mine.zpool.ca:3333"
       },
       bitaxe2: {
         id: "bitaxe_2",
-        label: "Bitaxe #2 (BM1368 Supra)",
+        label: "Bitaxe #2 (BM1370 ASIC)",
         ip: "192.168.1.151",
-        hashrate: "702 GH/s",
-        hashrate_ghs: 702,
-        temp: "54.1 °C",
-        power: "18.0 W",
-        status: "Rendimento Attivo",
+        clock: "425 MHz",
+        hashrate: "670 GH/s",
+        hashrate_ghs: 670,
+        temp: "52.0 °C",
+        power: "17.9 W",
+        status: "Online & Mining (Record Uptime)",
         pool: "sha256.mine.zpool.ca:3333"
       },
-      tot_hashrate: "1.77 TH/s",
-      tot_power: "40.3 W",
+      sentinel: {
+        id: "pi3_sentinel",
+        label: "Sentinel Controller (Raspberry Pi 3B)",
+        ip: "192.168.1.41",
+        service: "titan-bitaxe-watchdog.service",
+        interval: "120s",
+        alerts: "Telegram @titan_capital_gio_bot",
+        status: "Attivo h24"
+      },
+      tot_hashrate: "1.72 TH/s",
+      tot_power: "40.2 W",
+      efficiency: "23.3 J/TH",
       farm_status: "100% Operativa"
     },
     notice: zpoolData && zpoolData.error ? zpoolData.error : null
